@@ -1,0 +1,10 @@
+# stuff that is always included
+.vscode
+*.code-workspace
+vetur.config.js\
+.DS_Store
+
+# javascript
+node_modules
+.nuxt
+dist

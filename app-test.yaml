@@ -1,0 +1,19 @@
+runtime: python310
+  
+handlers:
+
+  - url: /(.*\..+)$
+    static_files: kbsb_backend/public/\1
+    upload: kbsb_backend/public/(.*\..+)$
+
+  - url: /
+    static_files: kbsb_backend/public/index.html
+    upload: kbsb_backend/public/index.html
+
+  - url: /([^\.]*)$
+    static_files: kbsb_backend/public/\1/index.html
+    upload: kbsb_backend/public/([^\.]*)/index.html
+
+  - url: /.*
+    static_files: kbsb_backend/public/index.html
+    upload: kbsb_backend/public/index.html
