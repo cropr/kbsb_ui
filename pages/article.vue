@@ -25,7 +25,6 @@ export default {
 
   async fetch () {
     this.articles = await this.$content('articles').fetch()
-    console.log('articles', this.articles.length)
   },
 
   head: {
@@ -41,7 +40,6 @@ export default {
           page = a
         }
       })
-      console.log('page', page)
       return page
     },
 

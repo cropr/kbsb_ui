@@ -1,19 +1,53 @@
 runtime: python310
-  
+threadsafe: true
+
 handlers:
 
-  - url: /(.*\..+)$
-    static_files: kbsb_backend/public/\1
-    upload: kbsb_backend/public/(.*\..+)$
+  # standard file types
+  - url: /(.*\.html)
+    mime_type: text/html
+    static_files: static/\1
+    upload: static/(.*\.html)
 
+  - url: /(.*\.js)
+    mime_type: text/javascript
+    static_files: static/\1
+    upload: static/(.*\.js)
+
+  - url: /(.*\.css)
+    mime_type: text/css
+    static_files: static/\1
+    upload: static/(.*\.js)
+  
+  - url: /(.*\.txt)
+    mime_type: text/plain
+    static_files: static/\1
+    upload: static/(.*\.txt)
+
+  # image files
+  - url: /(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+    static_files: static/\1
+    upload: static/(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+
+  # pdf files
+  - url: /(.*\.pdf)
+    static_files: static/\1
+    upload: static/(.*\.pdf)
+
+  # home 
   - url: /
-    static_files: kbsb_backend/public/index.html
-    upload: kbsb_backend/public/index.html
+    secure: always
+    static_files: dist/index.html
+    upload: dist/index.html
+    expiration: "15m"
 
-  - url: /([^\.]*)$
-    static_files: kbsb_backend/public/\1/index.html
-    upload: kbsb_backend/public/([^\.]*)/index.html
+  # index files
+  - url: /(.+)/
+    static_files: dist/\1/index.html
+    upload: dist/(.+)/index.html
 
-  - url: /.*
-    static_files: kbsb_backend/public/index.html
-    upload: kbsb_backend/public/index.html
+  # redirect to 'url + /index.html' url.
+  - url: /(.+)
+    static_files: static/redirector.html
+    upload: static/redirector.html
+

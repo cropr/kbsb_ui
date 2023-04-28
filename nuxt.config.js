@@ -18,14 +18,10 @@ export default {
 
   components: true,
 
-  content: {
-    dir: 'content'
-  },
-
   generate: {
-    fallback: true,
+    exclude: [ "/api/v1/filecontent" ]
   },
-
+  
   head: {
     link: [
       {
@@ -111,6 +107,8 @@ export default {
       '658290412135-v6ah768urdv83dn76ra4mkiovdalal2k.apps.googleusercontent.com',
     statamic_url: process.env.STATAMIC_URL || 'http://localhost:8001'
   },
+
+  render: {},
 
   target: 'static',
 
