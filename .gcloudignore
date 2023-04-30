@@ -10,14 +10,15 @@
 .git
 .gitignore
 
-api/
-components/
-content/
-lang/
-layouts/
-node_modules/
-pages/
-plugins/
-static/
-store/
-util/
+/api/
+/components/
+/content
+/lang/
+/layouts/
+/node_modules/
+/.nuxt/
+/pages/
+/plugins/
+/static/
+/store/
+/util/

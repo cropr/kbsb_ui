@@ -5,40 +5,39 @@ handlers:
   # standard file types
   - url: /(.*\.html)
     mime_type: text/html
-    static_files: static/\1
-    upload: static/(.*\.html)
+    static_files: dist/\1
+    upload: dist/(.*\.html)
 
   - url: /(.*\.js)
     mime_type: text/javascript
-    static_files: static/\1
-    upload: static/(.*\.js)
+    static_files: dist/\1
+    upload: dist/(.*\.js)
 
   - url: /(.*\.css)
     mime_type: text/css
-    static_files: static/\1
-    upload: static/(.*\.js)
+    static_files: dist/\1
+    upload: dist/(.*\.js)
   
   - url: /(.*\.txt)
     mime_type: text/plain
-    static_files: static/\1
-    upload: static/(.*\.txt)
+    static_files: dist/\1
+    upload: dist/(.*\.txt)
 
   # image files
   - url: /(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
-    static_files: static/\1
-    upload: static/(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+    static_files: dist/\1
+    upload: dist/(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
 
   # pdf files
   - url: /(.*\.pdf)
-    static_files: static/\1
-    upload: static/(.*\.pdf)
+    static_files: dist/\1
+    upload: dist/(.*\.pdf)
 
   # home 
   - url: /
     secure: always
     static_files: dist/index.html
     upload: dist/index.html
-    expiration: "15m"
 
   # index files
   - url: /(.+)/
@@ -47,6 +46,6 @@ handlers:
 
   # redirect to 'url + /index.html' url.
   - url: /(.+)
-    static_files: static/redirector.html
-    upload: static/redirector.html
+    static_files: dist/redirector.html
+    upload: dist/redirector.html
 
