@@ -1,12 +1,11 @@
 steps:
   - name: node:16
     entrypoint: yarn
-    args: ['--cwd', 'kbsb_frontend', 'install']
+    args: ['install']
 
   - name: node:16
-    dir: kbsb_frontend
     entrypoint: yarn
-    args: ['--cwd', 'kbsb_frontend', 'generate']
+    args: ['generate']
 
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: bash 
