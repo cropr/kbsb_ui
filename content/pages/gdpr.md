@@ -1,6 +1,6 @@
 ---
 id: 0a1e7870-de76-4bce-b0fd-2aea8360fa60
-blueprint: contentpage
+blueprint: page
 title: GDPR
 parent: 3c011e6a-084f-4d22-9e11-303712b4d247
 title_nl: GDPR
@@ -34,9 +34,9 @@ content_fr: |-
       
    - la personne n'est pas supprimée du fichier "player" mais est mise sur inactive. La FRBE continue d'avoir besoin des données des joueurs car sinon il y aura une incohérence dans le traitement elo et parce que les membres ont le droit de savoir qui étaient leurs adversaires dans les parties déjà jouées. La FRBE a le droit de conserver les données du joueur, car à part du nom, prénom et de l'année de naissance, toutes les autres données sont créées par la FRBE elle-même.
 title_de: GDPR
-content_de: "Diese Seite ist nicht auf Deutsch verfügbar"
+content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
 title_en: GDPR
-content_en: "This page is not available in English"
+content_english: 'This page is not available in English'
 updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
 updated_at: 1681480410
 ---

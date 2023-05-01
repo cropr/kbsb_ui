@@ -1,6 +1,6 @@
 ---
 id: 80090071-9d92-4e41-bce0-b39c51f077db
-blueprint: contentpage
+blueprint: page
 title: Partners
 parent: 3c011e6a-084f-4d22-9e11-303712b4d247
 title_nl: Partners
@@ -61,7 +61,7 @@ content_de: |-
   ## Talistro e-voting systems
   ![Talistro](/img/frame_talistro.png)
 title_en: Partners
-content_en: |-
+content_english: |-
   ## ECU: European chess union
   ![ecu](/img/frame_ecu.png)
 
@@ -79,6 +79,6 @@ content_en: |-
 
   ## Talistro e-voting systems
   ![Talistro](/img/frame_talistro.png)
-updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1682415865
+updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
+updated_at: 1681480481
 ---

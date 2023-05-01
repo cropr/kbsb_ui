@@ -1,9 +1,9 @@
 ---
 id: 6556bfa3-5f73-41d8-b49a-9b941bd46a25
-blueprint: contentpage
-title: "Internal Rules"
+blueprint: page
+title: 'Internal Rules'
 parent: 8dce013d-4f3a-4dc5-b18b-ebce97fa6545
-title_nl: "Intern reglement van de KBSB"
+title_nl: 'Intern reglement van de KBSB'
 content_nl: |-
   _Overal waar ‘hij’ of ‘zijn’ staat, wordt ook ‘zij’ of ‘haar’ bedoeld_
 
@@ -485,7 +485,7 @@ content_nl: |-
   ## 33. Het maatschappelijke zetel van de vereniging 
 
   Het adres van de zetel van de vereniging is: F. Vekemansstraat 131, 1120 Neder-Over-Heembeek.
-title_fr: "Règlement interne de la FRBÉ"
+title_fr: 'Règlement interne de la FRBÉ'
 content_fr: |-
   _Partout où il est noté “il”, “elle” est compris_
 
@@ -929,8 +929,8 @@ content_fr: |-
   ## 33. Du siège social de l'organisation.
 
   L’adresse du siège social est 131 Rue François Vekemans, 1120 Nader-Over-Heembeek.
-content_de: "Diese Seite ist nicht auf Deutsch verfügbar"
-content_en: "This page is not available in English"
+content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
+content_english: 'This page is not available in English'
 updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
 updated_at: 1681476729
 ---
