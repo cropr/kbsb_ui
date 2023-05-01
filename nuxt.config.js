@@ -18,9 +18,9 @@ export default {
 
   components: true,
 
-  generate: {
-    exclude: [/filecontent/ ]
-  },
+  // generate: {
+  //   exclude: [ "/api/v1/filecontent" ]
+  // },
   
   head: {
     link: [
