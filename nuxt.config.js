@@ -19,7 +19,7 @@ export default {
   components: true,
 
   generate: {
-    exclude: [ "/api/v1/filecontent" ]
+    exclude: [/filecontent/ ]
   },
   
   head: {

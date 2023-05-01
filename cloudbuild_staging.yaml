@@ -11,7 +11,7 @@ steps:
   - name: 'bash'
     script: |
       #!/usr/bin/env bash
-      ls dist
+      ls -R dist
 
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: bash 
