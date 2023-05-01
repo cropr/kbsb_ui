@@ -1,6 +1,6 @@
 ---
 id: d045f689-c6a3-4be0-a6ce-44b255ff123f
-blueprint: contentpage
+blueprint: page
 title: Regional
 parent: 8dce013d-4f3a-4dc5-b18b-ebce97fa6545
 content_nl: |-
@@ -87,7 +87,7 @@ content_de: |-
 
   ### Limburg
   Website: http://www.schaakliga-limburg.be/
-content_en: |-
+content_english: |-
   ## Community federations
 
   ### Vlaamse Schaakfederatie
@@ -117,8 +117,8 @@ content_en: |-
   Website: http://www.schaakliga-limburg.be/
 updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
 updated_at: 1681476968
-title_nl: "Regionale entiteiten"
-title_fr: "Entités régionales"
-title_de: "Regionale Einheiten"
-title_en: "Regional entities"
+title_nl: 'Regionale entiteiten'
+title_fr: 'Entités régionales'
+title_de: 'Regionale Einheiten'
+title_en: 'Regional entities'
 ---

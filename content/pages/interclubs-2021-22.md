@@ -1,6 +1,6 @@
 ---
 id: 03dd21ec-7b2c-4aed-9679-374853aed893
-blueprint: contentpage
+blueprint: page
 title: 'Interclubs 2021-22'
 title_nl: 'Interclubs 2021-22'
 content_nl: |-
@@ -201,7 +201,7 @@ content_de: |-
   [Datas.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/Datas.zip)<br>
   [IntNat.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/IntNat.zip)
 title_en: 'Interclubs 2021-22'
-content_en: |-
+content_english: |-
   [INTERCLUBS MANAGER](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php) with write permissions
 
   #### Consultation 
@@ -267,6 +267,6 @@ content_en: |-
   [Excel file NIC 2021-2022](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/NationaalInterclub2021-2022_Uitslagen.xlsm)<br>
   [Datas.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/Datas.zip)<br>
   [IntNat.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/IntNat.zip)
-updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1682416221
+updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
+updated_at: 1681478024
 ---

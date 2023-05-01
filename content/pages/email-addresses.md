@@ -1,13 +1,11 @@
 ---
 id: 965f379d-e711-4a0a-a689-0b38dff8d865
-blueprint: contentpage
+blueprint: page
 title: 'Email address'
 parent: 3c011e6a-084f-4d22-9e11-303712b4d247
 title_nl: 'Functionele e-mailadressen'
 content_nl: |-
-  Overzicht van alle functionele e-mailadressen.   Het is aan te raden om zoveel mogelijk de functionele e-mailadressen te gebruiken i.p.v. de privée-mailadressen van de bestuurders.
-
-   - Alle leden van het bestuur: board@frbe-kbsb-ksb.be
+  - Alle leden van het bestuur: board@frbe-kbsb-ksb.be
    - Alle leden van het bestuur + medewerkers : info@frbe-kbsb-ksb.be
    - De penningmeester: treasurer@frbe-kbsb-ksb.be
    - De secretaris: secretary@frbe-kbsb-ksb.be
@@ -23,9 +21,7 @@ content_nl: |-
    - De webmaster: webmaster@frbe-kbsb-ksb.be
 title_fr: 'Adresses électroniques fonctionelles'
 content_fr: |-
-  Aperçu de toutes les adresses e-mail fonctionnelles. Il est conseillé d'utiliser autant que possible les adresses e-mail fonctionnelles plutôt que les adresses e-mail privées des administrateurs.
-
-   - Le président: president@frbe-kbsb-ksb.be
+  - Le président: president@frbe-kbsb-ksb.be
    - Le responsable Arbitres: cis@frbe-kbsb-ksb.be
    - Le responsable Championnats: championships@frbe-kbsb-ksb.be
    - Le responsable Elo: ratings@frbe-kbsb-ksb.be
@@ -40,9 +36,7 @@ content_fr: |-
    - Tous les members du conseil d'administration: board@frbe-kbsb-ksb.be
    - Tous les members du conseil d'administration + collaborateurs : info@frbe-kbsb-ksb.be
 content_de: |-
-  Übersicht aller funktionsfähigen E-Mail-Adressen. Es empfiehlt sich, anstelle der privaten E-Mail-Adressen der Geschäftsführer möglichst die funktionalen E-Mail-Adressen zu verwenden.
-
-   - Alle Vorstandsmitglieder: board@frbe-kbsb-ksb.be
+  - Alle Vorstandsmitglieder: board@frbe-kbsb-ksb.be
    - Alle Vorstandsmitglieder + alle Mitarbeiter: info@frbe-kbsb-ksb.be
    - Der Generalsekretär: secretary.general@frbe-kbsb-ksb.be
    - Der Präsident: president@frbe-kbsb-ksb.be
@@ -57,10 +51,8 @@ content_de: |-
    - Verantwortlich für die Meisterschaften: championships@frbe-kbsb-ksb.be
    - Verantwortlich für die Schiedrichter: cis@frbe-kbsb-ksb.be
 title_en: 'Functional email addresses'
-content_en: |-
-  Overview of all functional e-mail addresses. It is advised to use the functional e-mail addresses as much as possible instead of the private e-mail addresses of the directors.
-
-   - All members of the board: board@frbe-kbsb-ksb.be
+content_english: |-
+  - All members of the board: board@frbe-kbsb-ksb.be
    - All members of the board + all collaborators : info@frbe-kbsb-ksb.be
    - The president: info@frbe-kbsb-ksb.be
    - The responsible Arbiters: cis@frbe-kbsb-ksb.be
@@ -74,6 +66,6 @@ content_en: |-
    - The secretary general: secretary.general@frbe-kbsb-ksb.be
    - The treasurer: treasurer@frbe-kbsb-ksb.be
    - The webmaster: webmaster@frbe-kbsb-ksb.be
-updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1682416441
+updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
+updated_at: 1681480247
 ---

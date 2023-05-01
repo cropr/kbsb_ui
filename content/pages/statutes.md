@@ -1,9 +1,9 @@
 ---
 id: ac71a036-67aa-4604-9e80-8d444af3be02
-blueprint: contentpage
+blueprint: page
 title: Statutes
 parent: 8dce013d-4f3a-4dc5-b18b-ebce97fa6545
-title_nl: "Statuten van de KBSB vzw"
+title_nl: 'Statuten van de KBSB vzw'
 content_nl: |-
   *Statuten van de KBSB vzw versie van 29 augustus 2020*
 
@@ -419,7 +419,7 @@ content_nl: |-
   ### Artikel 45
 
   Alle gevallen die niet in de huidige statuten zijn voorzien, worden behandeld in overeenstemming met de wettelijke en reglementaire bepalingen die van kracht zijn.
-title_fr: "Statuts de la FRBE asbl"
+title_fr: 'Statuts de la FRBE asbl'
 content_fr: |-
   *Statuts de la FRBÉ asbl. version du 29 août 2020.*
 
@@ -826,10 +826,10 @@ content_fr: |-
   ### Article 45
 
   Tous les cas non visés par les présents statuts sont réglés conformément aux dispositions légales et réglementaires en vigueur.
-title_de: "Satzung des KSB"
-content_de: "Diese Seite ist nicht auf Deutsch verfügbar"
-title_en: "Statutes of the RBCF"
-content_en: "This page is not available in English"
+title_de: 'Satzung des KSB'
+content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
+title_en: 'Statutes of the RBCF'
+content_english: 'This page is not available in English'
 updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
 updated_at: 1681477119
 ---

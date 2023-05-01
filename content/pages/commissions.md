@@ -1,6 +1,6 @@
 ---
 id: aee3d76d-2e98-4a8e-91d0-463c986d5105
-blueprint: contentpage
+blueprint: page
 title: Commissions
 title_nl: Commissies
 content_nl: |-
@@ -13,7 +13,6 @@ content_nl: |-
   ## Geschillencommissie
 
   voorzitter: Michèle d'Elia (FEFB), ontslagnemend
-
   leden: Pascal Van der Vorst (FEFB), Jan Gooris (VSF), Annelies Cuvelier (VSF), Joseph Lentz (SVDB), Paul Zilles (SVDB)
 
   Zie [Intern Reglement](/admin/internalrules) artikel 8.
@@ -24,7 +23,7 @@ content_nl: |-
 
   voorzitter: Marc Bils (VSF)
 
-  leden: Hans Temmerman (VSF), Tom De Gent (VSF), Bernd Loo (SVDB), Rudolf Meessen (SVDB), Fabrice Grobelny (FEFB), Laetitia Heuvelmans (FEFB), Jean-Christophe Thiry (FEFB)
+  ledene: Hans Temmerman (VSF), Tom De Gent (VSF), Bernd Loo (SVDB), Rudolf Meessen (SVDB), Fabrice Grobelny (FEFB), Laetitia Heuvelmans (FEFB), Jean-Christophe Thiry (FEFB)
 
   Zie [Intern Reglement](/admin/internalrules) artikel 9
 
@@ -39,7 +38,7 @@ content_fr: |-
 
   ## Comité des litiges
 
-  Président: Michèle d'Elia (FEFB), démissionaire
+  Président: Michèle d'Elia (FEFB) démissionaire
 
   Membres: Pascal Van der Vorst(FEFB), Jan Gooris (VSF), Annelies Cuvelier (VSF), Joseph Lentz (SVDB), Paul Zilles (SVDB)
 
@@ -59,7 +58,7 @@ content_fr: |-
 title_de: Ausschüsse
 content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
 title_en: Committees
-content_en: 'This page is not available in English'
-updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1682343435
+content_english: 'This page is not available in English'
+updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
+updated_at: 1681476541
 ---

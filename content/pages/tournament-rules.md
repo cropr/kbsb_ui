@@ -1,9 +1,9 @@
 ---
 id: 40b6ed53-7883-47b9-9954-dfbd1269c12e
-blueprint: contentpage
-title: "Tournament Rules"
+blueprint: page
+title: 'Tournament Rules'
 parent: 8dce013d-4f3a-4dc5-b18b-ebce97fa6545
-title_nl: "Wedstrijdreglement van de KBSB"
+title_nl: 'Wedstrijdreglement van de KBSB'
 content_nl: |-
   _Goedgek. door de Bijzondere Algemene Vergadering (BAV) van 20 juni 2009. Goedgek. door de Algemene Vergadering (AV) van 20 maart 2010. Goedgek. door de BAV van 15 Januari 2011. Goedgek. door de BAV van 18 juni 2011. Goedgek. door het BO van 4 september 2011. Goedgek. door de BAV van 26.11.2011. Goedgek. door de BAV van 2 juni 2012. Goedgek. door de BAV van 1 juni 2013. Goedgek. door de AV van 7 december 2013. Goedgek. door de BAV van 2 augustus 2014, verwerkt door het BO van 23 augustus 2014. Goedgek. door de AV van 4 oktober 2014. Goedgek. door de BAV van 6 juni 2015.Goedgek. door de AV van 17 oktober 2015. Goedgek. door de AV van 22 oktober 2016. Goedgek. door de BAV van 25 februari 2017. Goedgek. door het BO (eensluidendheid nl/fr teksten +ARTT. 35 en 38) op 1 juli en 2 september 2017. Goedgek. door de AV van 18 november 2017. Goedgek. door de AV van 20 oktober 2018. Goedgek. door de AV van 9 november 2019. Goedgek. door de AV van 29 augustus 2020. Goedgek. door de BAV van 13/02/2021._
 
@@ -1354,7 +1354,7 @@ content_nl: |-
   Toelichting : met uitzondering van de toepassing van criteria 1,  wil de jeugdcommissie de redelijkheid hanteren. Ze wil aanmoedigen en niet bestraffen. Bijvoorbeeld (niet limitatief) : een speler krijgt training van een ouder die een veel hogere rating heeft. Het aantonen van een onkostennota wordt hier moeilijk. De jeugdcommissie kan hier bijvoorbeeld vragen om andere gemaakte kosten aan te tonen (deelname toernooien). Voorbeeld : tijdens het Nationaal jeugdkampioenschap wordt onder auspiciën van de KBSB een normentoernooi georganiseerd. De jeugdspeler kan vooraf aan de nationale jeugdleider een vrijstelling vragen op criteria 2.
 
   Het niet voldoen aan de bijkomende criteria na het ontvangen van de steun zal leiden tot het schrappen van de voordelen gespecificeerd in artikel 100 bij een eerstvolgende positieve indeling in de groepen zoals omschreven in artikel 99.
-title_fr: "Règlement des tournois de la FRBÉ"
+title_fr: 'Règlement des tournois de la FRBÉ'
 content_fr: |-
   _Approuvé par l’Assemblée Générale Extraordinaire (AGE) du 20 juin 2009. Approuvé par l’Assemblée Générale (AG) du 20 mars 2010. Approuvé par l’AGE du 15 janvier 2011. Approuvé par l’AGE du 18 juin 2011. Approuvé par le CA du 04/09/2011. Approuvé par l’AGE du 26 novembre 2011. Approuvé par l’AGE du 2 juin 2012. Approuvé par l’AGE du 1 juin 2013. Approuvé par l'AG du 7 décembre 2013. Approuvé par l'AGE du 2 août 2014, élaboré par le CA du 23 août 2014. Approuvé par l’AG du 4 octobre 2014. Approuvé par l’AGE du 6 juin 2015. Approuvé par l’AG du 17 octobre 2015. Approuvé par l’AG du 22 octobre 2016. Approuvé par l’AGE du 25 février 2017. Approuvé par le C.A. le 1 juillet et le 2 septembre 2017. Approuvé par l’AG du 18 novembre 2017. Approuvé par l’AG du 20 octobre 2018. Approuvé par l’AG du 9 novembre 2019. Approuvé par l’AGE du 29 août 2020. Approuvé par l’AGE du 13 février 2021._
 
@@ -2723,10 +2723,10 @@ content_fr: |-
   Explication: à l'exception de l'application du critère 1, la commission de la jeunesse veut agir de manière raisonnable. Elle veut encourager et non punir. Par exemple (non limitatif): un joueur reçoit une formation d'un parent qui a un elo beaucoup plus élevé. La démonstration d'une note de frais devient difficile ici. La commission jeunesse peut, par exemple, demander une preuve des autres coûts encourus (participation à des tournois). Exemple: lors du Championnat Belgique de la Jeunesse, un tournoi à normes est organisé sous les auspices de la FRBE. Le jeune joueur peut, à l’avance, demander une exemption au directeur national de la jeunesse pour le critère 2.
 
   Le non-respect des critères supplémentaires après réception du soutien entraînera l’annulation des avantages visées dans l’article 100 lors de la prochaine répartition dans un groupe définie à l'article 99 et positive pour le joueur.
-title_de: "Turnierregeln des KSB"
-content_de: "Diese Seite ist nicht auf Deutsch verfügbar"
-title_en: "Tournament rules of the RBCF"
-content_en: "This page is not available in English"
+title_de: 'Turnierregeln des KSB'
+content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
+title_en: 'Tournament rules of the RBCF'
+content_english: 'This page is not available in English'
 updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
 updated_at: 1681477239
 ---
