@@ -8,7 +8,7 @@ steps:
     args: ['generate']
 
 
-  - name: list the dist directory
+  - name: 'bash'
     script: |
       #!/usr/bin/env bash
       ls dist
