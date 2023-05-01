@@ -7,6 +7,12 @@ steps:
     entrypoint: yarn
     args: ['generate']
 
+
+  - name: list the dist directory
+    script: |
+      #!/usr/bin/env bash
+      ls dist
+
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: bash 
     args:
