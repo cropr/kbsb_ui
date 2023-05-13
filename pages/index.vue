@@ -142,7 +142,7 @@ export default {
   },
 
   async fetch () {
-    this.page = await this.$content('pages', 'home').fetch()
+    this.page = await this.$content('pages', 'index').fetch()
     const articles = await this.$content('articles').fetch()
     const calenderItems = await this.$content('calendar').fetch()
     this.readArticles(articles)
