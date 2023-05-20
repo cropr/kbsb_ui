@@ -12,6 +12,8 @@ content_nl: |-
    - het organiseren of delegeren van allerhande nationale competities zoals de Belgische kampioenschappen voor senioren en jeugd, interclub kampioenschappen, de schoolschaak kampioenschappen, internationale open toernooien, ...
    - het opstellen van een klassement voor spelende leden.
    - het organiseren van diverse schaaktechnische en bestuurlijke opleidingen.
+
+  Onzin
 title_fr: 'La Fédération Royale Belge des Echecs'
 content_fr: |-
   La Fédération Royal Belge des Echecs (FRBE) est la fédération officielle de Belgique.
@@ -43,6 +45,6 @@ content_english: |-
    - drawing up a classification for the playing members
    - organizing various technical and managerial training courses.
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1684586563
+updated_at: 1684614874
 content_en: 'This page is not available in English'
 ---
