@@ -9,7 +9,7 @@ steps:
     env: 
       - GOOGLE_CLIENT_ID: 658290412135-v6ah768urdv83dn76ra4mkiovdalal2k.apps.googleusercontent.com
       - STATAMIC_URL: https://kbsbmgr.decrop.net
-      - REPO_BRANCH: staging
+      - REPO_BRANCH: master
 
   - name: "gcr.io/google.com/cloudsdktool/cloud-sdk"
     entrypoint: bash 

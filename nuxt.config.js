@@ -17,10 +17,6 @@ export default {
 
   components: true,
 
-  // generate: {
-  //   exclude: [ "/api/v1/filecontent" ]
-  // },
-
   head: {
     link: [
       {
@@ -47,22 +43,9 @@ export default {
       { hid: "description", name: "description", content: "" },
     ],
     titleTemplate: "%s | KBSB-FRBE-KSB",
-    script: [
-      // {
-      //   src: 'https://apis.google.com/js/platform.js',
-      //   async: true,
-      //   defer: true
-      // },
-      // {
-      //   src: 'https://apis.google.com/js/api:client.js',
-      //   async: true,
-      //   defer: true
-      // }
-    ],
   },
 
   i18n: {
-    // baseUrl: process.env.I18N_URL || '',
     lazy: true,
     locales: [
       { code: "nl", file: "nl.js" },
@@ -79,14 +62,9 @@ export default {
     },
   },
 
-  markdownit: {
-    html: true,
-  },
-
   modules: [
     "@nuxtjs/axios",
     "@nuxtjs/i18n",
-    "@nuxtjs/markdownit",
     "@nuxt/content",
     ["nuxt-vuex-localstorage", { localStorage: ["token"] }],
   ],
@@ -101,13 +79,10 @@ export default {
     axios: {
       browserBaseURL: process.env.BROWSER_BASE_URL,
     },
-    google_client_id:
-      process.env.GOOGLE_CLIENT_ID ||
-      "658290412135-v6ah768urdv83dn76ra4mkiovdalal2k.apps.googleusercontent.com",
-    statamic_url: process.env.STATAMIC_URL || "https://kbsbmgr.decrop.net",
+    google_client_id: process.env.GOOGLE_CLIENT_ID,
+    statamic_url: process.env.STATAMIC_URL,
+    repo_branch: process.env.REPO_BRANCH,
   },
-
-  render: {},
 
   target: "static",
 
