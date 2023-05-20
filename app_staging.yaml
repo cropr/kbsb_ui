@@ -44,7 +44,7 @@ handlers:
     static_files: dist/\1/index.html
     upload: dist/(.+)/index.html
 
-  # redirect to 'url + /index.html' url.
+  # redirect to 'url + /' url.
   - url: /(.+)
     static_files: dist/redirector.html
     upload: dist/redirector.html
