@@ -1,8 +1,4 @@
 runtime: python310
-env_variables:
-  REPO_BRANCH: staging
-  STATAMIC_URL: https://kbsbmgr.decrop.net
-  GOOGLE_CLIENT_ID: 658290412135-v6ah768urdv83dn76ra4mkiovdalal2k.apps.googleusercontent.com
 
 handlers:
 
