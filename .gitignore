@@ -7,5 +7,5 @@ vetur.config.js\
 # javascript
 node_modules
 .nuxt
-.env.local
+.env
 dist
