@@ -7,6 +7,10 @@
       interface at
       <a href="/mgmt/filelist">Files (Reports)</a>
     </p>
+    <p>
+      Documentaion about thi swebsite can be found at 
+      <a href="https://sites.google.com/frbe-kbsb-ksb.be/internal/home">Internal site</a>
+    </p>
     <P>Modifying the website is done in 3 steps:</P>
     <ul>
       <li>Make a copy of the operational website</li>
@@ -103,7 +107,8 @@ export default {
       this.checkinlaunched = true
       const data = {
         user: this.person.user,
-        email: this.person.email
+        email: this.person.email,
+        branch: this.$config.repo_branch,
       }
       const reply = await fetch(this.$config.statamic_url + '/python/checkin', {
         method: 'POST',
@@ -121,7 +126,8 @@ export default {
       this.checkoutlaunched = true
       const data = {
         user: this.person.user,
-        email: this.person.email
+        email: this.person.email,
+        branch: this.$config.repo_branch,
       }
       const reply = await fetch(this.$config.statamic_url + '/python/checkout', {
         method: 'POST',
