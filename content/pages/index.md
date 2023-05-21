@@ -2,7 +2,7 @@
 id: 8598f768-a421-488f-8ebe-fb0fdafd2866
 blueprint: contentpage
 title: Index
-title_nl: 'De Koninklijke Belgische Schaakbond'
+title_nl: "De Koninklijke Belgische Schaakbond"
 content_nl: |-
   De Koninklijke Belgische Schaakbond (KBSB) is de officële nationale schaakfederatie van België.  Zijn doelstellingen zijn:
    
@@ -13,8 +13,7 @@ content_nl: |-
    - het opstellen van een klassement voor spelende leden.
    - het organiseren van diverse schaaktechnische en bestuurlijke opleidingen.
 
-  Onzin
-title_fr: 'La Fédération Royale Belge des Echecs'
+title_fr: "La Fédération Royale Belge des Echecs"
 content_fr: |-
   La Fédération Royal Belge des Echecs (FRBE) est la fédération officielle de Belgique.
 
@@ -25,7 +24,7 @@ content_fr: |-
    - organiser ou déléguer l’organisation de tout genre de compétitions nationales; elle organise notamment les championnats de Belgique seniors et de la jeunesse, les championnats de Belgique interclubs, les championnats interscolaires, des tournois open internationaux, ...
    - établir une liste de classement des sportifs affiliés
    - organiser diverses formations relatives à la pratique des échecs et à la gestion.
-title_de: 'Der Königlicher Schachbund Belgien'
+title_de: "Der Königlicher Schachbund Belgien"
 content_de: |-
   Der Königlicher Schachbund Belgien(KSB) ist der offizielle nationale Schachverband Belgiens. Seine Ziele sind:
 
@@ -35,7 +34,7 @@ content_de: |-
    - die Organisation oder Delegation von nationalen Wettbewerben aller Art wie den belgischen Meisterschaften für Senioren und Jugendliche, Interclub-Meisterschaften, Schulschachmeisterschaften, internationalen offenen Turnieren, ...
    - die Aufstellung einer Rangliste für spielende Mitglieder
    - die Organisation verschiedener technischer und Management-Schulungen
-title_en: 'The Royal Belgian Chess Federation'
+title_en: "The Royal Belgian Chess Federation"
 content_english: |-
   The Royal Belgian Chess Federation (RBCF) is the official national ches federation of Belgium.  Its goals are:
 
@@ -46,5 +45,5 @@ content_english: |-
    - organizing various technical and managerial training courses.
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
 updated_at: 1684614874
-content_en: 'This page is not available in English'
+content_en: "This page is not available in English"
 ---
