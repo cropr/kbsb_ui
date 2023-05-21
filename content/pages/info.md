@@ -1,6 +1,6 @@
 ---
 id: 3c011e6a-084f-4d22-9e11-303712b4d247
-blueprint: page
+blueprint: contentpage
 title: Info
 content_nl: 'Deze pagina is niet in het Nederlands beschikbaar.'
 content_fr: "Cette page n'est pas disponible en français"

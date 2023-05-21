@@ -1,6 +1,6 @@
 ---
 id: bcf4514a-316e-4938-9d83-c9136181fe42
-blueprint: page
+blueprint: contentpage
 title: Competition
 content_nl: 'Deze pagina is niet in het Nederlands beschikbaar.'
 content_fr: "Cette page n'est pas disponible en français"

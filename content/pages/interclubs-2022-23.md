@@ -1,6 +1,6 @@
 ---
 id: a7f30444-00f4-4c02-be7a-a33ebe225c8a
-blueprint: page
+blueprint: contentpage
 title: 'Interclubs 2022-23'
 parent: bcf4514a-316e-4938-9d83-c9136181fe42
 title_nl: 'Interclubs 2022-23'

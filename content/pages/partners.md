@@ -1,6 +1,6 @@
 ---
 id: 80090071-9d92-4e41-bce0-b39c51f077db
-blueprint: page
+blueprint: contentpage
 title: Partners
 parent: 3c011e6a-084f-4d22-9e11-303712b4d247
 title_nl: Partners
