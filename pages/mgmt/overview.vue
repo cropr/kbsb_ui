@@ -1,52 +1,16 @@
 <template>
   <v-container>
     <h1>Overview Management FRBE KBSB KSB</h1>
-    <p>Here you can add, modify or delete the content of pages and news articles</p>
-    <p>
-      For the upload of reports of meetings and other files, we still use the old
-      interface at
-      <a href="/mgmt/filelist">Files (Reports)</a>
-    </p>
-    <p>
-      Documentaion about thi swebsite can be found at 
-      <a href="https://sites.google.com/frbe-kbsb-ksb.be/internal/home">Internal site</a>
-    </p>
-    <P>Modifying the website is done in 3 steps:</P>
+    <p>The following admin interfaces are available</p>
     <ul>
-      <li>Make a copy of the operational website</li>
-      <li>Modify the copy</li>
-      <li>Publish the modifications to the operational site</li>
+      <li>Managing of the <NuxtLink to="/mgmt/content">Content</NuxtLink> (news articles and pages)</li>
+      <li>Admin part of <NuxtLink to="/mgmt/clubs">Clubs Manager</NuxtLink></li>
+      <li>Admin part of <NuxtLink to="/mgmt/clubs">Interclubs Manager</NuxtLink></li>
+      <li>Managing of <NuxtLink to="/mgmt/filelist">Files</NuxtLink> (reports and other assets)</li>
     </ul>
-    <h3 class="mt-3">
-      Step 1: Make a copy of the operational site
-    </h3>
-    <v-btn class="my-2" @click="checkin">
-      Make copy
-    </v-btn>
-    <p v-if="checkinlaunched">
-      Copy is being made
-    </p>
-    <p v-if="checkinsuccess">
-      Copy ready.
-    </p>
-    <h3 class="mt-3">
-      Step 2: Make your modifications
-    </h3>
-    <p>Open the collections (pages, articles) in a separate tab.</p>
-    <v-btn class="my-2" @click="openCollections">
-      Open collections
-    </v-btn>
-    <h3 class="mt-3">
-      Step 3: Publish of the operational site
-    </h3>
-    <v-btn class="my-2" @click="checkout">
-      Publish
-    </v-btn>
-    <p v-if="checkoutlaunched">
-      The request for publication has been launched
-    </p>
-    <p v-if="checkoutsuccess">
-      The request was successful.   The new version of the operational site will be live in about 10 min.
+    <p>
+      Documentaion about the management of the website can be found at 
+      <a href="https://sites.google.com/frbe-kbsb-ksb.be/internal/home">Internal site</a>
     </p>
   </v-container>
 </template>
@@ -55,17 +19,11 @@
 export default {
   layout: 'mgmt',
 
-  data () {
-    return {
-      checkinlaunched: false,
-      checkinsuccess: false,
-      checkoutlaunched: false,
-      checkoutsuccess: false
-    }
-  },
+  nam: 'Overview',
 
   head: {
     title: 'Management Overview',
+
     // we need google script to load because we might redirect internally
     // to index in case we fail the authentication
     script: [
@@ -88,58 +46,15 @@ export default {
   },
 
   methods: {
+
     checkAuth () {
-      console.log('checking if auth is already set')
-      if (this.person.token.length === 0) {
+      if (this.person.credential.length === 0) {
         this.$router.push('/mgmt')
       }
       if (!this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
         this.$router.push('/mgmt')
       }
     },
-
-    openCollections () {
-      const stUrl = this.$config.statamic_url
-      window.open(`${stUrl}/cp/collections`, '_statamic')
-    },
-
-    async checkin () {
-      this.checkinlaunched = true
-      const data = {
-        user: this.person.user,
-        email: this.person.email,
-        branch: this.$config.repo_branch,
-      }
-      const reply = await fetch(this.$config.statamic_url + '/python/checkin', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      console.log('reply', reply)
-      this.checkinlaunched = false
-      this.checkinsuccess = true
-    },
-
-    async checkout () {
-      this.checkoutlaunched = true
-      const data = {
-        user: this.person.user,
-        email: this.person.email,
-        branch: this.$config.repo_branch,
-      }
-      const reply = await fetch(this.$config.statamic_url + '/python/checkout', {
-        method: 'POST',
-        body: JSON.stringify(data),
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-      console.log('reply', reply)
-      this.checkoutlaunched = false
-      this.checkoutsuccess = true
-    }
 
   }
 }
