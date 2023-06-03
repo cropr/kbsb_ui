@@ -12,6 +12,8 @@ content_nl: |-
   - Zoek een club in de buurt
   - Het Elo-klassement
   - Raadpleging van de toernooiuitslagen in SWAR
+  - Doorgeven van interclubresultaten via de Interclub Manager
+  - Wijzigingen van clubgegevens via de Club Manager
 
 
 title_fr: "La Fédération Royale Belge des Echecs"

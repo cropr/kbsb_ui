@@ -2,14 +2,15 @@
   <div>
     <v-container>
       <v-row>
-        <v-col cols="12" sm="9">
-          <div class="float-left">
-            <v-img src="/img/logo.svg" class="ma-2 float-left" width="70px" height="100px"/>
+        <v-col cols="12" sm="8">
+          <div class="float-left " style="background-color: white;">
+            <v-img src="/img/logo.svg" class="ma-2 hidden-xs-only " width="100px" height="150px"/>
+            <v-img src="/img/logo.svg" class="ma-2 hidden-sm-and-up" width ="50px" height="75px"/>
           </div>
-          <h1>{{ pagetitle }}</h1>
+          <h1 class="text-h4 text-md-h3">{{ pagetitle }}</h1>
           <div class="nuxt-content" v-html="pagecontent" />
         </v-col>
-        <v-col cols="12" sm="3">
+        <v-col cols="12" sm="4">
           <v-card class="mt-2">
             <v-card-title class="green darken-1 white--text pa-3 hyphen">
               {{ $t('Calendar') }}
@@ -231,6 +232,10 @@ h1:after {
 .nuxt-content h2,
 .nuxt-content h3 {
   margin-bottom: 0.5em;
+}
+
+.v-card__text, .v-card__title {
+  word-break: normal; /* maybe !important  */
 }
 
 </style>
