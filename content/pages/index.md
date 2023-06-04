@@ -4,17 +4,16 @@ blueprint: contentpage
 title: Index
 title_nl: "De Koninklijke Belgische Schaakbond"
 content_nl: |-
-  De Koninklijke Belgische Schaakbond (KBSB) is de officële nationale schaakfederatie van België.  Zijn doelstellingen zijn.
+  De Koninklijke Belgische Schaakbond (KBSB) is de officële nationale schaakfederatie van België.  
 
   ### Belangrijke links
 
-  - Raadpleging van de resultaten van de interclubs
-  - Zoek een club in de buurt
-  - Het Elo-klassement
-  - Raadpleging van de toernooiuitslagen in SWAR
-  - Doorgeven van interclubresultaten via de Interclub Manager
-  - Wijzigingen van clubgegevens via de Club Manager
-
+  - Het [Elo-klassement](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
+  - Raadpleging van de [resultaten van de interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
+  - Zoek een [club in de buurt](/clubs/find)
+  - Raadpleging van de [clubdetails](/clubs/info)
+  - Raadpleging van de [toernooiuitslagen in SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
+  
 
 title_fr: "La Fédération Royale Belge des Echecs"
 content_fr: |-

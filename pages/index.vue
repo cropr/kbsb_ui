@@ -3,7 +3,7 @@
     <v-container>
       <v-row>
         <v-col cols="12" sm="8">
-          <div class="float-left " style="background-color: white;">
+          <div class="float-right " style="background-color: white;">
             <v-img src="/img/logo.svg" class="ma-2 hidden-xs-only " width="100px" height="150px"/>
             <v-img src="/img/logo.svg" class="ma-2 hidden-sm-and-up" width ="50px" height="75px"/>
           </div>
@@ -37,7 +37,11 @@
             <v-card-title class="green lighten-1 black--text pa-3 hyphen">
               {{ a.title }}
             </v-card-title>
-            <v-card-text class="mt-2" v-html="a.intro" />
+            <v-card-text class="mt-2"  >
+              
+              <i v-html="Intl.DateTimeFormat('nl').format(a.activedate)"></i>
+              <div v-html="a.intro" />
+            </v-card-text>
             <v-card-actions>
               <v-spacer />
               <v-btn @click="gotoArticle(a)">
