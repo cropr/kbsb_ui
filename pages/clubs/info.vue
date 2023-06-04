@@ -1,281 +1,139 @@
 <template>
-	<v-container>
-		<h1>{{  $t('Club details') }}</h1>
-		<p v-if="!club.idclub">{{ $t('Select a club to view the club details') }}</p>
-    <div v-if="club.idclub">
-			<v-row>
-				<v-col cols="12" md="6">
+  <v-container>
+    <h1>{{ $t("Club details") }}</h1>
+    <v-card class="mt-2">
+      <v-card-text>
+        <p v-if="!club.idclub">{{ $t("Select a club to view the club details") }}</p>
+        <v-autocomplete
+          v-model="idclub"
+          :items="clubs"
+          item-text="merged"
+          item-value="idclub"
+          color="deep-purple"
+          label="Club"
+          clearable
+          @change="selectclub"
+        >
+          <template v-slot:item="data">
+            {{ data.item.merged }}
+          </template>
+        </v-autocomplete>
+      </v-card-text>
+    </v-card>
 
-					<h4>{{ $t('Details') }}</h4>
-					<div>
-						<span class="fieldname">{{ $t('Long name') }}</span>: {{ clubdetails.name_long }}
-					</div>
-					<div>
-						<span class="fieldname">{{ $t('Short name') }}</span>: {{ clubdetails.name_short }}
-					</div>
-					<div>
-						<span class="fieldname">{{ $t('Federation') }}</span>: {{ clubdetails.federation }}
-					</div>
-					<div>
-						<span class="fieldname">{{ $t('Club venue') }}</span>:<br />
-						<span v-html='clubdetails.venue.replaceAll("\n", "<br />")'></span>
-					</div>
-					<div>
-						<span class="fieldname">{{ $t('Website') }}</span>: {{ clubdetails.website }}
-					</div>
-				</v-col>
+    <div v-if="club.idclub" class="mt-3">
+      <v-row>
+        <v-col cols="12" md="6">
+          <h4>{{ $t("Details") }}</h4>
+          <div>
+            <span class="fieldname">{{ $t("Long name") }}</span
+            >: {{ club.name_long }}
+          </div>
+          <div>
+            <span class="fieldname">{{ $t("Short name") }}</span
+            >: {{ club.name_short }}
+          </div>
+          <div>
+            <span class="fieldname">{{ $t("Club venue") }}</span
+            >:<br />
+            <span v-html="club.venue.replaceAll('\n', '<br />')"></span>
+          </div>
+          <h4 class="mt-2">{{ $t("Contact") }}</h4>
+          <div>
+            <span class="fieldname">{{ $t("Main email address") }}</span
+            >: {{ club.email_main }}
+          </div>
+          <div>
+            <span class="fieldname">{{ $t("Postal address") }}</span
+            >:<br />
+            <span v-html="club.address.replaceAll('\n', '<br />')"></span>
+          </div>
+          <div>
+            <span class="fieldname">{{ $t("Website") }}</span
+            >: <a :href="club.website" target="_blank">{{ club.website }}</a>
+          </div>
+        </v-col>
 
-				<v-col cols="12" md="6">
-						<h4>{{ $t('Contact') }}</h4>
-						<div><span class="fieldname">{{ $t('Main email address') }}</span>: {{
-                  clubdetails.email_main
-              }}
-						</div>
-						<div><span class="fieldname">{{ $t('Postal address') }}</span>:<br />
-                <span v-html='clubdetails.address.replaceAll("\n", "<br />")'></span>
-						</div>
-				</v-col>
-
-				<v-col cols="12" sm="6" lg="4">
-						<h4>{{ $t('Board members') }}</h4>
-						<ul>
-							<li v-for="(bm, f) in clubdetails.boardmembers" :key="f">
-								<span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span>:
-								{{ bm.first_name }} {{ bm.last_name }}<br />
-								email: {{ bm.email }}<br />
-								gsm: {{ bm.mobile }}
-							</li>
-						</ul>
-				</v-col>
-
-			</v-row>
-		</div>
-	</v-container>
+        <v-col cols="12" sm="6" lg="4">
+          <h4>{{ $t("Board members") }}</h4>
+          <ul>
+            <li v-for="(bm, f) in club.boardmembers" :key="f">
+              <span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span
+              >: {{ bm.first_name }} {{ bm.last_name }}<br />
+              email: {{ bm.email }}<br />
+              gsm: {{ bm.mobile }}
+            </li>
+          </ul>
+        </v-col>
+      </v-row>
+    </div>
+  </v-container>
 </template>
 
 <script>
-  
-  const CLUB_STATUS = {
-    CONSULTING: 0,
-    MODIFYING: 1,
-  }
-  
-  const EMPTY_CLUBDETAILS = {
-    venue: "",
-    address: "",
-  }
-  
-  const EMPTY_BOARD = {
-    president: { idnumber: 0 },
-    vice_president: { idnumber: 0 },
-    secretary: { idnumber: 0 },
-    treasurer: { idnumber: 0 },
-    tournament_director: { idnumber: 0 },
-    youth_director: { idnumber: 0 },
-    interclub_director: { idnumber: 0 },
-    webmaster: { idnumber: 0 },
-    bar_manager: { idnumber: 0 },
-    press_officer: { idnumber: 0 },
-  }
-  
-  const VISIBILITY = {
-    hidden: "HIDDEN",
-    club: "CLUB",
-    public: "PUBLIC",
-  }
-  
-  export default {
-  
-    name: 'Details',
-  
-    data() {
-      return {
-        boardroles: [],
-        boardmembers: EMPTY_BOARD,
-        clubmembers: {},
-        clubdetails: {},
-        mbr_items: [],
-        status: CLUB_STATUS.CONSULTING,
-        visibility_items: Object.values(VISIBILITY).map(x => this.$t(x)),
+
+const EMPTY_club = {
+  venue: "",
+  address: "",
+};
+
+export default {
+  name: "Details",
+
+  data() {
+    return {
+      boardroles: [],
+      boardmembers: {},
+      club: {},
+      clubs: [],
+      idclub: null,
+    };
+  },
+
+  methods: {
+    async get_clubs() {
+      console.log("getAnonClubs");
+      try {
+        const reply = await this.$api.club.anon_get_clubs();
+        this.clubs = reply.data.clubs;
+        this.clubs.forEach((p) => {
+          p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`;
+        });
+      } catch (error) {
+        const reply = error.response;
+        console.error("Getting clubs failed", reply.data.detail);
+        this.$root.$emit("snackbar", {
+          text: "Getting clubs failed",
+        });
       }
     },
-  
-    props: {
-      club: Object
+
+    async fetch() {
+      this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
     },
-  
-    computed: {
-      logintoken() { return this.$store.state.oldlogin.value },
-      status_consulting() { return this.status == CLUB_STATUS.CONSULTING },
-      status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
+
+    selectclub() {
+      if (!this.idclub) {
+        this.club = {};
+      } else {
+        this.clubs.forEach((c) => {
+          if (c.idclub == this.idclub) {
+            this.club = c;
+          }
+        });
+      }
     },
-  
-    methods: {
-  
-      cancelClub() {
-        this.status = CLUB_STATUS.CONSULTING
-        this.get_clubdetails()
-      },
-  
-      emitInterface() {
-        this.$emit("interface", "get_clubdetails", this.get_clubdetails);
-      },
-  
-      async fetch() {
-        this.boardroles = (await this.$content('boardroles').fetch()).boardroles
-      },
-  
-      async get_clubmembers() {
-        try {
-          const reply = await this.$api.old.get_clubmembers({
-            idclub: this.club.idclub,
-          })
-          const activemembers = reply.data.activemembers
-          activemembers.forEach(p => {
-            p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
-          })
-          this.mbr_items = Object.values(activemembers.sort((a, b) =>
-            (a.last_name > b.last_name ? 1 : -1)))
-          this.clubmembers = Object.fromEntries(this.mbr_items.map(x => [x.idnumber, x]))
-        } catch (error) {
-          const reply = error.response
-          switch (reply.status) {
-            case 401:
-              this.gotoLogin()
-              break
-            case 403:
-              this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-              break
-            default:
-              console.error('Getting clubs failed', reply.data.detail)
-              this.$root.$emit('snackbar', { text: this.$t('Getting club members failed') })
-          }
-        }
-      },
-  
-      async get_clubdetails() {
-        if (!this.club.id) {
-          this.clubdetails = EMPTY_CLUBDETAILS
-          return
-        }
-        try {
-          const reply = await this.$api.club.clb_get_club({
-            id: this.club.id,
-            token: this.logintoken
-          })
-          this.readClubdetails(reply.data)
-        } catch (error) {
-          switch (reply.status) {
-            case 401:
-              this.gotoLogin()
-              break
-            case 403:
-              this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-              break
-            default:
-              console.error('Getting clubs failed', reply.data.detail)
-              this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
-          }
-        }
-      },
-  
-      gotoLogin() {
-        this.$router.push('/mgmt/login?url=__tools__club')
-      },
-  
-      async modifyClub() {
-        try {
-          const reply = await this.$api.club.verify_club_access({
-            idclub: this.club.idclub,
-            role: "ClubAdmin",
-            token: this.logintoken,
-          })
-          this.status = CLUB_STATUS.MODIFYING
-          this.get_clubmembers();
-        } catch (error) {
-          const reply = error.response
-          switch (reply.status) {
-            case 401:
-              this.gotoLogin()
-              break
-            default:
-              console.error('Getting clubs failed', reply.data.detail)
-              this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-          }
-        }
-      },
-  
-      readClubdetails(details) {
-        this.clubdetails = { ...details }
-        if (!this.clubdetails.address) this.clubdetails.address = ""
-        if (!this.clubdetails.venue) this.clubdetails.venue = ""
-        this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
-      },
-  
-      async saveClub() {
-        console.log('saving', this.clubdetails)
-        try {
-          const reply = await this.$api.club.clb_update_club({
-            ...this.clubdetails,
-            token: this.logintoken,
-          })
-          this.status = CLUB_STATUS.CONSULTING
-          this.$root.$emit('snackbar', { text: this.$t('Club saved') })
-        } catch (error) {
-          const reply = error.response
-          switch (reply.status) {
-            case 401:
-              this.gotoLogin()
-              break
-            case 403:
-              this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-              break
-            default:
-              console.error('Getting clubs failed', reply.data.detail)
-              this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
-          }
-        }
-      },
-  
-      updateboard(f) {
-        const bm = this.boardmembers[f]
-        if (bm.idnumber) {
-          let cm = this.clubmembers[bm.idnumber]
-          bm.first_name = cm.first_name
-          bm.last_name = cm.last_name
-          bm.email = cm.email
-          bm.mobile = cm.mobile
-          if (!bm.email_visibility) bm.email_visibility = "CLUB"
-          if (!bm.mobile_visibility) bm.mobile_visibility = "CLUB"
-          this.clubdetails.boardmembers[f] = bm
-        }
-        else {
-          bm.first_name = null
-          bm.last_name = null
-          bm.email = null
-          bm.mobile = null
-          bm.email_visibility = null
-          bm.mobile_visibility = null
-          delete this.clubdetails.boardmembers[f]
-        }
-  
-      },
-  
-    },
-  
-    mounted() {
-      this.emitInterface();
-      this.fetch();
-      this.$nextTick(() => {
-        this.get_clubdetails();
-      })
-    },
-  
-  }
-  </script>
-  
-  <style scoped>
-  .fieldname {
-    color: green;
-  }
-  </style>
+  },
+
+  mounted() {
+    this.fetch();
+    this.get_clubs();
+  },
+};
+</script>
+
+<style scoped>
+.fieldname {
+  color: green;
+}
+</style>
