@@ -4,17 +4,18 @@ blueprint: contentpage
 title: Index
 title_nl: "De Koninklijke Belgische Schaakbond"
 content_nl: |-
-  De Koninklijke Belgische Schaakbond (KBSB) is de officële nationale schaakfederatie van België.  Zijn doelstellingen zijn:
-   
-   - het behartigen van de gemeenschappelijke belangen van zijn leden.
-   - de vertegenwoordiging van de Belgische schaaksport op internationaal niveau.
-   - het aansluiten bij de internationaal overkoepelende organisaties en het stimuleren van deelname aan de door hen georganiseerde evenementen.
-   - het organiseren of delegeren van allerhande nationale competities zoals de Belgische kampioenschappen voor senioren en jeugd, interclub kampioenschappen, de schoolschaak kampioenschappen, internationale open toernooien, ...
-   - het opstellen van een klassement voor spelende leden.
-   - het organiseren van diverse schaaktechnische en bestuurlijke opleidingen.
+  De Koninklijke Belgische Schaakbond (KBSB) is de officële nationale schaakfederatie van België.  
 
-  Onzin
-title_fr: 'La Fédération Royale Belge des Echecs'
+  ### Belangrijke links
+
+  - Het [Elo-klassement](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
+  - Raadpleging van de [resultaten van de interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
+  - Zoek een [club in de buurt](/clubs/find)
+  - Raadpleging van de [clubdetails](/clubs/info)
+  - Raadpleging van de [toernooiuitslagen in SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
+  
+
+title_fr: "La Fédération Royale Belge des Echecs"
 content_fr: |-
   La Fédération Royal Belge des Echecs (FRBE) est la fédération officielle de Belgique.
 
@@ -55,5 +56,5 @@ content_english: |-
   
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
 updated_at: 1684614874
-content_en: 'This page is not available in English'
+content_en: "This page is not available in English"
 ---
