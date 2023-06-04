@@ -1,8 +1,8 @@
 ---
 id: 03dd21ec-7b2c-4aed-9679-374853aed893
-blueprint: page
-title: 'Interclubs 2021-22'
-title_nl: 'Interclubs 2021-22'
+blueprint: contentpage
+title: "Interclubs 2021-22"
+title_nl: "Interclubs 2021-22"
 content_nl: |-
   [INTERCLUBS MANAGER](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php) met schrijfrechten
 
@@ -69,7 +69,7 @@ content_nl: |-
   [Excelbestand NIC 2021-2022](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/NationaalInterclub2021-2022_Uitslagen.xlsm)<br>
   [Datas.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/Datas.zip)<br>
   [IntNat.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/IntNat.zip)
-title_fr: 'Interclubs 2021-22'
+title_fr: "Interclubs 2021-22"
 content_fr: |-
   [INTERCLUBS MANAGER](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php) avec sauvegarde.
 
@@ -134,7 +134,7 @@ content_fr: |-
   [Fichier Excel ICN 2021-2022](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/NationaalInterclub2021-2022_Uitslagen.xlsm)<br>
   [Datas.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/Datas.zip)<br>
   [IntNat.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/IntNat.zip)
-title_de: 'Interclubs 2021-22'
+title_de: "Interclubs 2021-22"
 content_de: |-
   [INTERCLUBS MANAGER](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php) mit Schreibrechten
 
@@ -200,7 +200,7 @@ content_de: |-
   [Excel Datei NIC 2021-2022](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/NationaalInterclub2021-2022_Uitslagen.xlsm)<br>
   [Datas.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/Datas.zip)<br>
   [IntNat.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/IntNat.zip)
-title_en: 'Interclubs 2021-22'
+title_en: "Interclubs 2021-22"
 content_english: |-
   [INTERCLUBS MANAGER](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php) with write permissions
 

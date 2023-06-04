@@ -1,6 +1,6 @@
 ---
 id: aee3d76d-2e98-4a8e-91d0-463c986d5105
-blueprint: page
+blueprint: contentpage
 title: Commissions
 title_nl: Commissies
 content_nl: |-
@@ -56,9 +56,9 @@ content_fr: |-
 
   La caution est de 500 €
 title_de: Ausschüsse
-content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
+content_de: "Diese Seite ist nicht auf Deutsch verfügbar"
 title_en: Committees
-content_english: 'This page is not available in English'
+content_english: "This page is not available in English"
 updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
 updated_at: 1681476541
 ---

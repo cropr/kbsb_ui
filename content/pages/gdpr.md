@@ -1,6 +1,6 @@
 ---
 id: 0a1e7870-de76-4bce-b0fd-2aea8360fa60
-blueprint: page
+blueprint: contentpage
 title: GDPR
 parent: 3c011e6a-084f-4d22-9e11-303712b4d247
 title_nl: GDPR

@@ -1,6 +1,6 @@
 ---
 id: d045f689-c6a3-4be0-a6ce-44b255ff123f
-blueprint: page
+blueprint: contentpage
 title: Regional
 parent: 8dce013d-4f3a-4dc5-b18b-ebce97fa6545
 content_nl: |-

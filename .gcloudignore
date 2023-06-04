@@ -6,6 +6,7 @@
 # For more information, run:
 #   $ gcloud topic gcloudignore
 #
+.DS_Store
 .gcloudignore
 .git
 .gitignore
@@ -22,10 +23,12 @@
 /static/
 /store/
 /util/
-nuxt.config.js
-app_staging.yaml
-.DS_Store
-dispatch.yaml
+app.yaml
+cloudbuild_prod.yaml
 cloudbuild_staging.yaml
+dispatch.yaml
+nuxt.config.js
+package.json
 README.md
 vue.config.js
+yarn.lock

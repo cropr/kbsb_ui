@@ -1,6 +1,6 @@
 ---
 id: 8b956147-7483-4c2c-a4da-b84d919df448
-blueprint: page
+blueprint: contentpage
 title: 'License G'
 parent: e7de4d5c-96af-4e24-8460-90a3511af030
 title_nl: 'G licentie'

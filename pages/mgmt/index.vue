@@ -37,11 +37,6 @@ export default {
   },
 
   mounted () {
-    // this.$store.commit('newlogin/startup')
-    // console.log('logintoken length', this.logintoken.length)
-    // if (!this.logintoken.length) {
-    //   this.gotoLogin()
-    // }
     this.checkAuth()
     this.setupGoogle()
   },
@@ -51,8 +46,9 @@ export default {
     handleGoogle (resp) {
       this.wrong_domain = false
       const payload = jose.decodeJwt(resp.credential)
+      console.log('decoded', payload)
       this.$store.commit('person/updateUser', {
-        token: resp.credential,
+        credential: resp.credential,
         user: payload.given_name,
         email: payload.email
       })
@@ -73,7 +69,7 @@ export default {
 
     checkAuth () {
       console.log('checking if auth is present so we can go to overview')
-      if (this.person.token.length > 0) {
+      if (this.person.credential.length > 0) {
         if (this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
           this.$router.push('/mgmt/overview')
         } else {

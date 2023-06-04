@@ -1,6 +1,6 @@
 ---
 id: 40b6ed53-7883-47b9-9954-dfbd1269c12e
-blueprint: page
+blueprint: contentpage
 title: 'Tournament Rules'
 parent: 8dce013d-4f3a-4dc5-b18b-ebce97fa6545
 title_nl: 'Wedstrijdreglement van de KBSB'

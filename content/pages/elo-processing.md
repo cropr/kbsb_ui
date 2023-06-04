@@ -1,6 +1,6 @@
 ---
 id: dfd79e23-f2ae-467b-8397-21b99213d05a
-blueprint: page
+blueprint: contentpage
 title: 'Elo processing'
 parent: 3c011e6a-084f-4d22-9e11-303712b4d247
 title_nl: Eloverwerking

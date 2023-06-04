@@ -28,6 +28,9 @@
         <v-list-item to="/admin/board">
           <v-list-item-content>{{ $t('Board') }}</v-list-item-content>
         </v-list-item>
+        <v-list-item to="/admin/goal">
+          <v-list-item-content>{{ $t('Goal') }}</v-list-item-content>
+        </v-list-item>
         <v-list-item to="/admin/statutes">
           <v-list-item-content>{{ $t('Statutes') }}</v-list-item-content>
         </v-list-item>
@@ -80,6 +83,18 @@
         </v-list-item>
       </v-list-group>
 
+      <v-list-group no-action>
+        <template #activator>
+          <v-list-item-content>{{ $t('Clubs') }}</v-list-item-content>
+        </template>
+        <v-list-item to="/clubs/info">
+          <v-list-item-content>{{ $t('BC Youth') }}</v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/clubs/find">
+          <v-list-item-content>{{ $t('International') }}</v-list-item-content>
+        </v-list-item>
+      </v-list-group>
+      
       <v-list-group no-action>
         <template #activator>
           <v-list-item-content>{{ $t('Youth') }}</v-list-item-content>

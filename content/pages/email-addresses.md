@@ -1,6 +1,6 @@
 ---
 id: 965f379d-e711-4a0a-a689-0b38dff8d865
-blueprint: page
+blueprint: contentpage
 title: 'Email address'
 parent: 3c011e6a-084f-4d22-9e11-303712b4d247
 title_nl: 'Functionele e-mailadressen'

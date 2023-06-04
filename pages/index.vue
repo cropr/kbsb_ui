@@ -2,60 +2,15 @@
   <div>
     <v-container>
       <v-row>
-        <v-col cols="4" md="2">
-          <v-img contain src="/img/logo.svg" />
-        </v-col>
-        <v-col cols="8" sm="7">
-          <h1>{{ pagetitle }}</h1>
+        <v-col cols="12" sm="8">
+          <div class="float-right " style="background-color: white;">
+            <v-img src="/img/logo.svg" class="ma-2 hidden-xs-only " width="100px" height="150px"/>
+            <v-img src="/img/logo.svg" class="ma-2 hidden-sm-and-up" width ="50px" height="75px"/>
+          </div>
+          <h1 class="text-h4 text-md-h3">{{ pagetitle }}</h1>
           <div class="nuxt-content" v-html="pagecontent" />
         </v-col>
-        <v-col cols="12" sm="3">
-          <v-card>
-            <v-card-title class="green darken-1 white--text pa-3">
-              <h4>{{ $t('Tools') }}</h4>
-            </v-card-title>
-            <v-card-text>
-              <div class="pa-2">
-                <a
-                  class="green--text"
-                  :href="phpbaseurl + 'sites/manager/GestionFICHES/FRBE_Fiche.php'"
-                >
-                  Elo
-                </a>
-              </div>
-              <div class="pa-2">
-                <b>NEW</b> <a class="green--text" href="/tools/club">
-                  Club manager
-                </a>
-              </div>
-              <div class="pa-2">
-                <a class="green--text" href="/tools/interclub">
-                  Interclub manager
-                </a>
-              </div>
-              <div class="pa-2">
-                <a
-                  class="green--text"
-                  :href="phpbaseurl + 'sites/manager/GestionCOMMON/GestionLogin.php'"
-                >
-                  Player manager
-                </a>
-              </div>
-              <div class="pa-2">
-                <a
-                  class="green--text"
-                  :href="phpbaseurl + 'sites/manager/GestionSWAR/SwarResults.php'"
-                >
-                  {{ $t('Results SWAR') }}
-                </a>
-              </div>
-              <div class="pa-2">
-                <a class="green--text" @click="ratingtrn">
-                  {{ $t('ELO tournaments') }}
-                </a>
-              </div>
-            </v-card-text>
-          </v-card>
+        <v-col cols="12" sm="4">
           <v-card class="mt-2">
             <v-card-title class="green darken-1 white--text pa-3 hyphen">
               {{ $t('Calendar') }}
@@ -82,7 +37,11 @@
             <v-card-title class="green lighten-1 black--text pa-3 hyphen">
               {{ a.title }}
             </v-card-title>
-            <v-card-text class="mt-2" v-html="a.intro" />
+            <v-card-text class="mt-2"  >
+              
+              <i v-html="Intl.DateTimeFormat('nl').format(a.activedate)"></i>
+              <div v-html="a.intro" />
+            </v-card-text>
             <v-card-actions>
               <v-spacer />
               <v-btn @click="gotoArticle(a)">
@@ -278,4 +237,9 @@ h1:after {
 .nuxt-content h3 {
   margin-bottom: 0.5em;
 }
+
+.v-card__text, .v-card__title {
+  word-break: normal; /* maybe !important  */
+}
+
 </style>

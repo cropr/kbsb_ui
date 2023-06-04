@@ -3,7 +3,23 @@
     <h1>Club Manager</h1>
     <v-card>
       <v-card-text>
-        Select the club. (start typing number of name)
+        <v-row>
+          <v-col cols="4">
+            <v-btn>Create new club</v-btn>
+          </v-col>
+          <v-col cols="8">
+            <v-btn>Export list of clubs</v-btn>
+            <v-select label="Format" v-model="exportformat" :items="exportformats">
+            </v-select>
+          </v-col>
+        </v-row>
+      </v-card-text>
+    </v-card>
+
+    <h2 class="mt-2">Managing a single club</h2>
+    <v-card class="mt-2">
+      <v-card-text>
+        Select the club. (start typing number or name)
         <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub"
           color="deep-purple" label="Club" clearable @change="selectclub">
           <template v-slot:item="data">
@@ -57,26 +73,41 @@ export default {
       clubs: [],
       idclub: null,
       tab: null,
+      exportformat: "JSON",
+      exportformats: [
+        "JSON",
+        "CSV",
+        "Excel",
+      ],
     }
   },
 
   computed: {
-    logintoken() { return this.$store.state.newlogin.value }
+    logintoken() { 
+      return this.$store.state.newlogin.value 
+    },
+    person () {
+      return this.$store.state.person
+    },
   },
 
   head: {
     title: 'Management Clubs',
+    script: [
+      {
+        src: 'https://accounts.google.com/gsi/client',
+        defer: true
+      }
+    ]
   },
 
-  mounted() {
-    this.$store.commit('newlogin/startup')
-    if (!this.logintoken.length) {
-      this.gotoLogin()
-    }
+  async mounted() {
+    await this.checkAuth()
     this.getClubs()
   },
 
   methods: {
+
 
     call_childmethods() {
       Object.keys(this.childmethods).forEach((v) => {
@@ -84,7 +115,33 @@ export default {
       })
     },
 
+    async checkAuth () {
+      console.log('checking if auth is already set')
+      if (!this.logintoken){
+        if (this.person.credential.length === 0) {
+          this.$router.push('/mgmt')
+        }
+        if (!this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
+          this.$router.push('/mgmt')
+        }
+        await this.$api.root.login({
+          logintype: 'google',
+          token: this.person.credential
+        }).then(
+          (resp) => {
+            this.$store.commit('newlogin/update', resp.data)
+          },
+          (error) => {
+            const resp = error.response
+            console.log('failed login', resp.data.detail)
+            this.$router.push('/mgmt')
+          }
+      )        
+      }
+    },
+
     async getClubs() {
+      console.log('getClubs', this.logintoken)
       try {
         const reply = await this.$api.club.mgmt_get_clubs({
           logintoken: this.logintoken
@@ -104,10 +161,6 @@ export default {
           })
         }
       }
-    },
-
-    gotoLogin() {
-      this.$router.push('/mgmt/login?url=__mgmt__club')
     },
 
     registerChildMethod(methodname, method) {

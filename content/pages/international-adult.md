@@ -1,6 +1,6 @@
 ---
 id: 5dc9ccf9-44a8-492d-95e8-daa201c1fa57
-blueprint: page
+blueprint: contentpage
 title: 'International adult'
 title_nl: 'Internationale competities'
 title_fr: 'Compétitions internationales'

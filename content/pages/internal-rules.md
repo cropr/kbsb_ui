@@ -1,6 +1,6 @@
 ---
 id: 6556bfa3-5f73-41d8-b49a-9b941bd46a25
-blueprint: page
+blueprint: contentpage
 title: 'Internal Rules'
 parent: 8dce013d-4f3a-4dc5-b18b-ebce97fa6545
 title_nl: 'Intern reglement van de KBSB'
