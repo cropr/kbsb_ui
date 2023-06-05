@@ -5,7 +5,8 @@
       <v-card-text>
         <v-row>
           <v-col cols="4">
-            <v-btn>Create new club</v-btn>
+            <v-btn>Create new club</v-btn><br/>
+            <v-btn class="mt-2">Make a mailing</v-btn>
           </v-col>
           <v-col cols="8">
             <v-btn>Export list of clubs</v-btn>
@@ -36,7 +37,7 @@
         <v-tabs-slider color="deep-purple"></v-tabs-slider>
         <v-tab>Club details</v-tab>
         <v-tab>Access rights</v-tab>
-        <v-tab>Downloads</v-tab>
+        <!-- <v-tab>Downloads</v-tab> -->
       </v-tabs>
       <v-tabs-items v-model="tab">
         <v-tab-item>
@@ -45,9 +46,9 @@
         <v-tab-item>
           <MgmtclubAccess @interface="registerChildMethod" :club="activeclub" />
         </v-tab-item>
-        <v-tab-item>
+        <!-- <v-tab-item>
           <MgmtclubDownloads />
-        </v-tab-item>
+        </v-tab-item> -->
       </v-tabs-items>
     </div>
   </v-container>
@@ -124,6 +125,7 @@ export default {
         if (!this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
           this.$router.push('/mgmt')
         }
+        // now login using the Google auth token
         await this.$api.root.login({
           logintype: 'google',
           token: this.person.credential
@@ -141,25 +143,19 @@ export default {
     },
 
     async getClubs() {
-      console.log('getClubs', this.logintoken)
+      console.log('getClubs')
       try {
-        const reply = await this.$api.club.mgmt_get_clubs({
-          logintoken: this.logintoken
-        })
+        const reply = await this.$api.club.anon_get_clubs();
         this.clubs = reply.data.clubs
         this.clubs.forEach(p => {
           p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
         })
       } catch (error) {
         const reply = error.response
-        if (reply.status === 401) {
-          this.gotoLogin()
-        } else {
-          console.error('Getting clubs failed', reply.data.detail)
-          this.$root.$emit('snackbar', {
-            text: 'Getting clubs failed'
-          })
-        }
+        console.error('Getting clubs failed', reply.data.detail)
+        this.$root.$emit('snackbar', {
+          text: 'Getting clubs failed'
+        })
       }
     },
 

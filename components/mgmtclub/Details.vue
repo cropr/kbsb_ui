@@ -214,7 +214,7 @@ export default {
       }
       try {
         const reply = await this.$api.club.mgmt_get_club({
-          id: this.club.id,
+          idclub: this.club.idclub,
           token: this.logintoken
         })
         this.readClubdetails(reply.data)
