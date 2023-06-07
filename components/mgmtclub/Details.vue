@@ -66,7 +66,7 @@
           <v-col cols="12" md="6">
             <h4>Contact</h4>
             <v-text-field v-model="clubdetails.email_main" label="Main E-mail address" />
-            <v-text-field v-model="clubdetails.email_intercub" label="E-mail Interclub" />
+            <v-text-field v-model="clubdetails.email_interclub" label="E-mail Interclub" />
             <v-text-field v-model="clubdetails.email_admin" label="E-mail administration" />
             <v-text-field v-model="clubdetails.email_finance" label="E-mail finance" />
             <v-textarea v-model="clubdetails.address" label="Postal address" />
@@ -152,6 +152,7 @@ export default {
       boardmembers: EMPTY_BOARD,
       clubmembers: {},
       clubdetails: {},
+      copyclubdetails: null,
       mbr_items: [],
       status: CLUB_STATUS.CONSULTING,
       visibility_items: Object.values(VISIBILITY).map(x => this.$t(x)),
@@ -242,6 +243,7 @@ export default {
 
     readClubdetails(details) {
       this.clubdetails = { ...details }
+      this.copyclubdetails = { ... details}
       if (!this.clubdetails.address) this.clubdetails.address = ""
       if (!this.clubdetails.venue) this.clubdetails.venue = ""
       this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
@@ -249,9 +251,18 @@ export default {
 
     async saveClub() {
       console.log('saving', this.clubdetails)
+      // build a a diff between clubdetails ans its cooy
+      let update = {}
+      for (const [key, value] of Object.entries(this.clubdetails)) {
+        if (value != this.copyclubdetails[key]) {
+          update[key] = value
+        }
+      }
+      console.log('updates ', update)
       try {
         const reply = await this.$api.club.mgmt_update_club({
-          ...this.clubdetails,
+          ...update,
+          idclub: this.clubdetails.idclub,
           token: this.logintoken,
         })
         this.status = CLUB_STATUS.CONSULTING

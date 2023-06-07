@@ -31,6 +31,7 @@ export default (context) => ({
   },
   async mgmt_update_club(options) {
     const { idclub, token, ...options1 } = options;
+    console.log("api mgmt_update_club", idclub, options1);
     const resp = await context.$axios.put(`/api/v1/club/${idclub}`, options1, {
       headers: {
         Authorization: "Bearer " + token,
