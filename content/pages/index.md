@@ -11,6 +11,7 @@ content_nl: |-
   - Het [Elo-klassement](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
   - Raadpleging van de [resultaten van de interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
   - Zoek een [club in de buurt](/clubs/find)
+  - Het [wijzigen van clubgegevens](/clubs/manager) doo de bestuurders van de club 
   - Raadpleging van de [clubdetails](/clubs/info)
   - Raadpleging van de [toernooiuitslagen in SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
   

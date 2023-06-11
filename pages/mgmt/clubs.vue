@@ -138,7 +138,7 @@ export default {
             console.log('failed login', resp.data.detail)
             this.$router.push('/mgmt')
           }
-      )        
+        )        
       }
     },
 

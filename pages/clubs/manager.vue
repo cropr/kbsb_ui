@@ -59,11 +59,8 @@ export default {
     logintoken() { return this.$store.state.oldlogin.value },
   },
 
-  mounted() {
-    this.$store.commit('oldlogin/startup')
-    if (!this.logintoken.length) {
-      this.gotoLogin()
-    }
+  async mounted() {
+    await this.checkAuth()
     this.getClubs()
   },
 
@@ -75,34 +72,34 @@ export default {
       })
     },
 
+    async checkAuth () {
+      console.log('checking if auth is already set')
+      if (!this.logintoken){
+        this.gotoLogin()
+      }
+    },
+
     async getClubs() {
+      console.log('getClubs')
       try {
-        const reply = await this.$api.club.clb_get_clubs({
-          token: this.logintoken
-        })
+        const reply = await this.$api.club.anon_get_clubs();
         this.clubs = reply.data.clubs
         this.clubs.forEach(p => {
           p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
         })
       } catch (error) {
         const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Getting clubs failed') })
-        }
+        console.error('Getting clubs failed', reply.data.detail)
+        this.$root.$emit('snackbar', {
+          text: 'Getting clubs failed'
+        })
       }
     },
 
     gotoLogin() {
-      this.$router.push('/tools/oldlogin?url=__tools__club')
+      this.$router.push('/tools/oldlogin?url=__clubs__manager')
     },
+
 
     registerChildMethod(methodname, method) {
       this.childmethods[methodname] = method

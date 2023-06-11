@@ -31,7 +31,6 @@ export default (context) => ({
   },
   async mgmt_update_club(options) {
     const { idclub, token, ...options1 } = options;
-    console.log("api mgmt_update_club", idclub, options1);
     const resp = await context.$axios.put(`/api/v1/club/${idclub}`, options1, {
       headers: {
         Authorization: "Bearer " + token,
@@ -43,8 +42,8 @@ export default (context) => ({
   // clb nethods
 
   async clb_get_club(options) {
-    const { id, token } = options;
-    const resp = await context.$axios.get(`/api/v1/c/club/${id}`, {
+    const { idclub, token } = options;
+    const resp = await context.$axios.get(`/api/v1/c/club/${idclub}`, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -62,12 +61,16 @@ export default (context) => ({
     return resp;
   },
   async clb_update_club(options) {
-    const { id, token, ...options1 } = options;
-    const resp = await context.$axios.put(`/api/v1/c/club/${id}`, options1, {
-      headers: {
-        Authorization: "Bearer " + token,
-      },
-    });
+    const { idclub, token, ...options1 } = options;
+    const resp = await context.$axios.put(
+      `/api/v1/c/club/${idclub}`,
+      options1,
+      {
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      }
+    );
     return resp;
   },
 
