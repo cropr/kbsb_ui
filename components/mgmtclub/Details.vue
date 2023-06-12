@@ -243,7 +243,7 @@ export default {
 
     readClubdetails(details) {
       this.clubdetails = { ...details }
-      this.copyclubdetails = { ... details}
+      this.copyclubdetails = JSON.parse(JSON.stringify(details))
       if (!this.clubdetails.address) this.clubdetails.address = ""
       if (!this.clubdetails.venue) this.clubdetails.venue = ""
       this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }

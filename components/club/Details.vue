@@ -284,14 +284,14 @@ export default {
 
     readClubdetails(details) {
       this.clubdetails = { ...details }
-      this.copyclubdetails = { ... details}
+      this.copyclubdetails = JSON.parse(JSON.stringify(details))
       if (!this.clubdetails.address) this.clubdetails.address = ""
       if (!this.clubdetails.venue) this.clubdetails.venue = ""
       this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
     },
 
     async saveClub() {
-      console.log('saving', this.clubdetails)
+      console.log('saving', this.clubdetails, )
       // build a a diff between clubdetails ans its cooy
       let update = {}
       for (const [key, value] of Object.entries(this.clubdetails)) {
