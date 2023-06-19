@@ -29,7 +29,7 @@
 export default {
   layout: 'mgmt',
 
-  nam: 'Overview',
+  name: 'MgmtOverview',
 
   head: {
     title: 'Management Overview',

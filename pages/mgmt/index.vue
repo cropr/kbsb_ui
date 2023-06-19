@@ -14,6 +14,9 @@
 import * as jose from 'jose'
 
 export default {
+
+  name: "TheIndex",
+
   layout: 'mgmt',
 
   data () {
@@ -65,6 +68,7 @@ export default {
       })
       // eslint-disable-next-line no-undef
       google.accounts.id.prompt()
+      console.log('Setup google sign in completed')
     },
 
     checkAuth () {
