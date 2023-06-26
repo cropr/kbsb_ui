@@ -111,7 +111,6 @@ export default {
       }
     },
 
-
     selectclub() {
       if (!this.idclub) {
         this.club = {};
