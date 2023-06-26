@@ -84,7 +84,7 @@ export default {
     return {
       boardroles: [],
       boardmembers: {},
-      club: {},
+      club: {...EMPTY_club},
       clubs: [],
       idclub: null,
     };
@@ -92,7 +92,6 @@ export default {
 
   methods: {
     async get_clubs() {
-      console.log("getAnonClubs");
       try {
         const reply = await this.$api.club.anon_get_clubs();
         this.clubs = reply.data.clubs;
@@ -118,7 +117,7 @@ export default {
       } else {
         this.clubs.forEach((c) => {
           if (c.idclub == this.idclub) {
-            this.club = c;
+            this.club = {...EMPTY_club, ...c};
           }
         });
       }
