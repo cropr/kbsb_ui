@@ -285,7 +285,7 @@ export default {
     },
 
     readClubdetails(details) {
-      this.clubdetails = { ...details }
+      this.clubdetails = { ...EMPTY_CLUBDETAILS, ...details }
       this.copyclubdetails = JSON.parse(JSON.stringify(details))
       if (!this.clubdetails.address) this.clubdetails.address = ""
       if (!this.clubdetails.venue) this.clubdetails.venue = ""
@@ -354,7 +354,6 @@ export default {
 
   mounted() {
     this.emitInterface();
-    this.fetch();
     this.$nextTick(() => {
       this.get_clubdetails();
     })
