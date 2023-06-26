@@ -203,9 +203,11 @@ export default {
 
     async get_clubmembers() {
       try {
+        console.log("getting clubmembers")
         const reply = await this.$api.old.get_clubmembers({
           idclub: this.club.idclub,
         })
+        console.log("getting clubmembers OK")
         const activemembers = reply.data.activemembers
         activemembers.forEach(p => {
           p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
@@ -214,6 +216,7 @@ export default {
           (a.last_name > b.last_name ? 1 : -1)))
         this.clubmembers = Object.fromEntries(this.mbr_items.map(x => [x.idnumber, x]))
       } catch (error) {
+        console.log("getting clubmembers NOK")
         const reply = error.response
         switch (reply.status) {
           case 401:
@@ -230,6 +233,7 @@ export default {
     },
 
     async get_clubdetails() {
+      console.log('getting club details')
       if (!this.club.id) {
         this.clubdetails = EMPTY_CLUBDETAILS
         return
