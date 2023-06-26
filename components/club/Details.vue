@@ -200,6 +200,7 @@ export default {
 
     async fetch() {
       this.boardroles = (await this.$content('boardroles').fetch()).boardroles
+      console.log('baordroles', this.boardroles)
     },
 
     async get_clubmembers() {
