@@ -88,7 +88,6 @@
             <v-text-field v-model="clubdetails.email_finance" label="E-mail finance" />
             <v-textarea v-model="clubdetails.address" label="Postal address" />
           </v-col>
-
           <v-col cols="12" md="6">
             <h4>{{ $t('Bank details') }}</h4>
             <v-text-field v-model="clubdetails.bankacount_name" label="Name bank account" />
@@ -201,8 +200,6 @@ export default {
     emitInterface() {
       this.$emit("interface", "get_clubdetails", this.get_clubdetails);
     },
-
-
 
     async get_clubmembers() {
       try {

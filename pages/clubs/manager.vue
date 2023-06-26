@@ -34,6 +34,11 @@
 
 <script>
 
+const EMPTY_CLUB = {
+  venue: "",
+  address: "",
+}
+
 const noop = function () { }
 
 export default {
@@ -100,7 +105,6 @@ export default {
       this.$router.push('/tools/oldlogin?url=__clubs__manager')
     },
 
-
     registerChildMethod(methodname, method) {
       this.childmethods[methodname] = method
     },
@@ -112,7 +116,7 @@ export default {
       else {
         this.clubs.forEach((c) => {
           if (c.idclub == this.idclub) {
-            this.activeclub = c
+            this.activeclub = {...EMPTY_CLUB, ...c}
           }
         })
       }
