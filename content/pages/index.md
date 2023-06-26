@@ -8,11 +8,10 @@ content_nl: |-
 
   ### Belangrijke links
 
-  - Het [Elo-klassement](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
+  - De [Eloratings](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
   - Raadpleging van de [resultaten van de interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
-  - Zoek een [club in de buurt](/clubs/find)
-  - Het [wijzigen van clubgegevens](/clubs/manager) doo de bestuurders van de club 
   - Raadpleging van de [clubdetails](/clubs/info)
+  - Het gebruik van [Club Manager](/clubs/manager) door de bestuurders van de club 
   - Raadpleging van de [toernooiuitslagen in SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
   
 
@@ -22,12 +21,11 @@ content_fr: |-
 
   ### Liens importants
 
-  - Consultation des résultats des Interclubs
-  - Trouver un club à proximité
-  - Le classement Elo
-  - Consultation des résultats des tournois SWAR
-  - Modification des résultats interclubs via l'Interclub Manager
-  - Modification des détails du club via le Club Manager
+  - Le [classement Elo](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
+  - La consultation des [résultats des Interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
+  - La [consultation des données des cercles](/clubs/info)
+  - L'utilisation de [Club Manager](/clubs/manager) par les administrateurs du club
+  - La consultation des [résultats des tournois SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
 
 title_de: "Der Königlicher Schachbund Belgien"
 content_de: |-
@@ -35,12 +33,12 @@ content_de: |-
   
   ### Wichtige Links
 
-    - Konsultation der Ergebnisse von Interclubs
-    - Finden Sie einen Club in der Nähe
-    - Die Elo-Wertung
-    - Abfrage der Turnierergebnisse von SWAR
-    - Ändern der Interclub-Ergebnisse über den Interclub-Manager
-    - Ändern der Clubdetails über den Club-Manager
+    - Die [Elo-Wertung](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
+    - Konsultation der [Ergebnisse von Interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
+    - Die Abfrage der [Clubinformationen](/clubs/info) 
+    - Die Verwendung von [Club-Manager](/clubs/manager) durch die Clubadministratoren
+    - Die Abfrage der [Turnierergebnisse von SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
+
 
 title_en: "The Royal Belgian Chess Federation"
 content_english: |-
@@ -48,12 +46,11 @@ content_english: |-
 
   ### Important links
 
-   - Consultation of the results of Interclubs
-   - Find a club nearby
-   - The Elo standings
-   - Consultation of tournament results of SWAR
-   - Changing the interclub results via the Interclub Manager
-   - Changing the club details via the Club Manager
+   - The [Elo ratings](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
+   - Consultation of the [results of Interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
+   - Consultation the [club details](/clubs/info)
+   - The use of [Club Manager](/clubs/manager) by the club's administrators
+   - Consultation of [tournament results of SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
   
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
 updated_at: 1684614874
