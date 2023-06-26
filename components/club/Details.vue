@@ -187,6 +187,10 @@ export default {
     status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
   },
 
+  async fetch() {
+      this.boardroles = (await this.$content('boardroles').fetch()).boardroles
+    },
+
   methods: {
 
     cancelClub() {
@@ -198,10 +202,7 @@ export default {
       this.$emit("interface", "get_clubdetails", this.get_clubdetails);
     },
 
-    async fetch() {
-      this.boardroles = (await this.$content('boardroles').fetch()).boardroles
-      console.log('boardroles', this.boardroles)
-    },
+
 
     async get_clubmembers() {
       try {
