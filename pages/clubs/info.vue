@@ -56,7 +56,7 @@
 
         <v-col cols="12" sm="6" lg="4">
           <h4>{{ $t("Board members") }}</h4>
-          <ul>
+          <ul v-if="boardroles.length">
             <li v-for="(bm, f) in club.boardmembers" :key="f">
               <span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span
               >: {{ bm.first_name }} {{ bm.last_name }}<br />
@@ -109,6 +109,7 @@ export default {
 
     async fetch() {
       this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
+      await this.get_clubs()
     },
 
     selectclub() {
@@ -126,7 +127,6 @@ export default {
 
   mounted() {
     this.fetch();
-    this.get_clubs();
   },
 };
 </script>
