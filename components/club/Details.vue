@@ -98,7 +98,7 @@
         </v-row>
         <div v-show="status_modifying">
           <h4>{{ $t('Board members') }}</h4>
-          <v-row v-for="(bm, f) in boardmembers" :key="f">
+          <v-row v-for="(bm, f) in clubdetails.boardmembers" :key="f">
             <!-- <span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span>: -->
             <v-col cols="12" sm="6" lg="4">
               <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" :label="boardroles[f][$i18n.locale]"
@@ -131,6 +131,7 @@
 <script>
 
 import { EMPTY_CLUB } from '@/util/cms'
+import { boardroles } from '@/util/boardroles'
 
 const CLUB_STATUS = {
   CONSULTING: 0,
@@ -163,6 +164,7 @@ export default {
   data() {
     return {
       boardmembers: EMPTY_BOARD,
+      boardroles: boardroles,
       clubmembers: {},
       clubdetails: EMPTY_CLUB,
       copyclubdetails: null,
@@ -170,10 +172,6 @@ export default {
       status: CLUB_STATUS.CONSULTING,
       visibility_items: Object.values(VISIBILITY).map(x => this.$t(x)),
     }
-  },
-
-  async fetch() {
-    this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
   },
 
   props: {

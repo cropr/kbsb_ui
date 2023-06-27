@@ -60,22 +60,19 @@
 <script>
 
 import { EMPTY_CLUB } from '@/util/cms';
+import { boardroles } from '@/util/boardroles';
 
 export default {
   name: "Details",
 
   data() {
     return {
-      boardroles: [],
+      boardroles: boardroles,
       boardmembers: {},
       club: {},
       clubs: [],
       idclub: null,
     };
-  },
-
-  async fetch() {
-    this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
   },
 
   methods: {

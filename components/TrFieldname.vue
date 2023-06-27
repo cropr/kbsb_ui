@@ -3,11 +3,10 @@
 </template>
   
 <script>
+
+import { boardroles } from '@/util/boardroles';
+
 export default {
-  
-  async fetch() {
-    this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
-  },
 
   data() {
     return {
@@ -21,9 +20,9 @@ export default {
 
   computed: {
     i18n_field (){
-      console.log('fieldname', this.fieldname, this.$i18n.locale, this.boardroles)
-      if (this.fieldname in this.boardroles) {
-        return this.boardroles[this.fieldname][this.$i18n.locale] || ""
+      console.log('fieldname', this.fieldname, this.$i18n.locale)
+      if (this.fieldname in boardroles) {
+        return boardroles[this.fieldname][this.$i18n.locale] || ""
       }
       else return ""
     }
