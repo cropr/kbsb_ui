@@ -5,7 +5,7 @@
       <v-card-text>
         <v-row>
           <v-col cols="4">
-            <v-btn>Create new club</v-btn><br/>
+            <v-btn>Create new club</v-btn><br />
             <v-btn class="mt-2">Make a mailing</v-btn>
           </v-col>
           <v-col cols="8">
@@ -21,8 +21,8 @@
     <v-card class="mt-2">
       <v-card-text>
         Select the club. (start typing number or name)
-        <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub"
-          color="deep-purple" label="Club" clearable @change="selectclub">
+        <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub" color="deep-purple"
+          label="Club" clearable @change="selectclub">
           <template v-slot:item="data">
             {{ data.item.merged }}
           </template>
@@ -55,7 +55,7 @@
 </template>
 
 <script>
-
+import { EMPTY_CLUB } from '@/util/cms'
 const noop = function () { }
 
 export default {
@@ -84,10 +84,10 @@ export default {
   },
 
   computed: {
-    logintoken() { 
-      return this.$store.state.newlogin.value 
+    logintoken() {
+      return this.$store.state.newlogin.value
     },
-    person () {
+    person() {
       return this.$store.state.person
     },
   },
@@ -116,9 +116,9 @@ export default {
       })
     },
 
-    async checkAuth () {
+    async checkAuth() {
       console.log('checking if auth is already set')
-      if (!this.logintoken){
+      if (!this.logintoken) {
         if (this.person.credential.length === 0) {
           this.$router.push('/mgmt')
         }
@@ -138,7 +138,7 @@ export default {
             console.log('failed login', resp.data.detail)
             this.$router.push('/mgmt')
           }
-        )        
+        )
       }
     },
 
@@ -170,7 +170,7 @@ export default {
       else {
         this.clubs.forEach((c) => {
           if (c.idclub == this.idclub) {
-            this.activeclub = c
+            this.activeclub = { ...EMPTY_CLUB, ...c }
           }
         })
       }
@@ -182,5 +182,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

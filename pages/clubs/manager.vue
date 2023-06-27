@@ -4,8 +4,8 @@
     <v-card>
       <v-card-text>
         {{ $t('Select the club') }} ({{ $t('Start typing number or name') }})
-        <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub"
-          color="green" :label="$t('Club')" clearable @change="selectclub">
+        <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub" color="green"
+          :label="$t('Club')" clearable @change="selectclub">
           <template v-slot:item="data">
             {{ data.item.merged }}
           </template>
@@ -34,6 +34,7 @@
 
 <script>
 
+import { EMPTY_CLUB } from '@/util/cms'
 const noop = function () { }
 
 export default {
@@ -72,9 +73,9 @@ export default {
       })
     },
 
-    async checkAuth () {
+    async checkAuth() {
       console.log('checking if auth is already set')
-      if (!this.logintoken){
+      if (!this.logintoken) {
         this.gotoLogin()
       }
     },
@@ -112,7 +113,7 @@ export default {
       else {
         this.clubs.forEach((c) => {
           if (c.idclub == this.idclub) {
-            this.activeclub = c
+            this.activeclub = { ...EMPTY_CLUB, ...c }
           }
         })
       }
@@ -124,5 +125,4 @@ export default {
 }
 </script>
 
-<style>
-</style>
+<style></style>

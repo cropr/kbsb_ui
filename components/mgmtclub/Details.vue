@@ -27,10 +27,10 @@
             <div><span class="fieldname">Main email address</span>: {{ clubdetails.email_main }}
             </div>
             <div><span class="fieldname">Email address Interclub</span>: {{
-            clubdetails.email_intercLub
+              clubdetails.email_intercLub
             }}</div>
             <div><span class="fieldname">Email address administration</span>: {{
-            clubdetails.email_admin
+              clubdetails.email_admin
             }}</div>
             <div><span class="fieldname">Email address finance</span>: {{ clubdetails.email_finance
             }}
@@ -84,24 +84,23 @@
           <v-row v-for="(bm, f) in boardroles" :key="f">
             <!-- <span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span>: -->
             <v-col cols="12" sm="6" lg="4">
-              <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items"
-                :label="boardroles[f][$i18n.locale]" item-text="merged" item-value="idnumber"
-                color="deep-purple" clearable @change="updateboard(f)">
+              <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" :label="boardroles[f][$i18n.locale]"
+                item-text="merged" item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
                 <template v-slot:item="data">
                   {{ data.item.merged }}
                 </template>
               </v-autocomplete>
             </v-col>
-            <!-- <v-col cols="12" sm="6" lg="4">
+            <v-col cols="12" sm="6" lg="4">
               {{ bm.email }}
-              <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items"
-                color="deep-purple" @change="updateboard(f)" label="Email visibility" />
+              <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="deep-purple"
+                @change="updateboard(f)" label="Email visibility" />
             </v-col>
             <v-col cols="12" sm="6" lg="4">
               {{ bm.mobile }}
-              <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items"
-                color="deep-purple" @change="updateboard(f)" label="Mobile visibility" />
-            </v-col> -->
+              <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="deep-purple"
+                @change="updateboard(f)" label="Mobile visibility" />
+            </v-col>
           </v-row>
         </div>
         <v-row v-show="status_modifying">
@@ -114,13 +113,11 @@
 </template>
 <script>
 
+import { EMPTY_CLUB } from '@/util/cms'
+
 const CLUB_STATUS = {
   CONSULTING: 0,
   MODIFYING: 1,
-}
-const EMPTY_CLUBDETAILS = {
-  venue: "",
-  address: "",
 }
 
 const EMPTY_BOARD = {
@@ -151,7 +148,7 @@ export default {
       boardroles: [],
       boardmembers: EMPTY_BOARD,
       clubmembers: {},
-      clubdetails: {},
+      clubdetails: EMPTY_CLUB,
       copyclubdetails: null,
       mbr_items: [],
       status: CLUB_STATUS.CONSULTING,
@@ -169,6 +166,10 @@ export default {
     status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
   },
 
+  async fetch() {
+    this.boardroles = (await this.$content('boardroles').fetch()).boardroles
+  },
+
   methods: {
 
     cancelClub() {
@@ -178,10 +179,6 @@ export default {
 
     emitInterface() {
       this.$emit("interface", "get_clubdetails", this.get_clubdetails);
-    },
-
-    async fetch() {
-      this.boardroles = (await this.$content('boardroles').fetch()).boardroles
     },
 
     async get_clubmembers() {
@@ -210,7 +207,7 @@ export default {
 
     async get_clubdetails() {
       if (!this.club.id) {
-        this.clubdetails = EMPTY_CLUBDETAILS
+        this.clubdetails = EMPTY_CLUB
         return
       }
       try {
@@ -242,10 +239,9 @@ export default {
     },
 
     readClubdetails(details) {
-      this.clubdetails = { ...details }
+      console.log('clubdetails read from server', details)
+      this.clubdetails = { ...EMPTY_CLUB, ...details }
       this.copyclubdetails = JSON.parse(JSON.stringify(details))
-      if (!this.clubdetails.address) this.clubdetails.address = ""
-      if (!this.clubdetails.venue) this.clubdetails.venue = ""
       this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
     },
 
@@ -307,7 +303,6 @@ export default {
 
   mounted() {
     this.emitInterface();
-    this.fetch();
     this.$nextTick(() => {
       this.get_clubdetails();
     })

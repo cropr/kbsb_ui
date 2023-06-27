@@ -88,3 +88,8 @@ export function goto(section, slug, locale) {
     if (locale != 'fr' && window.base.locale != 'nl') { window.location.href = '/ratingnl' }
   }
 }
+
+export const EMPTY_CLUB = {
+  venue: "",
+  address: "",
+};
