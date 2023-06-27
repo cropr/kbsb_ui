@@ -7,7 +7,6 @@ export default {
   
   async fetch() {
     this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
-    console.log('boardroles', this.boardroles)
   },
 
   data() {
