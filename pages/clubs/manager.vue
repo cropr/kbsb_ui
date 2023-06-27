@@ -62,7 +62,7 @@ export default {
 
   async mounted() {
     await this.checkAuth()
-    this.getClubs()
+    await this.getClubs()
   },
 
   methods: {
@@ -84,6 +84,7 @@ export default {
       console.log('getClubs')
       try {
         const reply = await this.$api.club.anon_get_clubs();
+        console.log('getClubs OK', reply)        
         this.clubs = reply.data.clubs
         this.clubs.forEach(p => {
           p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
@@ -107,6 +108,7 @@ export default {
     },
 
     selectclub() {
+      console.log('selecting club', this.idclub)
       if (!this.idclub) {
         this.activeclub = {}
       }
@@ -117,6 +119,7 @@ export default {
           }
         })
       }
+      console.log ('club selected', this.activeclub)
       this.$nextTick(() => this.call_childmethods())
     }
 

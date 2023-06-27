@@ -60,7 +60,7 @@
             <h4>{{ $t('Board members') }}</h4>
             <ul>
               <li v-for="(bm, f) in clubdetails.boardmembers" :key="f">
-                <span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span>:
+                <tr-fieldname :fieldname="f" />
                 {{ bm.first_name }} {{ bm.last_name }}<br />
                 email: {{ bm.email }}<br />
                 gsm: {{ bm.mobile }}
@@ -137,8 +137,6 @@ const CLUB_STATUS = {
   MODIFYING: 1,
 }
 
-
-
 const EMPTY_BOARD = {
   president: { idnumber: 0 },
   vice_president: { idnumber: 0 },
@@ -164,7 +162,6 @@ export default {
 
   data() {
     return {
-      boardroles: [],
       boardmembers: EMPTY_BOARD,
       clubmembers: {},
       clubdetails: EMPTY_CLUB,
@@ -183,10 +180,6 @@ export default {
     logintoken() { return this.$store.state.oldlogin.value },
     status_consulting() { return this.status == CLUB_STATUS.CONSULTING },
     status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
-  },
-
-  async fetch() {
-    this.boardroles = (await this.$content('boardroles').fetch()).boardroles
   },
 
   methods: {
@@ -229,6 +222,7 @@ export default {
     },
 
     async get_clubdetails() {
+      console.log("getting club details", this.club)
       if (!this.club.id) {
         this.clubdetails = EMPTY_CLUB
         return
@@ -238,6 +232,7 @@ export default {
           idclub: this.club.idclub,
           token: this.logintoken
         })
+        console.log("getting club details OK", reply.data)
         this.readClubdetails(reply.data)
       } catch (error) {
         switch (reply.status) {
@@ -283,9 +278,12 @@ export default {
     readClubdetails(details) {
       console.log('clubdetails read from server', details)
       this.clubdetails = { ...EMPTY_CLUB, ...details }
+      console.log('set clubdetails', this.clubdetails)
       this.copyclubdetails = JSON.parse(JSON.stringify(details))
+      console.log('set copyclubdetails', this.copyclubdetails)
       this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
-    },
+      console.log('set boardmembers', this.boardmembers)
+},
 
     async saveClub() {
       console.log('saving', this.clubdetails,)
@@ -296,7 +294,6 @@ export default {
           update[key] = value
         }
       }
-      console.log('updates ', update)
       try {
         const reply = await this.$api.club.clb_update_club({
           ...update,
@@ -347,18 +344,10 @@ export default {
 
   },
 
-  mounted() {
+  async mounted() {
     this.emitInterface();
-    this.$nextTick(() => {
-      this.get_clubdetails();
-    })
   },
 
 }
 </script>
 
-<style scoped>
-.fieldname {
-  color: green;
-}
-</style>

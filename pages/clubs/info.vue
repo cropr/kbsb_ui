@@ -74,27 +74,29 @@ export default {
     };
   },
 
+  async fetch() {
+    this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
+  },
+
   methods: {
     async get_clubs() {
       console.log("getAnonClubs");
       try {
         const reply = await this.$api.club.anon_get_clubs();
+        console.log('reply', reply)
         this.clubs = reply.data.clubs;
         this.clubs.forEach((p) => {
           p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`;
         });
       } catch (error) {
         const reply = error.response;
-        console.error("Getting clubs failed", reply.data.detail);
+        console.error("Getting clubs failed", reply.data);
         this.$root.$emit("snackbar", {
           text: "Getting clubs failed",
         });
       }
     },
 
-    async fetch() {
-      this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
-    },
 
     selectclub() {
       if (!this.idclub) {
@@ -110,7 +112,6 @@ export default {
   },
 
   mounted() {
-    this.fetch();
     this.get_clubs();
   },
 };
