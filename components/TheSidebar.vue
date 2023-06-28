@@ -88,10 +88,10 @@
           <v-list-item-content>{{ $t('Clubs') }}</v-list-item-content>
         </template>
         <v-list-item to="/clubs/info">
-          <v-list-item-content>{{ $t('BC Youth') }}</v-list-item-content>
+          <v-list-item-content>Club Info</v-list-item-content>
         </v-list-item>
-        <v-list-item to="/clubs/find">
-          <v-list-item-content>{{ $t('International') }}</v-list-item-content>
+        <v-list-item to="/clubs/manager">
+          <v-list-item-content>Club Manager</v-list-item-content>
         </v-list-item>
       </v-list-group>
       

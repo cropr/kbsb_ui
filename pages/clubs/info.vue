@@ -45,8 +45,7 @@
           <h4>{{ $t("Board members") }}</h4>
           <ul>
             <li v-for="(bm, f) in club.boardmembers" :key="f">
-              <span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span>: {{ bm.first_name }} {{ bm.last_name
-              }}<br />
+              <tr-fieldname :fieldname="f" />: {{ bm.first_name }} {{ bm.last_name}}<br />
               <span v-show="bm.email && bm.email != '#NA'">e-mail: {{ bm.email }}<br /></span>
               <span v-show="bm.mobile && bm.mobile != '#NA'">gsm: {{ bm.mobile }}<br /></span>
             </li>
@@ -60,7 +59,7 @@
 <script>
 
 import { EMPTY_CLUB } from '@/util/cms';
-import { boardroles } from '@/util/boardroles';
+import { boardroles } from '@/util/club';
 
 export default {
   name: "Details",

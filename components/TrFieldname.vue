@@ -4,7 +4,7 @@
   
 <script>
 
-import { boardroles } from '@/util/boardroles';
+import { boardroles } from '@/util/club';
 
 export default {
 
@@ -20,7 +20,6 @@ export default {
 
   computed: {
     i18n_field (){
-      console.log('fieldname', this.fieldname, this.$i18n.locale)
       if (this.fieldname in boardroles) {
         return boardroles[this.fieldname][this.$i18n.locale] || ""
       }

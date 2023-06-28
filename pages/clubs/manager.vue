@@ -107,25 +107,33 @@ export default {
       this.childmethods[methodname] = method
     },
 
-    selectclub() {
-      console.log('selecting club', this.idclub)
+    async selectclub() {
       if (!this.idclub) {
         this.activeclub = {}
+        return
       }
-      else {
+      console.log('selecting club', this.idclub)
+      try {
+        const reply = await this.$api.club.verify_club_access({
+          idclub: this.idclub,
+          role: "ClubAdmin",
+          token: this.logintoken,
+        })
         this.clubs.forEach((c) => {
           if (c.idclub == this.idclub) {
             this.activeclub = { ...EMPTY_CLUB, ...c }
           }
         })
+        console.log ('club selected', this.activeclub)
+        this.$nextTick(() => this.call_childmethods())
+      } catch (error) {
+          console.error('Getting clubs failed', error)
+          this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
       }
-      console.log ('club selected', this.activeclub)
-      this.$nextTick(() => this.call_childmethods())
     }
-
   }
 
 }
 </script>
 
-<style></style>
+<style></style>``

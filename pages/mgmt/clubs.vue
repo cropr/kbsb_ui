@@ -29,6 +29,7 @@
         </v-autocomplete>
       </v-card-text>
     </v-card>
+
     <h3 class="mt-2">Selected club: {{ activeclub.idclub }} {{ activeclub.name_short }}
     </h3>
     <div class="elevation-2">
@@ -104,7 +105,7 @@ export default {
 
   async mounted() {
     await this.checkAuth()
-    this.getClubs()
+    await this.getClubs()
   },
 
   methods: {
@@ -174,6 +175,7 @@ export default {
           }
         })
       }
+      console.log ('club selected', this.activeclub)      
       this.$nextTick(() => this.call_childmethods())
     }
 

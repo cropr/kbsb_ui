@@ -2,10 +2,9 @@
   <v-container>
     <p v-if="!club.idclub">{{ $t('Select a club to view the club details') }}</p>
     <div v-if="club.idclub">
-      <h3 v-show="status_consulting">{{ $t('Consulting club details') }}</h3>
-      <h3 v-show="status_modifying">{{ $t('Modify club') }}</h3>
-      <v-container>
-        <v-row v-show="status_consulting">
+      <v-container v-show="status_consulting">
+        <h3>{{ $t('Consulting club details') }}</h3>
+        <v-row>
           <v-col cols="12" md="6">
             <h4>{{ $t('Club details') }}</h4>
             <div><span class="fieldname">{{ $t('Long name') }}</span>: {{ clubdetails.name_long }}
@@ -60,70 +59,71 @@
             <h4>{{ $t('Board members') }}</h4>
             <ul>
               <li v-for="(bm, f) in clubdetails.boardmembers" :key="f">
-                <tr-fieldname :fieldname="f" />
-                {{ bm.first_name }} {{ bm.last_name }}<br />
+                <tr-fieldname :fieldname="f" />: {{ bm.first_name }} {{ bm.last_name }}<br />
                 email: {{ bm.email }}<br />
                 gsm: {{ bm.mobile }}
               </li>
             </ul>
           </v-col>
         </v-row>
-        <v-row v-show="status_consulting">
+        <v-row class="mt-2">
           <v-btn @click="modifyClub">{{ $t('Modify club') }}</v-btn>
         </v-row>
-        <v-row v-show="status_modifying">
-          <v-col cols="12" md="6">
+      </v-container>
+      <v-container v-show="status_modifying">
+        <h3 >{{ $t('Modify club') }}</h3>
+        <v-row>
+          <v-col cols="12" md="6" lg="4">
             <h4>{{ $t('Club details') }}</h4>
-            <v-text-field v-model="clubdetails.name_long" label="Long name" />
-            <v-text-field v-model="clubdetails.name_short" label="Short name" />
+            <v-text-field v-model="clubdetails.name_long" :label=" $t('Long name')" />
+            <v-text-field v-model="clubdetails.name_short" :label="$t('Short name')" />
             <p>{{ $t('Federation') }}: {{ clubdetails.federation }}</p>
-            <v-textarea v-model="clubdetails.venue" label="Venue" />
+            <v-textarea rows="3" v-model="clubdetails.venue" :label="$t('Venue')" />
             <v-text-field v-model="clubdetails.website" label="Website" />
           </v-col>
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" lg="4">
             <h4>{{ $t('Contact') }}</h4>
-            <v-text-field v-model="clubdetails.email_main" label="Main E-mail address" />
-            <v-text-field v-model="clubdetails.email_interclub" label="E-mail Interclub" />
-            <v-text-field v-model="clubdetails.email_admin" label="E-mail administration" />
-            <v-text-field v-model="clubdetails.email_finance" label="E-mail finance" />
-            <v-textarea v-model="clubdetails.address" label="Postal address" />
+            <v-text-field v-model="clubdetails.email_main" :label="$t('Main email address')" />
+            <v-text-field v-model="clubdetails.email_interclub" :label="$t('Email address Interclub')" />
+            <v-text-field v-model="clubdetails.email_admin" :label="$t('Email address administration')" />
+            <v-text-field v-model="clubdetails.email_finance" :label="$t('Email address finance')" />
+            <v-textarea  rows="3"v-model="clubdetails.address" :label="$t('Postal address')" />
           </v-col>
-
-          <v-col cols="12" md="6">
+          <v-col cols="12" md="6" lg="4">
             <h4>{{ $t('Bank details') }}</h4>
-            <v-text-field v-model="clubdetails.bankacount_name" label="Name bank account" />
-            <v-text-field v-model="clubdetails.bankaccount_iban" label="IBAN bank account" />
-            <v-text-field v-model="clubdetails.bankaccount_bic" label="BIC bank account" />
+            <v-text-field v-model="clubdetails.bankacount_name" :label="$t('Bank account name')" />
+            <v-text-field v-model="clubdetails.bankaccount_iban" :label="$t('Bank account IBAN')" />
+            <v-text-field v-model="clubdetails.bankaccount_bic" :label="$t('Bank account BIC')" />
           </v-col>
         </v-row>
-        <div v-show="status_modifying">
-          <h4>{{ $t('Board members') }}</h4>
-          <v-row v-for="(bm, f) in clubdetails.boardmembers" :key="f">
-            <!-- <span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span>: -->
-            <v-col cols="12" sm="6" lg="4">
-              <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" :label="boardroles[f][$i18n.locale]"
-                item-text="merged" item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
-                <template v-slot:item="data">
-                  {{ data.item.merged }}
-                </template>
-              </v-autocomplete>
-            </v-col>
-            <v-col cols="12" sm="6" lg="4">
-              {{ bm.email }}
-              <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="deep-purple"
-                @change="updateboard(f)" label="Email visibility" />
-            </v-col>
-            <v-col cols="12" sm="6" lg="4">
-              {{ bm.mobile }}
-              <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="deep-purple"
-                @change="updateboard(f)" label="Mobile visibility" />
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-btn @click="saveClub">{{ $t('Save club') }}</v-btn>
-            <v-btn @click="cancelClub">{{ $t('Cancel') }}</v-btn>
-          </v-row>
-        </div>
+        <h4>{{ $t('Board members') }}</h4>
+        <v-row >
+          <v-col cols="12" sm="6" lg="4" v-for="(bm, f) in clubdetails.boardmembers" :key="f">
+            <v-card class="elevation-5">
+              <v-card-title>                
+                <tr-fieldname :fieldname="f" />
+              </v-card-title>
+              <v-card-text>
+                <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" 
+                  item-text="merged" item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
+                  <template v-slot:item="data">
+                    {{ data.item.merged }}
+                  </template>
+                </v-autocomplete>
+                <v-text-field label="Email" v-model="boardmembers[f].email"></v-text-field>
+                <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="deep-purple"
+                  @change="updateboard(f)" label="Email visibility" />
+                  <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
+                <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="deep-purple"
+                  @change="updateboard(f)" label="Mobile visibility" />
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row class="ma-2">
+          <v-btn @click="saveClub">{{ $t('Save club') }}</v-btn>
+          <v-btn @click="cancelClub">{{ $t('Cancel') }}</v-btn>
+        </v-row>
       </v-container>
     </div>
   </v-container>
@@ -131,31 +131,7 @@
 <script>
 
 import { EMPTY_CLUB } from '@/util/cms'
-import { boardroles } from '@/util/boardroles'
-
-const CLUB_STATUS = {
-  CONSULTING: 0,
-  MODIFYING: 1,
-}
-
-const EMPTY_BOARD = {
-  president: { idnumber: 0 },
-  vice_president: { idnumber: 0 },
-  secretary: { idnumber: 0 },
-  treasurer: { idnumber: 0 },
-  tournament_director: { idnumber: 0 },
-  youth_director: { idnumber: 0 },
-  interclub_director: { idnumber: 0 },
-  webmaster: { idnumber: 0 },
-  bar_manager: { idnumber: 0 },
-  press_officer: { idnumber: 0 },
-}
-
-const VISIBILITY = {
-  hidden: "HIDDEN",
-  club: "CLUB",
-  public: "PUBLIC",
-}
+import { boardroles, visibility_items, CLUB_STATUS, EMPTY_BOARD } from '@/util/club'
 
 export default {
 
@@ -170,7 +146,7 @@ export default {
       copyclubdetails: null,
       mbr_items: [],
       status: CLUB_STATUS.CONSULTING,
-      visibility_items: Object.values(VISIBILITY).map(x => this.$t(x)),
+      visibility_items: [...visibility_items]
     }
   },
 
@@ -278,13 +254,9 @@ export default {
     },
 
     readClubdetails(details) {
-      console.log('clubdetails read from server', details)
       this.clubdetails = { ...EMPTY_CLUB, ...details }
-      console.log('set clubdetails', this.clubdetails)
       this.copyclubdetails = JSON.parse(JSON.stringify(details))
-      console.log('set copyclubdetails', this.copyclubdetails)
       this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
-      console.log('set boardmembers', this.boardmembers)
 },
 
     async saveClub() {
@@ -348,8 +320,20 @@ export default {
 
   async mounted() {
     this.emitInterface();
+    this.visibility_items.forEach((vi)=>{
+      console.log('vi', vi)
+      if (!vi.translated) {
+        vi.text = this.$t(vi.text)
+        vi.translated = true
+      }
+    })
   },
 
 }
 </script>
 
+<style scoped>
+.fieldname {
+  color: green;
+}
+</style>
