@@ -68,15 +68,18 @@ export default {
     return {
       boardroles: boardroles,
       boardmembers: {},
-      club: {},
+      club: {...EMPTY_club},
       clubs: [],
       idclub: null,
     };
   },
 
+  async fetch() {
+    this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
+  },
+
   methods: {
     async get_clubs() {
-      console.log("getAnonClubs");
       try {
         const reply = await this.$api.club.anon_get_clubs();
         console.log('reply', reply)
@@ -92,7 +95,6 @@ export default {
         });
       }
     },
-
 
     selectclub() {
       if (!this.idclub) {

@@ -89,7 +89,9 @@ export default {
         this.clubs.forEach(p => {
           p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
         })
+        console.log('get Clubs OK')
       } catch (error) {
+        console.log('get Clubs NOK')
         const reply = error.response
         console.error('Getting clubs failed', reply.data.detail)
         this.$root.$emit('snackbar', {
@@ -101,7 +103,6 @@ export default {
     gotoLogin() {
       this.$router.push('/tools/oldlogin?url=__clubs__manager')
     },
-
 
     registerChildMethod(methodname, method) {
       this.childmethods[methodname] = method

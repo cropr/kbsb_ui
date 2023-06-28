@@ -27,6 +27,7 @@ content_fr: |-
   - L'utilisation de [Club Manager](/clubs/manager) par les administrateurs du club
   - La consultation des [résultats des tournois SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
 
+
 title_de: "Der Königlicher Schachbund Belgien"
 content_de: |-
   Der Königlicher Schachbund Belgien(KSB) ist der offizielle nationale Schachverband Belgiens. 
@@ -41,7 +42,7 @@ content_de: |-
 
 
 title_en: "The Royal Belgian Chess Federation"
-content_english: |-
+content_en: |-
   The Royal Belgian Chess Federation (RBCF) is the official national ches federation of Belgium.
 
   ### Important links
@@ -51,8 +52,8 @@ content_english: |-
    - Consultation the [club details](/clubs/info)
    - The use of [Club Manager](/clubs/manager) by the club's administrators
    - Consultation of [tournament results of SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
-  
+
+
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
 updated_at: 1684614874
-content_en: "This page is not available in English"
 ---
