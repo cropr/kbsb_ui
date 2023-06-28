@@ -14,6 +14,9 @@
 import * as jose from 'jose'
 
 export default {
+
+  name: "TheIndex",
+
   layout: 'mgmt',
 
   data () {
@@ -37,11 +40,6 @@ export default {
   },
 
   mounted () {
-    // this.$store.commit('newlogin/startup')
-    // console.log('logintoken length', this.logintoken.length)
-    // if (!this.logintoken.length) {
-    //   this.gotoLogin()
-    // }
     this.checkAuth()
     this.setupGoogle()
   },
@@ -51,8 +49,9 @@ export default {
     handleGoogle (resp) {
       this.wrong_domain = false
       const payload = jose.decodeJwt(resp.credential)
+      console.log('decoded', payload)
       this.$store.commit('person/updateUser', {
-        token: resp.credential,
+        credential: resp.credential,
         user: payload.given_name,
         email: payload.email
       })
@@ -69,11 +68,12 @@ export default {
       })
       // eslint-disable-next-line no-undef
       google.accounts.id.prompt()
+      console.log('Setup google sign in completed')
     },
 
     checkAuth () {
       console.log('checking if auth is present so we can go to overview')
-      if (this.person.token.length > 0) {
+      if (this.person.credential.length > 0) {
         if (this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
           this.$router.push('/mgmt/overview')
         } else {

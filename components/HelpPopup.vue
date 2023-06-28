@@ -26,19 +26,13 @@ export default {
     }
   },
 
+  async fetch() {
+    this.content = (await this.$content('help', this.file).fetch())[this.$i18n.locale]
+  },
+
   props: {
     file: String
   },
 
-  methods: {
-    async fetch() {
-      this.content = (await this.$content('help', this.file).fetch())[this.$i18n.locale]
-    },
-
-  },
-
-  mounted() {
-    this.fetch()
-  },
 }
 </script>

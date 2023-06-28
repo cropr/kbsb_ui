@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>{{ pagetitle }}</h1>
+    <h1 class="text-h4 text-md-h3">{{ pagetitle }}</h1>
     <div class="mt-1" v-html="pageintro" />
     <div class="mt-1" v-html="pagecontent" />
   </v-container>

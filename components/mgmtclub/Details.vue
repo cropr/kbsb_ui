@@ -2,10 +2,9 @@
   <v-container>
     <p v-if="!club.idclub">Please select a club to view the club details</p>
     <div v-if="club.idclub">
-      <h3 v-show="status_consulting">Consulting club details</h3>
-      <h3 v-show="status_modifying">Modify club details</h3>
-      <v-container>
-        <v-row v-show="status_consulting">
+      <v-container v-show="status_consulting">
+        <h3>Consulting club details</h3>
+        <v-row >
           <v-col cols="12" md="6">
             <h4>Club details</h4>
             <div><span class="fieldname">Long name</span>: {{ clubdetails.name_long }}</div>
@@ -27,10 +26,10 @@
             <div><span class="fieldname">Main email address</span>: {{ clubdetails.email_main }}
             </div>
             <div><span class="fieldname">Email address Interclub</span>: {{
-            clubdetails.email_intercLub
+              clubdetails.email_intercLub
             }}</div>
             <div><span class="fieldname">Email address administration</span>: {{
-            clubdetails.email_admin
+              clubdetails.email_admin
             }}</div>
             <div><span class="fieldname">Email address finance</span>: {{ clubdetails.email_finance
             }}
@@ -54,7 +53,10 @@
         <v-row v-show="status_consulting">
           <v-btn @click="modifyClub">Modify club</v-btn>
         </v-row>
-        <v-row v-show="status_modifying">
+      </v-container>
+      <v-container v-show="status_modifying">
+        <h3>Modify club details</h3> 
+        <v-row class="my-2">
           <v-col cols="12" md="6">
             <h4>Club details</h4>
             <v-text-field v-model="clubdetails.name_long" label="Long name" />
@@ -66,7 +68,7 @@
           <v-col cols="12" md="6">
             <h4>Contact</h4>
             <v-text-field v-model="clubdetails.email_main" label="Main E-mail address" />
-            <v-text-field v-model="clubdetails.email_intercub" label="E-mail Interclub" />
+            <v-text-field v-model="clubdetails.email_interclub" label="E-mail Interclub" />
             <v-text-field v-model="clubdetails.email_admin" label="E-mail administration" />
             <v-text-field v-model="clubdetails.email_finance" label="E-mail finance" />
             <v-textarea v-model="clubdetails.address" label="Postal address" />
@@ -79,68 +81,40 @@
             <v-text-field v-model="clubdetails.bankaccount_bic" label="BIC bank account" />
           </v-col>
         </v-row>
-        <div v-show="status_modifying">
-          <h4>Board Members</h4>
-          <v-row v-for="(bm, f) in boardroles" :key="f">
-            <!-- <span class="fieldname">{{ boardroles[f][$i18n.locale] }}</span>: -->
-            <v-col cols="12" sm="6" lg="4">
-              <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items"
-                :label="boardroles[f][$i18n.locale]" item-text="merged" item-value="idnumber"
-                color="deep-purple" clearable @change="updateboard(f)">
-                <template v-slot:item="data">
-                  {{ data.item.merged }}
-                </template>
-              </v-autocomplete>
+        <h4>Board Members</h4>
+        <v-row class="my-2">
+            <v-col cols="12" sm="6" lg="4" v-for="(bm, f) in boardmembers" :key="f">
+              <v-card class="elevation-5">
+                <v-card-title class="fieldname"> {{ f }}</v-card-title>
+                <v-card-text>
+                  <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" :label="boardroles[f][$i18n.locale]"
+                    item-text="merged" item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
+                    <template v-slot:item="data">
+                      {{ data.item.merged }}
+                    </template>
+                  </v-autocomplete>
+                  <v-text-field label="Email" v-model="boardmembers[f].email"></v-text-field>
+                  <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="deep-purple"
+                    @change="updateboard(f)" label="Email visibility" />
+                  <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
+                  <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="deep-purple"
+                    @change="updateboard(f)" label="Mobile visibility" />
+                </v-card-text>
+              </v-card>
             </v-col>
-            <!-- <v-col cols="12" sm="6" lg="4">
-              {{ bm.email }}
-              <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items"
-                color="deep-purple" @change="updateboard(f)" label="Email visibility" />
-            </v-col>
-            <v-col cols="12" sm="6" lg="4">
-              {{ bm.mobile }}
-              <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items"
-                color="deep-purple" @change="updateboard(f)" label="Mobile visibility" />
-            </v-col> -->
-          </v-row>
-        </div>
-        <v-row v-show="status_modifying">
+        </v-row>
+        <v-row class="ma-3">
           <v-btn @click="saveClub">Save club</v-btn>
           <v-btn @click="cancelClub">Cancel</v-btn>
         </v-row>
       </v-container>
     </div>
   </v-container>
-</template>
+</template>``
 <script>
 
-const CLUB_STATUS = {
-  CONSULTING: 0,
-  MODIFYING: 1,
-}
-const EMPTY_CLUBDETAILS = {
-  venue: "",
-  address: "",
-}
+import { boardroles, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 
-const EMPTY_BOARD = {
-  president: { idnumber: 0 },
-  vice_president: { idnumber: 0 },
-  secretary: { idnumber: 0 },
-  treasurer: { idnumber: 0 },
-  tournament_director: { idnumber: 0 },
-  youth_director: { idnumber: 0 },
-  interclub_director: { idnumber: 0 },
-  webmaster: { idnumber: 0 },
-  bar_manager: { idnumber: 0 },
-  press_officer: { idnumber: 0 },
-}
-
-const VISIBILITY = {
-  hidden: "HIDDEN",
-  club: "CLUB",
-  public: "PUBLIC",
-}
 
 export default {
 
@@ -148,13 +122,14 @@ export default {
 
   data() {
     return {
-      boardroles: [],
+      boardroles: boardroles,
       boardmembers: EMPTY_BOARD,
       clubmembers: {},
-      clubdetails: {},
+      clubdetails: EMPTY_CLUB,
+      copyclubdetails: null,
       mbr_items: [],
       status: CLUB_STATUS.CONSULTING,
-      visibility_items: Object.values(VISIBILITY).map(x => this.$t(x)),
+      visibility_items: visibility_items
     }
   },
 
@@ -168,6 +143,7 @@ export default {
     status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
   },
 
+
   methods: {
 
     cancelClub() {
@@ -177,10 +153,6 @@ export default {
 
     emitInterface() {
       this.$emit("interface", "get_clubdetails", this.get_clubdetails);
-    },
-
-    async fetch() {
-      this.boardroles = (await this.$content('boardroles').fetch()).boardroles
     },
 
     async get_clubmembers() {
@@ -208,13 +180,14 @@ export default {
     },
 
     async get_clubdetails() {
+      console.log("getting club details", this.club)
       if (!this.club.id) {
-        this.clubdetails = EMPTY_CLUBDETAILS
+        this.clubdetails = EMPTY_CLUB
         return
       }
       try {
         const reply = await this.$api.club.mgmt_get_club({
-          id: this.club.id,
+          idclub: this.club.idclub,
           token: this.logintoken
         })
         this.readClubdetails(reply.data)
@@ -230,28 +203,32 @@ export default {
       }
     },
 
-    gotoLogin() {
-      this.$router.push('/mgmt/login?url=__mgmt__club')
-    },
 
     modifyClub() {
       this.status = CLUB_STATUS.MODIFYING
       this.get_clubmembers();
-
     },
 
     readClubdetails(details) {
-      this.clubdetails = { ...details }
-      if (!this.clubdetails.address) this.clubdetails.address = ""
-      if (!this.clubdetails.venue) this.clubdetails.venue = ""
+      this.clubdetails = { ...EMPTY_CLUB, ...details }
+      this.copyclubdetails = JSON.parse(JSON.stringify(details))
       this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
     },
 
     async saveClub() {
       console.log('saving', this.clubdetails)
+      // build a a diff between clubdetails ans its cooy
+      let update = {}
+      for (const [key, value] of Object.entries(this.clubdetails)) {
+        if (value != this.copyclubdetails[key]) {
+          update[key] = value
+        }
+      }
+      console.log('updates ', update)
       try {
         const reply = await this.$api.club.mgmt_update_club({
-          ...this.clubdetails,
+          ...update,
+          idclub: this.clubdetails.idclub,
           token: this.logintoken,
         })
         this.status = CLUB_STATUS.CONSULTING
@@ -296,10 +273,6 @@ export default {
 
   mounted() {
     this.emitInterface();
-    this.fetch();
-    this.$nextTick(() => {
-      this.get_clubdetails();
-    })
   },
 
 }

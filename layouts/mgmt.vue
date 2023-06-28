@@ -20,11 +20,23 @@
       </v-list>
       </v-toolbar>
       <v-list dark dense class="deep-purple">
-        <v-list-item to="/mgmt/pagelist">
+        <v-list-item to="/mgmt/overview">
           <v-list-item-icon>
-            <v-icon>mdi-file</v-icon>
+            <v-icon>mdi-eye-circle</v-icon>
           </v-list-item-icon>
-          <v-list-item-content>News Articles</v-list-item-content>
+          <v-list-item-content>Overview</v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/mgmt/content">
+          <v-list-item-icon>
+            <v-icon>mdi-content-save-cog</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>Site Content</v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/mgmt/clubs">
+          <v-list-item-icon>
+            <v-icon>mdi-account-group</v-icon>
+          </v-list-item-icon>
+          <v-list-item-content>Clubs</v-list-item-content>
         </v-list-item>
         <v-list-item to="/mgmt/filelist">
           <v-list-item-icon>
@@ -32,17 +44,17 @@
           </v-list-item-icon>
           <v-list-item-content>Files (Reports)</v-list-item-content>
         </v-list-item>
-        <v-list-item to="/mgmt/interclub">
+        <v-list-item to="/mgmt/interclubs">
           <v-list-item-icon>
-            <v-icon>mdi-arrow-left-right</v-icon>
+            <v-icon>mdi-chess-king</v-icon>
           </v-list-item-icon>
-          <v-list-item-content>Interclub</v-list-item-content>
+          <v-list-item-content>Interclubs</v-list-item-content>
         </v-list-item>
-        <v-list-item to="/mgmt/club">
+        <v-list-item to="/mgmt/logout">
           <v-list-item-icon>
-            <v-icon>mdi-account-group</v-icon>
+            <v-icon>mdi-logout</v-icon>
           </v-list-item-icon>
-          <v-list-item-content>Clubs</v-list-item-content>
+          <v-list-item-content>Logout</v-list-item-content>
         </v-list-item>
       </v-list>
     </v-navigation-drawer>

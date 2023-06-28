@@ -4,8 +4,8 @@
     <v-card>
       <v-card-text>
         {{ $t('Select the club') }} ({{ $t('Start typing number or name') }})
-        <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub"
-          color="green" :label="$t('Club')" clearable @change="selectclub">
+        <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub" color="green"
+          :label="$t('Club')" clearable @change="selectclub">
           <template v-slot:item="data">
             {{ data.item.merged }}
           </template>
@@ -34,6 +34,7 @@
 
 <script>
 
+import { EMPTY_CLUB } from '@/util/club'
 const noop = function () { }
 
 export default {
@@ -59,12 +60,9 @@ export default {
     logintoken() { return this.$store.state.oldlogin.value },
   },
 
-  mounted() {
-    this.$store.commit('oldlogin/startup')
-    if (!this.logintoken.length) {
-      this.gotoLogin()
-    }
-    this.getClubs()
+  async mounted() {
+    await this.checkAuth()
+    await this.getClubs()
   },
 
   methods: {
@@ -75,57 +73,68 @@ export default {
       })
     },
 
+    async checkAuth() {
+      console.log('checking if auth is already set')
+      if (!this.logintoken) {
+        this.gotoLogin()
+      }
+    },
+
     async getClubs() {
+      console.log('getClubs')
       try {
-        const reply = await this.$api.club.clb_get_clubs({
-          token: this.logintoken
-        })
+        const reply = await this.$api.club.anon_get_clubs();
+        console.log('getClubs OK', reply)        
         this.clubs = reply.data.clubs
         this.clubs.forEach(p => {
           p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
         })
+        console.log('get Clubs OK')
       } catch (error) {
+        console.log('get Clubs NOK')
         const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Getting clubs failed') })
-        }
+        console.error('Getting clubs failed', reply.data.detail)
+        this.$root.$emit('snackbar', {
+          text: 'Getting clubs failed'
+        })
       }
     },
 
     gotoLogin() {
-      this.$router.push('/tools/oldlogin?url=__tools__club')
+      this.$router.push('/tools/oldlogin?url=__clubs__manager')
     },
 
     registerChildMethod(methodname, method) {
       this.childmethods[methodname] = method
     },
 
-    selectclub() {
+    async selectclub() {
       if (!this.idclub) {
         this.activeclub = {}
+        return
       }
-      else {
+      console.log('selecting club', this.idclub)
+      try {
+        const reply = await this.$api.club.verify_club_access({
+          idclub: this.idclub,
+          role: "ClubAdmin",
+          token: this.logintoken,
+        })
         this.clubs.forEach((c) => {
           if (c.idclub == this.idclub) {
-            this.activeclub = c
+            this.activeclub = { ...EMPTY_CLUB, ...c }
           }
         })
+        console.log ('club selected', this.activeclub)
+        this.$nextTick(() => this.call_childmethods())
+      } catch (error) {
+          console.error('Getting clubs failed', error)
+          this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
       }
-      this.$nextTick(() => this.call_childmethods())
     }
-
   }
 
 }
 </script>
 
-<style>
-</style>
+<style></style>``

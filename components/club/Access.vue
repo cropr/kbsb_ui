@@ -173,7 +173,7 @@ export default {
     },
 
     async get_clubmembers() {
-      console.log('get_clubmembers', this.club.id)
+      console.log('get_clubmembers', this.club.idclub)
       if (!this.club.id) {
         this.clubmembers = {}
         return
@@ -204,13 +204,14 @@ export default {
 
     async get_clubrights() {
       await this.get_clubmembers()
+      console.log('get clubrights')
       if (!this.club.id) {
         this.clubrights = {}
         return
       }
       try {
         const reply = await this.$api.club.clb_get_club({
-          id: this.club.id,
+          idclub: this.club.idclub,
           token: this.logintoken
         })
         this.readClubrights(reply.data)
@@ -227,7 +228,7 @@ export default {
     },
 
     gotoLogin() {
-      this.$router.push('/mgmt/login?url=__tools__club')
+      this.$router.push('/mgmt/login?url=__club__manager')
     },
 
     async modifyAccess() {
@@ -281,7 +282,7 @@ export default {
     async saveAccess() {
       try {
         const reply = await this.$api.club.clb_update_club({
-          id: this.club.id,
+          idclub: this.club.idclub,
           clubroles: [
             {
               nature: "ClubAdmin",
