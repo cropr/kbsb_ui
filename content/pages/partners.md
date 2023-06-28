@@ -79,6 +79,24 @@ content_english: |-
 
   ## Talistro e-voting systems
   ![Talistro](/img/frame_talistro.png)
-updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
-updated_at: 1681480481
+updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
+updated_at: 1687812137
+content_en: |-
+  ## ECU: European chess union
+  ![ecu](/img/frame_ecu.png)
+
+  ## FIDE
+  ![fide](/img/frame_fide.png)
+
+  ## BOIC - COIB
+  ![boic-coib](/img/boic.png)
+
+  ## Arena Sport Insurance
+  ![arena](/img/frame_arena.png)
+
+  ## i-HEB Chartered Accountants
+  ![i-HEB](/img/frame_iheb.png)
+
+  ## Talistro e-voting systems
+  ![Talistro](/img/frame_talistro.png)
 ---
