@@ -130,8 +130,7 @@
 </template>
 <script>
 
-import { EMPTY_CLUB } from '@/util/cms'
-import { boardroles, visibility_items, CLUB_STATUS, EMPTY_BOARD } from '@/util/club'
+import { boardroles, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 
 export default {
 
@@ -160,9 +159,6 @@ export default {
     status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
   },
 
-  async fetch() {
-      this.boardroles = (await this.$content('boardroles').fetch()).boardroles
-    },
 
   methods: {
 

@@ -84,3 +84,8 @@ export const visibility_items = [
   { text: "Club", value: "CLUB" },
   { text: "Public", value: "PUBLIC" },
 ];
+
+export const EMPTY_CLUB = {
+  venue: "",
+  address: "",
+};

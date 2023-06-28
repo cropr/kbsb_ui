@@ -34,7 +34,7 @@
 
 <script>
 
-import { EMPTY_CLUB } from '@/util/cms'
+import { EMPTY_CLUB } from '@/util/club'
 const noop = function () { }
 
 export default {

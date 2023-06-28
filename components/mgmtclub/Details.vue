@@ -113,9 +113,7 @@
 </template>``
 <script>
 
-import { EMPTY_CLUB } from '@/util/cms'
-import { boardroles, visibility_items, CLUB_STATUS, EMPTY_BOARD } from '@/util/club'
-
+import { boardroles, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 
 
 export default {

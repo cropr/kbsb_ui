@@ -58,8 +58,7 @@
 
 <script>
 
-import { EMPTY_CLUB } from '@/util/cms';
-import { boardroles } from '@/util/club';
+import { boardroles, EMPTY_CLUB } from '@/util/club';
 
 export default {
   name: "Details",
@@ -68,14 +67,10 @@ export default {
     return {
       boardroles: boardroles,
       boardmembers: {},
-      club: {...EMPTY_club},
+      club: {...EMPTY_CLUB},
       clubs: [],
       idclub: null,
     };
-  },
-
-  async fetch() {
-    this.boardroles = (await this.$content("boardroles").fetch()).boardroles;
   },
 
   methods: {
@@ -109,8 +104,8 @@ export default {
     },
   },
 
-  mounted() {
-    this.get_clubs();
+  async mounted() {
+    await this.get_clubs();
   },
 };
 </script>
