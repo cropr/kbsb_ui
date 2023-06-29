@@ -71,11 +71,11 @@
         </v-row>
       </v-container>
       <v-container v-show="status_modifying">
-        <h3 >{{ $t('Modify club') }}</h3>
+        <h3>{{ $t('Modify club') }}</h3>
         <v-row>
           <v-col cols="12" md="6" lg="4">
             <h4>{{ $t('Club details') }}</h4>
-            <v-text-field v-model="clubdetails.name_long" :label=" $t('Long name')" />
+            <v-text-field v-model="clubdetails.name_long" :label="$t('Long name')" />
             <v-text-field v-model="clubdetails.name_short" :label="$t('Short name')" />
             <p>{{ $t('Federation') }}: {{ clubdetails.federation }}</p>
             <v-textarea rows="3" v-model="clubdetails.venue" :label="$t('Venue')" />
@@ -87,7 +87,7 @@
             <v-text-field v-model="clubdetails.email_interclub" :label="$t('Email address Interclub')" />
             <v-text-field v-model="clubdetails.email_admin" :label="$t('Email address administration')" />
             <v-text-field v-model="clubdetails.email_finance" :label="$t('Email address finance')" />
-            <v-textarea  rows="3"v-model="clubdetails.address" :label="$t('Postal address')" />
+            <v-textarea rows="3" v-model="clubdetails.address" :label="$t('Postal address')" />
           </v-col>
           <v-col cols="12" md="6" lg="4">
             <h4>{{ $t('Bank details') }}</h4>
@@ -97,15 +97,15 @@
           </v-col>
         </v-row>
         <h4>{{ $t('Board members') }}</h4>
-        <v-row >
-          <v-col cols="12" sm="6" lg="4" v-for="(bm, f) in clubdetails.boardmembers" :key="f">
+        <v-row>
+          <v-col cols="12" sm="6" lg="4" v-for="(bm, f) in boardmembers" :key="f">
             <v-card class="elevation-5">
-              <v-card-title>                
+              <v-card-title>
                 <tr-fieldname :fieldname="f" />
               </v-card-title>
               <v-card-text>
-                <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" 
-                  item-text="merged" item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
+                <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" item-text="merged"
+                  item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
                   <template v-slot:item="data">
                     {{ data.item.merged }}
                   </template>
@@ -113,7 +113,7 @@
                 <v-text-field label="Email" v-model="boardmembers[f].email"></v-text-field>
                 <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="deep-purple"
                   @change="updateboard(f)" label="Email visibility" />
-                  <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
+                <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
                 <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="deep-purple"
                   @change="updateboard(f)" label="Mobile visibility" />
               </v-card-text>
@@ -260,7 +260,7 @@ export default {
       this.clubdetails = { ...EMPTY_CLUB, ...details }
       this.copyclubdetails = JSON.parse(JSON.stringify(details))
       this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
-},
+    },
 
     async saveClub() {
       console.log('saving', this.clubdetails,)
@@ -301,8 +301,8 @@ export default {
         let cm = this.clubmembers[bm.idnumber]
         bm.first_name = cm.first_name
         bm.last_name = cm.last_name
-        bm.email = cm.email
-        bm.mobile = cm.mobile
+        if (!bm.email) bm.email = cm.email
+        if (!bm.mobile) bm.mobile = cm.mobile
         if (!bm.email_visibility) bm.email_visibility = "CLUB"
         if (!bm.mobile_visibility) bm.mobile_visibility = "CLUB"
         this.clubdetails.boardmembers[f] = bm
@@ -323,7 +323,7 @@ export default {
 
   async mounted() {
     this.emitInterface();
-    this.visibility_items.forEach((vi)=>{
+    this.visibility_items.forEach((vi) => {
       console.log('vi', vi)
       if (!vi.translated) {
         vi.text = this.$t(vi.text)

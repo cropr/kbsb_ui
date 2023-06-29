@@ -4,7 +4,7 @@
     <div v-if="club.idclub">
       <v-container v-show="status_consulting">
         <h3>Consulting club details</h3>
-        <v-row >
+        <v-row>
           <v-col cols="12" md="6">
             <h4>Club details</h4>
             <div><span class="fieldname">Long name</span>: {{ clubdetails.name_long }}</div>
@@ -55,7 +55,7 @@
         </v-row>
       </v-container>
       <v-container v-show="status_modifying">
-        <h3>Modify club details</h3> 
+        <h3>Modify club details</h3>
         <v-row class="my-2">
           <v-col cols="12" md="6">
             <h4>Club details</h4>
@@ -83,25 +83,25 @@
         </v-row>
         <h4>Board Members</h4>
         <v-row class="my-2">
-            <v-col cols="12" sm="6" lg="4" v-for="(bm, f) in boardmembers" :key="f">
-              <v-card class="elevation-5">
-                <v-card-title class="fieldname"> {{ f }}</v-card-title>
-                <v-card-text>
-                  <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" :label="boardroles[f][$i18n.locale]"
-                    item-text="merged" item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
-                    <template v-slot:item="data">
-                      {{ data.item.merged }}
-                    </template>
-                  </v-autocomplete>
-                  <v-text-field label="Email" v-model="boardmembers[f].email"></v-text-field>
-                  <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="deep-purple"
-                    @change="updateboard(f)" label="Email visibility" />
-                  <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
-                  <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="deep-purple"
-                    @change="updateboard(f)" label="Mobile visibility" />
-                </v-card-text>
-              </v-card>
-            </v-col>
+          <v-col cols="12" sm="6" lg="4" v-for="(bm, f) in boardmembers" :key="f">
+            <v-card class="elevation-5">
+              <v-card-title class="fieldname"> {{ f }}</v-card-title>
+              <v-card-text>
+                <v-autocomplete v-model="boardmembers[f].idnumber" :items="mbr_items" :label="boardroles[f][$i18n.locale]"
+                  item-text="merged" item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
+                  <template v-slot:item="data">
+                    {{ data.item.merged }}
+                  </template>
+                </v-autocomplete>
+                <v-text-field label="Email" v-model="boardmembers[f].email"></v-text-field>
+                <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="deep-purple"
+                  @change="updateboard(f)" label="Email visibility" />
+                <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
+                <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="deep-purple"
+                  @change="updateboard(f)" label="Mobile visibility" />
+              </v-card-text>
+            </v-card>
+          </v-col>
         </v-row>
         <v-row class="ma-3">
           <v-btn @click="saveClub">Save club</v-btn>
@@ -251,8 +251,8 @@ export default {
         let cm = this.clubmembers[bm.idnumber]
         bm.first_name = cm.first_name
         bm.last_name = cm.last_name
-        bm.email = cm.email
-        bm.mobile = cm.mobile
+        if (!bm.email) bm.email = cm.email
+        if (!bm.mobile) bm.mobile = cm.mobile
         if (!bm.email_visibility) bm.email_visibility = "CLUB"
         if (!bm.mobile_visibility) bm.mobile_visibility = "CLUB"
         this.clubdetails.boardmembers[f] = bm
