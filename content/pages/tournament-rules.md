@@ -1570,7 +1570,7 @@ content_fr: |-
 
   3. Tout joueur qui, après 20 parties, n'obtient pas 1150 pts se voit automatiquement donner une cote de 1150.
 
-  4. Si la différence de cote entre deux joueurs dépasse 350 pts, elle est ramenée à 350.
+  4. Si la différence de cote entre deux joueurs dépasse 400 pts, elle est ramenée à 400.
 
   5. Si deux joueurs sont à égalité de points, le joueur qui a le plus de parties enregistrées est classé le premier.
       
@@ -2727,6 +2727,7 @@ title_de: 'Turnierregeln des KSB'
 content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
 title_en: 'Tournament rules of the RBCF'
 content_english: 'This page is not available in English'
-updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
-updated_at: 1681477239
+updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
+updated_at: 1687972412
+content_en: 'This page is not available in English'
 ---

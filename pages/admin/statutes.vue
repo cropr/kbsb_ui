@@ -15,7 +15,7 @@
           <div class="mt-2" v-html="pagecontent_nl" />
         </v-tab-item>
         <v-tab-item>
-          <div class="mt-2" v-html="pagecontent_nl" />
+          <div class="mt-2" v-html="pagecontent_fr" />
         </v-tab-item>
       </v-tabs-items>
     </v-container>

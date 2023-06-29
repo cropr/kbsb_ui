@@ -1,51 +1,31 @@
 <template>
   <v-container>
-    <h1>{{ page.title }}</h1>
-    <v-container class="mt-1 markedcontent elevation-2">
-      <v-tabs v-model="tab" light slider-color="deep-purple">
-        <v-tab class="mx-2">
-          NL
-        </v-tab>
-        <v-tab class="mx-2">
-          FR
-        </v-tab>
-      </v-tabs>
-      <v-tabs-items v-model="tab">
-        <v-tab-item>
-          <nuxt-content :document="page__nl" class="mt-3" />
-        </v-tab-item>
-        <v-tab-item>
-          <nuxt-content :document="page__fr" class="mt-3" />
-        </v-tab-item>
-      </v-tabs-items>
-    </v-container>
+    <h1>{{ pagetitle }}</h1>
+    <div class="mt-2" v-html="pagecontent" />
   </v-container>
 </template>
 
 <script>
+
+import showdown from 'showdown'
+
 export default {
 
   layout: 'default',
 
   data () {
     return {
-      page__nl: {},
-      page__fr: {},
-      page__de: {},
-      page__en: {},
+      page: {},
       tab: 0
     }
   },
 
   async fetch () {
-    this.page__nl = await this.$content('pages', 'youth', 'school-chess_nl').fetch()
-    this.page__fr = await this.$content('pages', 'youth', 'school-chess_fr').fetch()
-    this.page__de = await this.$content('pages', 'youth', 'school-chess_de').fetch()
-    this.page__en = await this.$content('pages', 'youth', 'school-chess_en').fetch()
+    this.page = await this.$content('pages', 'schoolchess').fetch()
   },
 
   head: {
-    title: 'Schoolschaak - Inter-écoles',
+    title: 'Belgisch jeugdkampioenschap | Championnat de Belgique de la jeunesse',
     link: [
       {
         rel: 'stylesheet',
@@ -76,9 +56,19 @@ export default {
       }
     ]
   },
-
   computed: {
-    page () { return this['page__' + this.$i18n.locale] }
+    pagecontent () {
+      const pcontent = this.page[`content_${this.$i18n.locale}`]
+      const converter = new showdown.Converter()
+      return converter.makeHtml(pcontent)
+    },
+
+    pagetitle () {
+      const locale = this.$i18n.locale
+      const pti18 = this.page[`title_${locale}`]
+      const ptitle = pti18 && pti18.length ? pti18 : this.page.title
+      return ptitle
+    }
   }
 }
 </script>
