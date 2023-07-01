@@ -10,9 +10,11 @@ content_nl: |-
 
   ## Partijen inzenden voor ELO-verwerking
   **Via SWAR**: Gebruik de menu-knop 'EloN' of via het menu 'Lijsten' > 'Berekening ELO -> KBSB'. SWAR genereert het ELO-bestand dat u vervolgens manueel, of via SWAR doorstuurt naar [ratings@frbe-kbsb-ksb.be](mailto:ratings@frbe-kbsb-ksb.be).
+
   **Via de toernooimanager** [De toernooimanager](https://www.frbe-kbsb.be/sites/manager/GestionTOURNOIS/liste_tournois.php) laat toe om manueel partijen te coderen en vervolgens eveneens door te sturen.
 
   **Limietdatum voor inzendingen**: De uiterste limietdatum voor inzending van partijen is 3 dagen vòòr publicatie van het volgende klassement.
+
   **Bevestiging**: Voor elke inzending die succesvol toekomt bij de KBSB, volgt een verwerkingsstap en bevestiging van inzending. Na inzending is het nog steeds uw verantwoordelijkheid om de verwerking na te kijken en eventuele fouten door te geven uiterlijk 3 dagen vòòr publicatie van het nieuwe klassement.
   De verwerkingsstap gebeurt manueel en neemt typisch niet meer dan 3 dagen in beslag.
 
@@ -29,9 +31,11 @@ content_fr: |-
 
   ## Soumettre les parties pour traitement ELO
   **Via SWAR**: Utilisez le bouton de menu 'EloN' ou via le menu 'Listes' > 'Calcul ELO -> KBSB'. SWAR génère le fichier ELO que vous envoyez ensuite manuellement ou via SWAR à [ratings@frbe-kbsb-ksb.be](mailto:ratings@frbe-kbsb-ksb.be).
+
   **Via le gestionnaire de tournois** [Le gestionnaire de tournois](https://www.frbe-kbsb.be/sites/manager/GestionTOURNOIS/liste_tournois.php) permet d'encoder manuellement les parties puis de les retransmettre également.
 
   **Date limite d'inscription**: La date limite d'inscription des parties est de 3 jours avant la publication du prochain classement.
+
   **Confirmation**: pour chaque soumission qui parvient à la KBSB, une étape de traitement et une confirmation de soumission suivent. Après soumission, il vous appartient toujours de vérifier le traitement et de signaler toute erreur au plus tard 3 jours avant la publication du nouveau classement.
   L'étape de traitement est effectuée manuellement et ne prend généralement pas plus de 3 jours.
 
@@ -46,16 +50,18 @@ content_de: 'The content of this page is not available in German.'
 title_en: 'ELO processing'
 content_english: 'The final date for sending the tournament results for the Belgian ELO standings has now been defined as 3 days before the end of the quarter being the **27/9**, **28/12**, **28/03** and **27/06**. The results of the tournaments must be sent within 30 days after the end of tournament'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1688238700
+updated_at: 1688238767
 content_en: |-
   ## Rules for the ELO processing
   [The Competition Rules Article 10](https://www.frbe-kbsb-ksb.be/admin/tournamentrules) describes how the ranking of the players is done, together with the ELO calculation.
 
   ## Submit games for ELO processing
   **Via SWAR**: Use the menu button 'EloN' or via the menu 'Lists' > 'Calculation ELO -> KBSB'. SWAR generates the ELO file that you then send manually or via SWAR to [ratings@frbe-kbsb-ksb.be](mailto:ratings@frbe-kbsb-ksb.be).
+
   **Via the tournament manager** [The tournament manager](https://www.frbe-kbsb.be/sites/manager/GestionTOURNOIS/liste_tournois.php) allows you to manually encode games and then forward them as well.
 
   **Entry Limit Date**: The deadline for entry of lots is 3 days prior to the publication of the next ranking.
+
   **Confirmation**: For each submission that successfully reaches the KBSB, a processing step and confirmation of submission follows. After submission, it is still your responsibility to check the processing and report any errors no later than 3 days before the publication of the new ranking.
   The processing step is done manually and typically takes no more than 3 days.
 
