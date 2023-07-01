@@ -25,7 +25,7 @@ content_nl: |-
 title_fr: 'Traitement ELO'
 content_fr: |-
   ## Règles pour le traitement ELO
-  [L'article 10 du règlement du concours](https://www.frbe-kbsb-ksb.be/admin/règlesdutournoi) décrit comment se fait le classement des joueurs, ainsi que le calcul de l'ELO.
+  [L'article 10 du règlement du concours](https://www.frbe-kbsb-ksb.be/admin/tournamentrules) décrit comment se fait le classement des joueurs, ainsi que le calcul de l'ELO.
 
   ## Soumettre les parties pour traitement ELO
   **Via SWAR**: Utilisez le bouton de menu 'EloN' ou via le menu 'Listes' > 'Calcul ELO -> KBSB'. SWAR génère le fichier ELO que vous envoyez ensuite manuellement ou via SWAR à [ratings@frbe-kbsb-ksb.be](mailto:ratings@frbe-kbsb-ksb.be).
@@ -41,12 +41,12 @@ content_fr: |-
   ## Contact
   Pour toute question concernant le traitement ELO, veuillez nous contacter de préférence via [ratings@frbe-kbsb-ksb.be](mailto:ratings@frbe-kbsb-ksb.be).
   Dans le deuxième cas, vous pouvez également contacter directement [la personne responsable du traitement ELO](https://www.frbe-kbsb-ksb.be/admin/board).
-title_de: 'Verarbeitung ELO'
-content_de: 'Das äußerste Datum fürs Einreichen der Resultate von Turnieren für die Belgische Elo-Wertungszahl (BEWZ) wird auf drei Tage vor Ende eines Trimesters festgelegt, d. h. am **27.09**, **28.12**, **28.03** und **27.06**. Es sei daran erinnert, dass die Turnierergebnisse innerhalb von 30 Tagen nach Turnierende eingesandt werden MÜSSEN.'
+title_de: 'ELO processing'
+content_de: 'The content of this page is not available in German.'
 title_en: 'ELO processing'
 content_english: 'The final date for sending the tournament results for the Belgian ELO standings has now been defined as 3 days before the end of the quarter being the **27/9**, **28/12**, **28/03** and **27/06**. The results of the tournaments must be sent within 30 days after the end of tournament'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1688236331
+updated_at: 1688238700
 content_en: |-
   ## Rules for the ELO processing
   [The Competition Rules Article 10](https://www.frbe-kbsb-ksb.be/admin/tournamentrules) describes how the ranking of the players is done, together with the ELO calculation.
