@@ -1,15 +1,24 @@
 <template>
   <v-container>
     <h1>Club Manager</h1>
+    <v-dialog width="10em" v-model="waiting_dialog">
+      <template v-slot:activator="{ on, attrs }"></template>
+      <v-card>
+        <v-card-title>Loading...</v-card-title>
+        <v-card-text>
+          <v-progress-circular indeterminate color="deep-purple" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-card>
       <v-card-text>
         <v-row>
           <v-col cols="4">
-            <v-btn>Create new club</v-btn><br />
-            <v-btn class="mt-2">Make a mailing</v-btn>
+            <v-btn @click="notyet">Create new club</v-btn><br />
+            <v-btn @click="notyet" class="mt-2">Make a mailing</v-btn>
           </v-col>
           <v-col cols="8">
-            <v-btn>Export list of clubs</v-btn>
+            <v-btn @click="download">Export list of clubs</v-btn>
             <v-select label="Format" v-model="exportformat" :items="exportformats">
             </v-select>
           </v-col>
@@ -34,18 +43,22 @@
     </h3>
     <div class="elevation-2">
 
-      <v-tabs v-model="tab" color="deep-purple" @change="call_childmethods">
+      <v-tabs v-model="tab" color="deep-purple" @change="updateTab">
         <v-tabs-slider color="deep-purple"></v-tabs-slider>
-        <v-tab>Club details</v-tab>
+        <v-tab>Details</v-tab>
+        <v-tab>Board members</v-tab>
         <v-tab>Access rights</v-tab>
         <!-- <v-tab>Downloads</v-tab> -->
       </v-tabs>
       <v-tabs-items v-model="tab">
-        <v-tab-item>
-          <MgmtclubDetails @interface="registerChildMethod" :club="activeclub" />
+        <v-tab-item :eager="true">
+          <MgmtclubDetails :bus="bus" :club="activeclub" ref="detail" />
         </v-tab-item>
-        <v-tab-item>
-          <MgmtclubAccess @interface="registerChildMethod" :club="activeclub" />
+        <v-tab-item :eager="true">
+          <MgmtclubBoard :bus="bus" :club="activeclub" :clubmembers="clubmembers" ref="board"/>
+        </v-tab-item>
+        <v-tab-item :eager="true">
+          <MgmtclubAccess :bus="bus" :club="activeclub" :clubmembers="clubmembers" ref="access"/>
         </v-tab-item>
         <!-- <v-tab-item>
           <MgmtclubDownloads />
@@ -56,8 +69,13 @@
 </template>
 
 <script>
+import Vue from 'vue'
 import { EMPTY_CLUB } from '@/util/club'
 const noop = function () { }
+
+function utoa(data) {
+  return window.btoa(unescape(encodeURIComponent(data)));
+}
 
 export default {
 
@@ -68,19 +86,18 @@ export default {
   data() {
     return {
       activeclub: {},
-      childmethods: {
-        get_clubdetails: noop,
-        get_clubrights: noop,
-      },
+      bus: new Vue(),
+      clubmembers: null,      
       clubs: [],
-      idclub: null,
-      tab: null,
       exportformat: "JSON",
       exportformats: [
         "JSON",
         "CSV",
         "Excel",
-      ],
+      ],      
+      idclub: null,
+      tab: null,
+      waiting_dialog: false
     }
   },
 
@@ -111,12 +128,6 @@ export default {
   methods: {
 
 
-    call_childmethods() {
-      Object.keys(this.childmethods).forEach((v) => {
-        this.childmethods[v]()
-      })
-    },
-
     async checkAuth() {
       console.log('checking if auth is already set')
       if (!this.logintoken) {
@@ -143,8 +154,22 @@ export default {
       }
     },
 
+    async download(){
+      switch(this.exportformat) {
+        case "JSON":
+          window.open('/api/v1/a/clubs', "_download")
+          break
+        case "CSV":
+        window.open('/api/v1/a/csv/clubs', "_download")
+          break
+        case "Excel":
+          this.$root.$emit('snackbar', {
+            text: 'Not supported yet'
+          })
+      }
+    },
+
     async getClubs() {
-      console.log('getClubs')
       try {
         const reply = await this.$api.club.anon_get_clubs();
         this.clubs = reply.data.clubs
@@ -160,24 +185,61 @@ export default {
       }
     },
 
-    registerChildMethod(methodname, method) {
-      this.childmethods[methodname] = method
+    async getClubMembers() {
+      this.waiting_dialog = true
+      try {
+        const reply = await this.$api.old.get_clubmembers({
+          idclub: this.idclub,
+        })
+        this.waiting_dialog = false
+        const members = reply.data.activemembers
+        members.forEach(p => {
+          p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
+        })
+        this.clubmembers = members.sort((a, b) =>
+          (a.last_name > b.last_name ? 1 : -1))        
+      } catch (error) {
+        this.waiting_dialog = false        
+        const reply = error.reply
+        console.error('Getting club members failed', reply.data.detail)
+        this.$root.$emit('snackbar', { text: 'Getting club members failed' })
+      }
+    },    
+
+    notyet(){
+      this.$root.$emit('snackbar', { text: 'Not available yet' })      
     },
 
-    selectclub() {
+    async selectclub() {
       if (!this.idclub) {
         this.activeclub = {}
+        return
       }
-      else {
-        this.clubs.forEach((c) => {
-          if (c.idclub == this.idclub) {
-            this.activeclub = { ...EMPTY_CLUB, ...c }
-          }
-        })
+      this.clubs.forEach((c) => {
+        if (c.idclub == this.idclub) {
+          this.activeclub = { ...EMPTY_CLUB, ...c }
+        }
+      })
+      this.$nextTick(()=> this.bus.$emit("setupdetails"))   // fill data on load 
+      this.clubmembers = null
+      await this.getClubMembers()   
+    },
+
+    updateTab(){
+      switch (this.tab) {
+        case 0:
+          this.bus.$emit("setupdetails")
+          break
+        case 1:
+          console.log('emitting board')
+          this.bus.$emit("setupboard")
+          break
+        case 2:
+          console.log('emitting access')
+          this.bus.$emit("setupaccess")
+          break
       }
-      console.log ('club selected', this.activeclub)      
-      this.$nextTick(() => this.call_childmethods())
-    }
+    }    
 
   }
 

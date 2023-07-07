@@ -88,4 +88,7 @@ export const visibility_items = [
 export const EMPTY_CLUB = {
   venue: "",
   address: "",
+  openinghours: {},
 };
+
+export const ROLES = ["ClubAdmin", "InterclubAdmin"];

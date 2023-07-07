@@ -85,6 +85,10 @@ export default (context) => ({
     const resp = await context.$axios.get("/api/v1/a/clubs");
     return resp;
   },
+  async anon_get_csv_clubs(options) {
+    const resp = await context.$axios.get("/api/v1/a/csv/clubs");
+    return resp;
+  },
 
   // other
   async verify_club_access(options) {
