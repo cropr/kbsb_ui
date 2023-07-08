@@ -201,7 +201,7 @@ content_de: |-
   [Datas.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/Datas.zip)<br>
   [IntNat.zip ChessManager](https://www.frbe-kbsb.be/sites/manager/ICN/21-22/IntNat.zip)
 title_en: "Interclubs 2021-22"
-content_english: |-
+content_en: |-
   [INTERCLUBS MANAGER](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php) with write permissions
 
   #### Consultation 
