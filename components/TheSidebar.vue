@@ -59,12 +59,12 @@
         <template #activator>
           <v-list-item-content>{{ $t('Competitions') }}</v-list-item-content>
         </template>
-        <v-list-item to="/competition/interclubs-2023-24">
+        <v-list-item to="/interclubs/interclubs-2023-24">
           <v-list-item-content>
             Interclubs 2023-34
           </v-list-item-content>
         </v-list-item>
-        <v-list-item to="/competition/interclubs-2022-23">
+        <v-list-item to="/interclubs/interclubs-2022-23">
           <v-list-item-content>
             Interclubs 2022-23
           </v-list-item-content>
@@ -145,7 +145,10 @@
             Player Manager
           </v-list-item-content>
         </v-list-item>
-        <v-list-item to="/tools/interclub">
+        <v-list-item to="/clubs/manager">
+          <v-list-item-content>Club Manager</v-list-item-content>
+        </v-list-item>
+        <v-list-item to="/interclubs/manager">
           <v-list-item-content>
             Interclub Manager
           </v-list-item-content>
