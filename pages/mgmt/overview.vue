@@ -15,7 +15,7 @@
     <ul>
       <li>Managing of the <NuxtLink to="/mgmt/content">Content</NuxtLink> (news articles and pages)</li>
       <li>Admin part of <NuxtLink to="/mgmt/clubs">Clubs Manager</NuxtLink></li>
-      <li>Admin part of <NuxtLink to="/mgmt/clubs">Interclubs Manager</NuxtLink></li>
+      <li>Admin part of <NuxtLink to="/mgmt/interclubs">Interclubs Manager</NuxtLink></li>
       <li>Managing of <NuxtLink to="/mgmt/filelist">Files</NuxtLink> (reports and other assets)</li>
     </ul>
     <p>

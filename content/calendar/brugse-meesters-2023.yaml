@@ -1,0 +1,17 @@
+multiple:
+- title: BK en Brugse Meesters 2023
+  rounds:
+    1: 2023-08-12
+    2,3: 2023-08-13
+    4: 2023-08-14
+    5,6: 2023-08-15
+    7: 2023-08-16
+    8: 2023-08-17
+    9: 2023-08-18
+  link: https://sites.google.com/view/brugsemeestersbe
+  label: external
+
+- title: Blitz op de Brugse Meesters 2023
+  date: 2023-08-16
+  link: https://sites.google.com/view/brugsemeestersbe
+  label: external

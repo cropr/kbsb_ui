@@ -31,10 +31,10 @@
       </v-tabs>
       <v-tabs-items v-model="tab" >
         <v-tab-item :eager="true">
-          <InterclubsEnrollment :bus="bus" :club="activeclub" />
+          <InterclubsEnrollment :bus="bus" :club="activeclub" ref="enrollment" />
         </v-tab-item>
         <v-tab-item :eager="true">
-          <InterclubsVenue :bus="bus" :club="activeclub" />
+          <InterclubsVenue :bus="bus" :club="activeclub"  ref="venues"/>
         </v-tab-item>
       </v-tabs-items>
     </div>
@@ -61,7 +61,7 @@ export default {
       bus: new Vue(),
       clubs: [],
       idclub: null,
-      tab: null,
+      tab: -1,
       waiting_dialog: false
     }
   },
@@ -119,8 +119,7 @@ export default {
             this.activeclub = { ...EMPTY_CLUB, ...c }
           }
         })
-        this.$nextTick(()=> this.bus.$emit("setupenrollment"))   // fill data on load 
-        // await this.getClubMembers()   
+        this.$refs.enrollment.setupEnrollment()
       } catch (error) {
           console.error('Getting clubs failed', error)
           this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
@@ -128,12 +127,13 @@ export default {
     },
 
     updateTab(){
+      console.log('updateTab', this.tab, this.bus)
       switch (this.tab) {
         case 0:
-          this.bus.$emit("setupenrollment")
+          this.$refs.enrollment.setupEnrollment()
           break
         case 1:
-          this.bus.$emit("setupvenue")
+          this.$refs.venues.setupVenues()
           break
       }
     }
@@ -145,5 +145,11 @@ export default {
 <style>
 .fieldname {
   color: green;
+}
+.card-title {
+  color: green;
+  border-bottom: dashed green thin;
+  margin-bottom: 8px;
+  padding-bottom: 8px; 
 }
 </style>

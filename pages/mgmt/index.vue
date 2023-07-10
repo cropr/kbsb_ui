@@ -47,6 +47,7 @@ export default {
   methods: {
 
     handleGoogle (resp) {
+      console.log('handling google')
       this.wrong_domain = false
       const payload = jose.decodeJwt(resp.credential)
       console.log('decoded', payload)
@@ -61,13 +62,15 @@ export default {
     setupGoogle () {
       console.log('Setup google sign in')
       // eslint-disable-next-line no-undef
-      google.accounts.id.initialize({
+      const reply = google.accounts.id.initialize({
         client_id: '658290412135-v6ah768urdv83dn76ra4mkiovdalal2k.apps.googleusercontent.com',
         callback: this.handleGoogle,
         prompt_parent_id: 'parent_id'
       })
+      console.log("initialize:", reply)
       // eslint-disable-next-line no-undef
-      google.accounts.id.prompt()
+      const prompt = google.accounts.id.prompt()
+      console.log("prompt", prompt)
       console.log('Setup google sign in completed')
     },
 

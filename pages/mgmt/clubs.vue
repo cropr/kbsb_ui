@@ -48,7 +48,6 @@
         <v-tab>Details</v-tab>
         <v-tab>Board members</v-tab>
         <v-tab>Access rights</v-tab>
-        <!-- <v-tab>Downloads</v-tab> -->
       </v-tabs>
       <v-tabs-items v-model="tab">
         <v-tab-item :eager="true">
@@ -60,9 +59,6 @@
         <v-tab-item :eager="true">
           <MgmtclubAccess :bus="bus" :club="activeclub" :clubmembers="clubmembers" ref="access"/>
         </v-tab-item>
-        <!-- <v-tab-item>
-          <MgmtclubDownloads />
-        </v-tab-item> -->
       </v-tabs-items>
     </div>
   </v-container>

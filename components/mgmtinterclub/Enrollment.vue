@@ -1,83 +1,125 @@
 <template>
   <v-container>
-    <p v-if="!club.idclub">{{ $t('Please select a club to view the enrollment') }}</p>
+    <p v-if="!club.idclub">Please select a club to view the enrollment</p>
     <div v-if="club.idclub">
-      <div v-show="status_consulting">
-        <h3>{{ $t('Interclub enrollment') }}</h3>
-        <div v-show="!enrollment.id">
-          <p>{{ $t('The club is not enrolled yet') }}</p>
-        </div>
-        <div v-show="enrollment.id">
-          <ul>
-            <li>{{ $t('Teams in division') }} 1: {{ enrollment.teams1 }}</li>
-            <li>{{ $t('Teams in division') }} 2: {{ enrollment.teams2 }}</li>
-            <li>{{ $t('Teams in division') }} 3: {{ enrollment.teams3 }}</li>
-            <li>{{ $t('Teams in division') }} 4: {{ enrollment.teams4 }}</li>
-            <li>{{ $t('Teams in division') }} 5: {{ enrollment.teams5 }}</li>
-          </ul>
-          <div>{{ $t('Wishes') }}</div>
-          <ul>
-            <li>{{ $t('Teams grouped by pairing number') }}: {{ groupingvalue }} </li>
-            <li>{{ $t('Distribution of teams in same division') }}: {{ splittingvalue }} </li>
-            <li>{{ $t('Regional preferences') }}: {{ enrollment.wishes.regional }} </li>
-            <li>{{ $t('Remarks') }}: {{ enrollment.wishes.remarks }} </li>
-          </ul>
-        </div>
-        <v-btn @click="modifyEnrollment">
-          {{ $t('Modify enrollment') }}
-        </v-btn>
-      </div>
-      <v-container v-show="status_modifying">
-        <v-row>
-          <v-col cols="12" sm="3">
-            <h4>{{ $t('Teams') }}</h4>
-            <v-text-field v-model="enrollment.teams1" :label="$t('Teams in division') + ' 1'"
-              type="number" min="0" max="1" />
-            <v-text-field v-model="enrollment.teams2" :label="$t('Teams in division') + ' 2'"
-              type="number" min="0" max="15" />
-            <v-text-field v-model="enrollment.teams3" :label="$t('Teams in division') + ' 3'"
-              type="number" min="0" max="15" />
-            <v-text-field v-model="enrollment.teams4" :label="$t('Teams in division') + ' 4'"
-              type="number" min="0" max="15" />
-            <v-text-field v-model="enrollment.teams5" :label="$t('Teams in division') + ' 5'"
-              type="number" min="0" max="15" />
-          </v-col>
-          <v-col cols="12" sm="5">
-            <h4>{{ $t('Wishes') }}</h4>
-            <v-card class="elevation-4 mb-1">
+      <v-container v-show="status_consulting">
+        <v-row v-show="!enrollment.id">
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                Enrollment
+              </v-card-title>
               <v-card-text>
-                <v-select :label="$t('Teams grouped by pairing number')"
-                  v-model="enrollment.wishes.grouping" :items="grouping" />
-              </v-card-text>
-            </v-card>
-            <v-card class="elevation-4 mb-1">
-              <v-card-text>
-                <v-select :label="$t('Distribution of teams in same division')"
-                  v-model="enrollment.wishes.split" :items="splitting" />
-              </v-card-text>
-            </v-card>
-            <v-card class="elevation-4">
-              <v-card-text>
-                <v-text-field v-model="enrollment.wishes.regional"
-                  :label="$t('Regional preferences')" />
+                The club is not enrolled yet
               </v-card-text>
             </v-card>
           </v-col>
-          <v-col cols="12" sm="4">
-            <h4>{{ $t('Remarks') }}</h4>
-            <v-card class="elevation-4">
+        </v-row>
+        <v-row v-show="enrollment.id">
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                {{ $t("Teams") }}
+              </v-card-title>
               <v-card-text>
-                <v-textarea rows="5" v-model="enrollment.wishes.remarks" :label="$t('Remarks')" />
+                <ul>
+                  <li>Teams in division 1: {{ enrollment.teams1 }}</li>
+                  <li>Teams in division 2: {{ enrollment.teams2 }}</li>
+                  <li>Teams in division 3: {{ enrollment.teams3 }}</li>
+                  <li>Teams in division 4: {{ enrollment.teams4 }}</li>
+                  <li>Teams in division 5: {{ enrollment.teams5 }}</li>
+                </ul>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                {{ $t("Wishes") }}
+              </v-card-title>
+              <v-card-text>
+                <ul>
+                  <li>Teams grouped by pairing number: {{ groupingvalue }} </li>
+                  <li>Distribution of teams in same division: {{ splittingvalue }} </li>
+                  <li>Regional preferences: {{ enrollment.wishes.regional }} </li>
+                  <li>Remarks: {{ enrollment.wishes.remarks }} </li>
+                </ul>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                Name
+              </v-card-title>
+              <v-card-text>
+                Name of the club as shown in results and pairings: {{ enrollment.name }}
               </v-card-text>
             </v-card>
           </v-col>
         </v-row>
         <v-row>
-          <v-btn @click="saveEnrollment">
-            {{ $t('Save enrollment') }}
+          <v-btn @click="modifyEnrollment" :disabled="new Date() > stopdate">
+            Edit
           </v-btn>
+        </v-row>
+      </v-container>
+      <v-container v-show="status_modifying">
+        <v-row>
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                Teams
+              </v-card-title>
+              <v-card-text>
+                <v-text-field v-model="enrollment.teams1" :label="$t('Teams in division') + ' 1'"
+                  type="number" min="0" max="1" />
+                <v-text-field v-model="enrollment.teams2" :label="$t('Teams in division') + ' 2'"
+                  type="number" min="0" max="15" />
+                <v-text-field v-model="enrollment.teams3" :label="$t('Teams in division') + ' 3'"
+                  type="number" min="0" max="15" />
+                <v-text-field v-model="enrollment.teams4" :label="$t('Teams in division') + ' 4'"
+                  type="number" min="0" max="15" />
+                <v-text-field v-model="enrollment.teams5" :label="$t('Teams in division') + ' 5'"
+                  type="number" min="0" max="15" />
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                Wishes
+              </v-card-title>
+              <v-card-text>
+                <v-select :label="$t('Teams grouped by pairing number')"
+                  v-model="enrollment.wishes.grouping" :items="grouping" />
+                <v-select :label="$t('Distribution of teams in same division')"
+                  v-model="enrollment.wishes.split" :items="splitting" />
+                <v-text-field v-model="enrollment.wishes.regional"
+                  :label="$t('Regional preferences')" /> 
+                <v-textarea rows="5" v-model="enrollment.wishes.remarks" :label="$t('Remarks')" />
+              </v-card-text>                                                     
+            </v-card>            
+          </v-col>
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                Name
+              </v-card-title>
+              <v-card-text>
+                You can define a name for your club when the results and standings are displayed.
+                As a default, you clubname is used.
+                <v-text-field v-model="enrollment.name" :label="$t('Name')" />
+              </v-card-text>                                                     
+            </v-card>            
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-btn @click="saveEnrollment">
+            Save
+          </v-btn>&nbsp;
           <v-btn @click="cancelEnrollment">
-            {{ $t('Cancel') }}
+            Cancel
           </v-btn>
         </v-row>
       </v-container>
@@ -85,20 +127,7 @@
   </v-container>
 </template>
 <script>
-import Vue from 'vue'
-
-const ENROLLMENT_STATUS = {
-  CONSULTING: 0,
-  MODIFYING: 1,
-}
-const empty_enrollment = {
-  teams1: 0,
-  teams2: 0,
-  teams3: 0,
-  teams4: 0,
-  teams5: 0,
-  wishes: {},
-}
+import { INTERCLUBS_STATUS, STOPDATE, empty_enrollment } from '@/util/interclubs.js'
 
 export default {
 
@@ -107,16 +136,17 @@ export default {
   data() {
     return {
       grouping: [
-        { "text": this.$t("No preference"), "value": "0" },
-        { "text": this.$t("1 group"), "value": "1" },
-        { "text": this.$t("2 opposite groups"), "value": "2" },
+        { "text": "No preference", "value": "0" },
+        { "text": "1 group", "value": "1" },
+        { "text": "2 opposite groups", "value": "2" },
       ],
       splitting: [
-        { "text": this.$t("In 1 series"), "value": "1" },
-        { "text": this.$t("In multiple series"), "value": "2" },
+        { "text": "In 1 series", "value": "1" },
+        { "text": "In multiple series", "value": "2" },
       ],
       enrollment: empty_enrollment,
-      status: ENROLLMENT_STATUS.CONSULTING,
+      status: INTERCLUBS_STATUS.CONSULTING,
+      stopdate: STOPDATE,
     }
   },
 
@@ -134,19 +164,15 @@ export default {
       const spl = this.splitting.filter(x => x.value == this.enrollment.wishes.split)
       return spl.length > 0 ? spl[0].text : ""
     },
-    status_consulting() { return this.status == ENROLLMENT_STATUS.CONSULTING },
-    status_modifying() { return this.status == ENROLLMENT_STATUS.MODIFYING },
+    status_consulting() { return this.status == INTERCLUBS_STATUS.CONSULTING },
+    status_modifying() { return this.status == INTERCLUBS_STATUS.MODIFYING },
   },
 
   methods: {
 
     cancelEnrollment() {
-      this.status = ENROLLMENT_STATUS.CONSULTING
+      this.status = INTERCLUBS_STATUS.CONSULTING
       this.find_interclubenrollment()
-    },
-
-    emitInterface() {
-      this.$emit("interface", "find_interclubenrollment", this.find_interclubenrollment);
     },
 
     async find_interclubenrollment() {
@@ -154,6 +180,7 @@ export default {
         this.enrollment = empty_enrollment
         return
       }
+      this.enrollment = { ... empty_enrollment}
       try {
         const reply = await this.$api.interclub.find_interclubenrollment({
           idclub: this.club.idclub
@@ -171,13 +198,14 @@ export default {
         }
         else {
           console.error('Getting existing enrollment failed', reply.data.detail)
-          this.$root.$emit('snackbar', { text: this.$t('Getting existing enrollment failed') })
+          this.$root.$emit('snackbar', { text: 'Getting existing enrollment failed' })
         }
       }
     },
 
     async modifyEnrollment() {
-      this.status = ENROLLMENT_STATUS.MODIFYING
+      this.status = INTERCLUBS_STATUS.MODIFYING
+      this.enrollment.name = this.club.name_long
     },
 
     async saveEnrollment() {
@@ -192,28 +220,22 @@ export default {
           teams5: this.enrollment.teams5,
           wishes: this.enrollment.wishes,
         })
-        this.status = ENROLLMENT_STATUS.CONSULTING
+        this.status = INTERCLUBS_STATUS.CONSULTING
         this.find_interclubenrollment(this.club)
       } catch (error) {
         const reply = error.response
-        if (reply.status === 401) {
-          this.gotoLogin()
-        }
-        else {
-          console.error('Saving enrollment', reply.data.detail)
-          this.$root.$emit('snackbar', { text: this.$t('Saving enrollment') })
-        }
+        console.error('Saving enrollment', reply.data.detail)
+        this.$root.$emit('snackbar', { text: 'Saving enrollment' })
       }
+    },
+
+    async setupEnrollment(){
+      await this.find_interclubenrollment()
     },
 
   },
 
-  mounted() {
-    this.emitInterface();
-    this.$nextTick(() => {
-      this.find_interclubenrollment();
-    })
-  },
+
 
 }
 </script>

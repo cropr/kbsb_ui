@@ -1,56 +1,76 @@
 <template>
   <v-container>
+    <h2>{{ $t('Interclub venues') }}</h2>
     <p v-if="!club.idclub">{{ $t('Please select a club to view the interclub venues') }}</p>
     <div v-if="club.idclub">
-      <h3>{{ $t('Interclub venues') }}</h3>
-      <div v-show="!venues.length && status_consulting">
-        <p>{{ $t('No interclub venue is defined yet') }}</p>
-      </div>
-      <div v-show="status_consulting">
-        <v-card v-for="(v, ix) in venues" :key="ix" class="elevation-4 my-2">
-          <v-card-title>
-            {{ $t('Venue') }}: {{ ix + 1 }}
-          </v-card-title>
-          <v-card-text>
-            <div><b>{{ $t('Address') }}:</b> <br />
-              <span v-html="v.address.split('\n').join('<br />')"></span>
-            </div>
-            <div><b>{{ $t('Email address') }}:</b> {{ v.email }}</div>
-            <div><b>{{ $t('Telephone number') }}:</b> {{ v.phone }}</div>
-            <div><b>{{ $t('Capacity (boards)') }}:</b> {{ v.capacity }}</div>
-            <div><b>{{ $t('Not available') }}:</b> {{ v.notavailable.join(', ') }}</div>
-          </v-card-text>
-        </v-card>
-        <v-btn @click="modifyVenues">
-          {{ $t('Modify venues') }}
-        </v-btn>
-      </div>
+      <v-container v-show="status_consulting">
+        <v-row v-show="!venues.length">
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                {{  $t('Venues') }}
+              </v-card-title>
+              <v-card-text>
+                {{ $t('No interclub venue is defined yet') }}
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix" >
+            <v-card class="elevation-5">
+              <v-card-title>
+                {{ $t('Venue') }}: {{ ix + 1 }}
+              </v-card-title>
+              <v-card-text>
+                <div><b>{{ $t('Address') }}:</b> <br />
+                  <span v-html="v.address.split('\n').join('<br />')"></span>
+                </div>
+                <div><b>{{ $t('Capacity (boards)') }}:</b> {{ v.capacity }}</div>
+                <div><b>{{ $t('Not available') }}:</b> {{ v.notavailable.join(', ') }}</div>
+                <p>{{ $t('Optional') }}</p>
+                <div><b>{{ $t('Email address venue') }}:</b> {{ v.email }}</div>
+                <div><b>{{ $t('Telephone number venue') }}:</b> {{ v.phone }}</div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-btn @click="modifyVenues">
+            {{ $t('Edit') }}
+          </v-btn>
+        </v-row>
+      </v-container>
       <v-container v-show="status_modifying">
-        <v-row v-for="(v, ix) in venues" :key="ix" class="elevation-4 my-2">
-          <v-col cols="12" sm="5">
-            <h4>{{ $t('Venue') }}: {{ ix + 1 }}</h4>
-            <v-textarea v-model="v.address" :label="$t('Address')" rows="3" @input="addEmptyVenue"
-              outlined />
-            <v-text-field v-model="v.email" :label="$t('Email address')" />
-            <v-text-field v-model="v.phone" :label="$t('Telephone number')" />
-            <v-text-field v-model="v.capacity" :label="$t('Capacity (boards)')" type="number"
-              min="1" max="99" />
-          </v-col>
-          <v-col cols="12" sm="5">
-            <h4>{{ $t('Availability') }}</h4>
-            <v-radio-group v-model="v.available">
-              <v-radio value="all" :label="$t('All rounds')" />
-              <v-radio value="selected"
-                :label="$t('The venue is not available on following rounds')" />
-            </v-radio-group>
-            <v-select multiple v-show="v.available != 'all'" :items="rounds" chips
-              v-model="v.notavailable"
-              :label="$t('Select the rounds the venue is not available')" />
-          </v-col>
-          <v-col cols="12" sm="2">
-            <v-btn fab small @click="deleteVenue(ix)" v-show="ix < venues.length - 1">
-              <v-icon>mdi-delete</v-icon>
-            </v-btn>
+        <v-row >
+          <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix">
+            <v-card class="elevation-5">
+              <v-card-title>
+                {{ $t('Venue') }}: {{ ix + 1 }}
+              </v-card-title>
+              <v-card-text>
+                <v-textarea v-model="v.address" :label="$t('Address')" rows="3" @input="addEmptyVenue"
+                  outlined />
+                <v-text-field v-model="v.capacity" :label="$t('Capacity (boards)')" type="number"/>
+                <h4>{{ $t('Availability') }}</h4>
+                <v-radio-group v-model="v.available">
+                  <v-radio value="all" :label="$t('All rounds')" />
+                  <v-radio value="selected"
+                    :label="$t('The venue is not available on following rounds')" />
+                </v-radio-group>
+                <v-select multiple v-show="v.available != 'all'" :items="rounds" chips
+                  v-model="v.notavailable"
+                  :label="$t('Select the rounds the venue is not available')" />
+                <p class="fieldname">{{ $t('Optionally') }}</p>
+                <v-text-field v-model="v.email" :label="$t('Email address venue')" />
+                <v-text-field v-model="v.phone" :label="$t('Telephone number venue')" />
+              </v-card-text>
+              <v-card-actions>
+                <v-btn fab small @click="deleteVenue(ix)" v-show="ix < venues.length - 1">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>   
           </v-col>
         </v-row>
         <v-row>
@@ -63,36 +83,10 @@
         </v-row>
       </v-container>
     </div>
-
   </v-container>
 </template>
 <script>
-const VENUE_STATUS = {
-  CONSULTING: 0,
-  MODIFYING: 1,
-}
-const ROUNDS = {
-  1: "2022-09-25",
-  2: "2022-10-16",
-  3: "2022-11-06",
-  4: "2022-11-20",
-  5: "2022-12-05",
-  6: "2023-01-29",
-  7: "2023-02-12",
-  8: "2023-03-05",
-  9: "2023-03-19",
-  10: "2023-04-16",
-  11: "2023-04-30",
-}
-
-const empty_venue = {
-  address: "",
-  available: "all",
-  notavailable: [],
-  capacity: 99,
-  email: "",
-  phone: "",
-}
+import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, empty_venue } from '@/util/interclubs.js'
 
 export default {
 
@@ -100,20 +94,21 @@ export default {
 
   data() {
     return {
-      status: VENUE_STATUS.CONSULTING,
-      rounds: Object.entries(ROUNDS).map(x => ({ value: x[1], text: `R${x[0]}: ${x[1]}` })),
+      status: INTERCLUBS_STATUS.CONSULTING,
+      rounds: Object.entries(INTERCLUBS_ROUNDS).map(x => ({ value: x[1], text: `R${x[0]}: ${x[1]}` })),
       venues: [],
     }
   },
 
   props: {
-    club: Object
+    bus: Object,
+    club: Object,
   },
 
   computed: {
     logintoken() { return this.$store.state.oldlogin.value },
-    status_consulting() { return this.status == VENUE_STATUS.CONSULTING },
-    status_modifying() { return this.status == VENUE_STATUS.MODIFYING },
+    status_consulting() { return this.status == INTERCLUBS_STATUS.CONSULTING },
+    status_modifying() { return this.status == INTERCLUBS_STATUS.MODIFYING },
   },
 
   methods: {
@@ -127,7 +122,7 @@ export default {
     },
 
     cancelVenues() {
-      this.status = VENUE_STATUS.CONSULTING
+      this.status = INTERCLUBS_STATUS.CONSULTING
       this.find_interclubvenues()
     },
 
@@ -136,9 +131,6 @@ export default {
       this.addEmptyVenue()
     },
 
-    emitInterface() {
-      this.$emit("interface", "find_interclubvenues", this.find_interclubvenues);
-    },
 
     async find_interclubvenues() {
       console.log('running find_interclubvenues', this.club)
@@ -166,9 +158,10 @@ export default {
           idclub: this.club.idclub,
           role: "InterclubAdmin"
         })
-        this.status = VENUE_STATUS.MODIFYING
+        this.status = INTERCLUBS_STATUS.MODIFYING
         this.addEmptyVenue()
       } catch (error) {
+        console.log('error', error)
         const reply = error.response
         switch (reply.status) {
           case 401:
@@ -208,7 +201,7 @@ export default {
           idclub: this.club.idclub,
           venues: savedvenues,
         })
-        this.status = VENUE_STATUS.CONSULTING
+        this.status = INTERCLUBS_STATUS.CONSULTING
         this.find_interclubvenues()
       } catch (error) {
         const reply = error.response
@@ -228,15 +221,11 @@ export default {
       }
     },
 
+    async setupVenues(){
+      await this.find_interclubvenues()
+    },
 
-  },
-
-  mounted() {
-    this.emitInterface();
-    this.$nextTick(() => {
-      this.find_interclubvenues();
-    })
-  },
+  }
 
 }
 </script>
