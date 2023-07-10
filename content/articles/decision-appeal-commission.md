@@ -9,25 +9,25 @@ intro_nl: 'De beroepscommissie heef een beslissing genomen ivm het vemeende geva
 text_nl: |-
   De commissie heeft op 1 juli 2023 samengezten en is tot een beslissing gekomen. 
 
-  De [link](https://www.frbe-kbsb-ksb.be/static/docs/beroepscommissie-2023-01-01.pdf) naar het verslag
+  De [link](https://www.frbe-kbsb-ksb.be/docs/beroepscommissie-2023-01-01.pdf) naar het verslag
 title_fr: "Décision du comité d'appel"
 intro_fr: "Le comité d'appel a rendu une décision sur le cas présumé de tricherie par IM Stefan Docx"
 text_fr: |-
   Le comité s'est réuni le 1er juillet 2023 et a pris une décision.
 
-  Le [lien](https://www.frbe-kbsb-ksb.be/static/docs/beroepscommissie-2023-01-01.pdf) vers le rapport en nérlandais
+  Le [lien](https://www.frbe-kbsb-ksb.be/docs/beroepscommissie-2023-01-01.pdf) vers le rapport en nérlandais
 title_de: 'Entscheidung des Berufungsausschusses'
 intro_de: 'Die Berufungskommission hat über den mutmaßlichen Betrugsfall von IM Stefan Docx entschieden'
 text_de: |-
   Der Ausschuss tagte am 1. Juli 2023 und traf eine Entscheidung.
 
-  Der [Link](https://www.frbe-kbsb-ksb.be/static/docs/beroepscommissie-2023-01-01.pdf) zum Bericht (auf Niederländisch)
+  Der [Link](https://www.frbe-kbsb-ksb.be/docs/beroepscommissie-2023-01-01.pdf) zum Bericht (auf Niederländisch)
 title_en: 'Decision of the Appeals Committee'
 intro_en: 'The appeals committee has made a decision on the alleged case of cheating by IM Stefan Docx'
 text_en: |-
   The committee met on July 1, 2023 and reached a decision.
 
-  The [link](https://www.frbe-kbsb-ksb.be/static/docs/beroepscommissie-2023-01-01.pdf) to the report in Dutch
+  The [link](https://www.frbe-kbsb-ksb.be/docs/beroepscommissie-2023-01-01.pdf) to the report in Dutch
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1689020843
+updated_at: 1689022673
 ---
