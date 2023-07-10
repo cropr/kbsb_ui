@@ -184,6 +184,7 @@ export default {
         console.log('save successful')
         this.$root.$emit('snackbar', { text: 'File saved' })
       } catch (error) {
+        console.error("error", error)
         const resp = error.response
         console.error('getting getFiles', resp)
         if (resp.status === 401) {

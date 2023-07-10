@@ -44,6 +44,12 @@ export default {
 
   head: {
     title: 'Management Files',
+    script: [
+      {
+        src: 'https://accounts.google.com/gsi/client',
+        defer: true
+      }
+    ]
   },
 
   data() {
@@ -71,11 +77,15 @@ export default {
   },
 
   computed: {
-    token() { return this.$store.state.newlogin.value }
+    token() { return this.$store.state.newlogin.value },
+    person() {
+      return this.$store.state.person
+    },
   },
 
-  mounted() {
-    this.getFiles()
+  async mounted() {
+    await this.checkAuth()
+    await this.getFiles()
   },
 
   methods: {
@@ -84,8 +94,30 @@ export default {
       this.$router.push('/mgmt/fileadd')
     },
 
-    gotoLogin() {
-      this.$router.push('/mgmt/login?url=__mgmt__filelist')
+    async checkAuth() {
+      console.log('checking if auth is already set')
+      if (!this.logintoken) {
+        if (this.person.credential.length === 0) {
+          this.$router.push('/mgmt')
+        }
+        if (!this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
+          this.$router.push('/mgmt')
+        }
+        // now login using the Google auth token
+        await this.$api.root.login({
+          logintype: 'google',
+          token: this.person.credential
+        }).then(
+          (resp) => {
+            this.$store.commit('newlogin/update', resp.data)
+          },
+          (error) => {
+            const resp = error.response
+            console.log('failed login', resp.data.detail)
+            this.$router.push('/mgmt')
+          }
+        )
+      }
     },
 
     editFile(item) {
@@ -93,19 +125,17 @@ export default {
     },
 
     async getFiles() {
+      console.log('getting files')
       try {
         const resp = await this.$api.file.get_files({
           token: this.token
         })
         this.files = resp.data.files
       } catch (error) {
+        console.error("error", error)
         const resp = error.response
         console.error('getting getFiles', resp)
-        if (resp.status === 401) {
-          this.gotoLogin()
-        } else {
-          this.$root.$emit('snackbar', { text: 'Getting files failed', reason: resp.data.detail })
-        }
+        this.$root.$emit('snackbar', { text: 'Getting files failed', reason: resp.data.detail })
       }
     }
 

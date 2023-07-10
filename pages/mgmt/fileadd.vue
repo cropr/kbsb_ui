@@ -92,13 +92,10 @@ export default {
         console.log('file added', resp.data)
         this.$router.push('/mgmt/fileedit?id=' + resp.data)
       } catch (error) {
+        console.error("error", error)
         const resp = error.response
         console.error('getting add_file', resp)
-        if (resp.status === 401) {
-          this.$router.push('/mgmt/login')
-        } else {
-          this.$root.$emit('snackbar', { text: 'Adding page failed', reason: resp.data.detail })
-        }
+        this.$root.$emit('snackbar', { text: 'Adding page failed', reason: resp.data.detail })
       }
     }
 
