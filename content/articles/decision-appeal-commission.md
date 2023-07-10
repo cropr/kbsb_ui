@@ -2,7 +2,7 @@
 id: acd8283a-7692-4db5-aa18-bc82b8433161
 blueprint: article
 title: 'Decision Appeal Commission'
-active_days: '90'
+active_days: '180'
 active_since: '2023-07-10'
 title_nl: 'Beslissing Beroepscommissie'
 intro_nl: 'De beroepscommissie heef een beslissing genomen ivm het vemeende geval van bedrog door IM Stefan Docx'
@@ -29,5 +29,5 @@ text_en: |-
 
   The [link](https://www.frbe-kbsb-ksb.be/docs/beroepscommissie-2023-01-01.pdf) to the report in Dutch
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1689022673
+updated_at: 1689023618
 ---
