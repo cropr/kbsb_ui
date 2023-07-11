@@ -23,11 +23,11 @@
               </v-card-title>
               <v-card-text>
                 <ul>
-                  <li>Teams in division 1: {{ enrollment.teams1 }}</li>
-                  <li>Teams in division 2: {{ enrollment.teams2 }}</li>
-                  <li>Teams in division 3: {{ enrollment.teams3 }}</li>
-                  <li>Teams in division 4: {{ enrollment.teams4 }}</li>
-                  <li>Teams in division 5: {{ enrollment.teams5 }}</li>
+                  <li><span class="fieldname">Teams in division 1:</span> {{ enrollment.teams1 }}</li>
+                  <li><span class="fieldname">Teams in division 2:</span> {{ enrollment.teams2 }}</li>
+                  <li><span class="fieldname">Teams in division 3:</span> {{ enrollment.teams3 }}</li>
+                  <li><span class="fieldname">Teams in division 4:</span> {{ enrollment.teams4 }}</li>
+                  <li>T<span class="fieldname">Teams in division 5:</span> {{ enrollment.teams5 }}</li>
                 </ul>
               </v-card-text>
             </v-card>
@@ -39,10 +39,10 @@
               </v-card-title>
               <v-card-text>
                 <ul>
-                  <li>Teams grouped by pairing number: {{ groupingvalue }} </li>
-                  <li>Distribution of teams in same division: {{ splittingvalue }} </li>
-                  <li>Regional preferences: {{ enrollment.wishes.regional }} </li>
-                  <li>Remarks: {{ enrollment.wishes.remarks }} </li>
+                  <li><span class="fieldname">Teams grouped by pairing number:</span> {{ groupingvalue }} </li>
+                  <li><span class="fieldname">Distribution of teams in same division:</span> {{ splittingvalue }} </li>
+                  <li><span class="fieldname">Regional preferences:</span> {{ enrollment.wishes.regional }} </li>
+                  <li><span class="fieldname">Remarks:</span> {{ enrollment.wishes.remarks }} </li>
                 </ul>
               </v-card-text>
             </v-card>
@@ -53,7 +53,7 @@
                 Name
               </v-card-title>
               <v-card-text>
-                Name of the club as shown in results and pairings: {{ enrollment.name }}
+                <span class="fieldname">Name of the club</span>, as shown in results and pairings: {{ enrollment.name }}
               </v-card-text>
             </v-card>
           </v-col>
@@ -72,15 +72,16 @@
                 Teams
               </v-card-title>
               <v-card-text>
-                <v-text-field v-model="enrollment.teams1" :label="$t('Teams in division') + ' 1'"
+                <p>Number of teams per division</p>
+                <v-text-field v-model="enrollment.teams1" label="division 1"
                   type="number" min="0" max="1" />
-                <v-text-field v-model="enrollment.teams2" :label="$t('Teams in division') + ' 2'"
+                <v-text-field v-model="enrollment.teams2" label="division 2"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams3" :label="$t('Teams in division') + ' 3'"
+                <v-text-field v-model="enrollment.teams3" label="division 3"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams4" :label="$t('Teams in division') + ' 4'"
+                <v-text-field v-model="enrollment.teams4" label="division 4"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams5" :label="$t('Teams in division') + ' 5'"
+                <v-text-field v-model="enrollment.teams5" label="division 5"
                   type="number" min="0" max="15" />
               </v-card-text>
             </v-card>
@@ -91,13 +92,15 @@
                 Wishes
               </v-card-title>
               <v-card-text>
-                <v-select :label="$t('Teams grouped by pairing number')"
+                <div>Teams grouped by pairing number</div>
+                <v-select label="Grouping"
                   v-model="enrollment.wishes.grouping" :items="grouping" />
-                <v-select :label="$t('Distribution of teams in same division')"
+                <div>Distribution of teams in same division</div>  
+                <v-select :label="Distribution"
                   v-model="enrollment.wishes.split" :items="splitting" />
                 <v-text-field v-model="enrollment.wishes.regional"
-                  :label="$t('Regional preferences')" /> 
-                <v-textarea rows="5" v-model="enrollment.wishes.remarks" :label="$t('Remarks')" />
+                  label="Regional preferences" /> 
+                <v-textarea rows="5" v-model="enrollment.wishes.remarks" label="Other wishes" />
               </v-card-text>                                                     
             </v-card>            
           </v-col>
@@ -109,7 +112,7 @@
               <v-card-text>
                 You can define a name for your club when the results and standings are displayed.
                 As a default, you clubname is used.
-                <v-text-field v-model="enrollment.name" :label="$t('Name')" />
+                <v-text-field v-model="enrollment.name" label="Name" />
               </v-card-text>                                                     
             </v-card>            
           </v-col>
@@ -176,6 +179,7 @@ export default {
     },
 
     async find_interclubenrollment() {
+      console.log('find interclub enrollment', this.club.id, this.club.idclub)
       if (!this.club.id) {
         this.enrollment = empty_enrollment
         return
@@ -213,6 +217,7 @@ export default {
         const reply1 = await this.$api.interclub.mgmt_set_interclubenrollment({
           token: this.logintoken,
           idclub: this.club.idclub,
+          name: this.enrollment.name,
           teams1: this.enrollment.teams1,
           teams2: this.enrollment.teams2,
           teams3: this.enrollment.teams3,
@@ -230,6 +235,7 @@ export default {
     },
 
     async setupEnrollment(){
+      console.log('setting up Enrollment')
       await this.find_interclubenrollment()
     },
 
@@ -239,3 +245,9 @@ export default {
 
 }
 </script>
+
+<style scoped?>
+.fieldname {
+  color: purple
+}
+</style>

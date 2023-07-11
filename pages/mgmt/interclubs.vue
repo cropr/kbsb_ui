@@ -146,11 +146,11 @@ export default {
         })
       }
       console.log('club selected', this.idclub, this.activeclub)
+      this.$nextTick(()=> this.$refs.enrollment.setupEnrollment())       
     },
 
     updateTab(){
       console.log('updateTab', this.tab, this.$refs)
-      this.$nextTick
       switch (this.tab) {
         case 0:
           this.$refs.enrollment.setupEnrollment()
