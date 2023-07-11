@@ -31,10 +31,10 @@
       </v-tabs>
       <v-tabs-items v-model="tab" >
         <v-tab-item :eager="true">
-          <InterclubsEnrollment :bus="bus" :club="activeclub" ref="enrollment" />
+          <InterclubsEnrollment :club="activeclub" ref="enrollment" />
         </v-tab-item>
         <v-tab-item :eager="true">
-          <InterclubsVenue :bus="bus" :club="activeclub"  ref="venues"/>
+          <InterclubsVenue :club="activeclub"  ref="venues"/>
         </v-tab-item>
       </v-tabs-items>
     </div>
@@ -42,7 +42,6 @@
 </template>
 
 <script>
-import Vue from 'vue'
 import { EMPTY_CLUB } from '@/util/club'
 const noop = function () { }
 const tabsmapping = {
@@ -58,7 +57,6 @@ export default {
   data() {
     return {
       activeclub: {},
-      bus: new Vue(),
       clubs: [],
       idclub: null,
       tab: -1,
@@ -119,7 +117,7 @@ export default {
             this.activeclub = { ...EMPTY_CLUB, ...c }
           }
         })
-        this.$refs.enrollment.setupEnrollment()
+        this.$nextTick(()=>this.$refs.enrollment.setupEnrollment())
       } catch (error) {
           console.error('Getting clubs failed', error)
           this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
@@ -127,7 +125,7 @@ export default {
     },
 
     updateTab(){
-      console.log('updateTab', this.tab, this.bus)
+      console.log('updateTab', this.tab)
       switch (this.tab) {
         case 0:
           this.$refs.enrollment.setupEnrollment()
