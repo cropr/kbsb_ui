@@ -6,10 +6,8 @@ title_nl: 'Internationale competities'
 title_fr: 'Compétitions internationales'
 title_de: 'Internationale Wettbewerbe'
 title_en: 'International competitions'
-updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
-updated_at: 1681478920
-content_nl: 'Deze pagina is niet in het Nederlands beschikbaar.'
-content_fr: "Cette page n'est pas disponible en français"
-content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
+updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
+updated_at: 1689345270
+content_nl: '!'
 content_english: 'This page is not available in English'
 ---
