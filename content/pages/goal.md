@@ -1,8 +1,8 @@
 ---
-id: 8598f768-a421-488f-8ebe-fb0fdafd2866
+id: bb944a79-0697-4ddc-8c39-0c3cb0780333
 blueprint: contentpage
 title: Index
-title_nl: "Doel van de KBSB"
+title_nl: 'Doel van de KBSB'
 content_nl: |-
   De doelstellingen van de KBSB zijn:
    - het behartigen van de gemeenschappelijke belangen van zijn leden.
@@ -11,8 +11,7 @@ content_nl: |-
    - het organiseren of delegeren van allerhande nationale competities zoals de Belgische kampioenschappen voor senioren en jeugd, interclub kampioenschappen, de schoolschaak kampioenschappen, internationale open toernooien, ...
    - het opstellen van een klassement voor spelende leden.
    - het organiseren van diverse schaaktechnische en bestuurlijke opleidingen.
-
-title_fr: "But de la FRBE"
+title_fr: 'But de la FRBE'
 content_fr: |-
   La fédération a comme but:
    - défendre les intérêts communs de ses membres
@@ -21,8 +20,7 @@ content_fr: |-
    - organiser ou déléguer l’organisation de tout genre de compétitions nationales; elle organise notamment les championnats de Belgique seniors et de la jeunesse, les championnats de Belgique interclubs, les championnats interscolaires, des tournois open internationaux, ...
    - établir une liste de classement des sportifs affiliés
    - organiser diverses formations relatives à la pratique des échecs et à la gestion.
-
-title_de: "Ziel des KSB"
+title_de: 'Ziel des KSB'
 content_de: |-
   Die Ziele des KSBs sind:
 
@@ -32,7 +30,7 @@ content_de: |-
    - die Organisation oder Delegation von nationalen Wettbewerben aller Art wie den belgischen Meisterschaften für Senioren und Jugendliche, Interclub-Meisterschaften, Schulschachmeisterschaften, internationalen offenen Turnieren, ...
    - die Aufstellung einer Rangliste für spielende Mitglieder
    - die Organisation verschiedener technischer und Management-Schulungen
-title_en: "The Royal Belgian Chess Federation"
+title_en: 'The Royal Belgian Chess Federation'
 content_english: |-
   The goals of the RBCF are:
 
@@ -43,5 +41,5 @@ content_english: |-
    - organizing various technical and managerial training courses.
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
 updated_at: 1684614874
-content_en: "This page is not available in English"
+content_en: 'This page is not available in English'
 ---
