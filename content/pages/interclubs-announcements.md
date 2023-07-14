@@ -1,16 +1,11 @@
 ---
-id: a7f30444-00f4-4c02-be7a-a33ebe225c8a
+id: eae137bf-8313-43d4-9afe-a4272d71e7be
 blueprint: contentpage
-title: 'Announcements'
-parent: bcf4514a-316e-4938-9d83-c9136181fe42
-title_nl: 'Meldingen'
-content_nl: 'Hier komen de aankondigingen'
-title_fr: 'Annonces'
-content_fr: 'Les annonces vont ici'
-title_de: 'Ankündigungen'
-content_de: 'Die Ankündigungen finden Sie hier'
-title_en: 'Announcements'
-content_en: 'The announcements go here'
-updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
-updated_at: 1681477872
+title: interclubs-announcements
+title_nl: Meldingen
+title_fr: Annonces
+title_de: Ankündigungen
+title_en: Announcements
+updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
+updated_at: 1689343292
 ---
