@@ -1,7 +1,7 @@
 <template>
   <v-container>
     <h1>{{ pagetitle }}</h1>
-    <nuxt-content :document="page" />
+    <nuxt-content class="mt-2" v-html="pagecontent" />
   </v-container>
 </template>
 
