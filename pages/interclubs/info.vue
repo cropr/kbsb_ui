@@ -10,10 +10,10 @@
     </v-tabs>
     <v-tabs-items v-model="tab">
       <v-tab-item>
-        <InterclubAnnouncement />
+        <InterclubsAnnouncements />
       </v-tab-item>
       <v-tab-item>
-        <InterclubDates />
+        <InterclubsDates />
       </v-tab-item>
     </v-tabs-items>
   </v-container>

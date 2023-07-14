@@ -110,7 +110,7 @@
               <v-card-text>
                 {{ $t('You can define a name for your club when the results and standings are displayed.') }}
                 {{ $t('As a default, you clubname is used.') }} 
-                <v-text-field v-model="enrollment.name" :label="$t('Name')" />
+                <v-text-field v-model="enrollment.name" :label="$t('Name')" maxlength="20" :rules="[rules.count20]"/>
               </v-card-text>                                                     
             </v-card>            
           </v-col>
@@ -147,6 +147,9 @@ export default {
         { "text": this.$t("In multiple series"), "value": "2" },
       ],
       enrollment: empty_enrollment,
+      rules: {
+        count20: (x) => (x && x.length <= 20 || 'Max 20 characters')
+      },
       status: INTERCLUBS_STATUS.CONSULTING,
       stopdate: STOPDATE,
     }
@@ -189,6 +192,7 @@ export default {
         })
         if (reply.data) {
           this.enrollment = reply.data
+          if (!this.enrollment.name.length) this.enrollment.name = this.club.name_short
         }
         else {
           this.enrollment.id = null
@@ -213,7 +217,6 @@ export default {
           role: "InterclubAdmin"
         })
         this.status = INTERCLUBS_STATUS.MODIFYING
-        this.enrollment.name = this.club.name_long
       } catch (error) {
         const reply = error.response
         switch (reply.status) {
