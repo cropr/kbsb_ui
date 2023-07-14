@@ -1,47 +1,27 @@
 <template>
   <v-container>
-    <h1>Interclubs 2022-23</h1>
-    <v-tabs v-model="tab" color="green">
-      <v-tabs-slider color="green"></v-tabs-slider>
-      <v-tab>{{ $t('Announcements') }}</v-tab>
-      <v-tab>{{ $t('Dates') }}</v-tab>
-      <v-tab>{{ $t('Player list') }}</v-tab>
-      <v-tab>{{ $t('Planning') }}</v-tab>
-      <v-tab>{{ $t('Results') }}</v-tab>
-      <v-tab>{{ $t('Standings') }}</v-tab>
-    </v-tabs>
-    <v-tabs-items v-model="tab">
-      <v-tab-item>
-        <InterclubAnnouncement />
-      </v-tab-item>
-      <v-tab-item>
-        <InterclubDates />
-      </v-tab-item>
-      <v-tab-item>
-        TO DO
-      </v-tab-item>
-      <v-tab-item>
-        TO DO
-      </v-tab-item>
-      <v-tab-item>
-        TO DO
-      </v-tab-item>
-    </v-tabs-items>
+    <h1>{{ pagetitle }}</h1>
+    <div class="mt-1" v-html="pagecontent" />
   </v-container>
 </template>
 
 <script>
+import showdown from 'showdown'
 
 export default {
 
   layout: 'default',
 
-  data() {
+  data () {
     return {
+      page: {},
       tab: 0
     }
   },
 
+  async fetch () {
+    this.page = await this.$content('pages', 'interclubs-2022-23').fetch()
+  },
 
   head: {
     title: 'Interclubs 2022-23',
@@ -75,6 +55,19 @@ export default {
       }
     ]
   },
+  computed: {
+    pagecontent () {
+      const pcontent = this.page[`content_${this.$i18n.locale}`]
+      const converter = new showdown.Converter()
+      return converter.makeHtml(pcontent)
+    },
 
+    pagetitle () {
+      const locale = this.$i18n.locale
+      const pti18 = this.page[`title_${locale}`]
+      const ptitle = pti18 && pti18.length ? pti18 : this.page.title
+      return ptitle
+    }
+  }
 }
 </script>

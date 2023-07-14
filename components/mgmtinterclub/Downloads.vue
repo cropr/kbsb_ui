@@ -17,7 +17,7 @@ function utoa(data) {
 
 export default {
 
-  name: 'Sownloads',
+  name: 'Downloads',
 
 
   computed: {

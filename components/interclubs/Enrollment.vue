@@ -1,16 +1,17 @@
 <template>
   <v-container>
-    <p v-if="!club.idclub">Please select a club to view the enrollment</p>
+    <h2>{{ $t('Interclubs enrollment') }}</h2>
+    <p v-if="!club.idclub">{{ $t('Please select a club to view the enrollment') }}</p>
     <div v-if="club.idclub">
       <v-container v-show="status_consulting">
         <v-row v-show="!enrollment.id">
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
               <v-card-title class="card-title">
-                Enrollment
+                {{ $t("Enrollment") }}
               </v-card-title>
               <v-card-text>
-                The club is not enrolled yet
+                {{ $t('The club is not enrolled yet') }}
               </v-card-text>
             </v-card>
           </v-col>
@@ -23,11 +24,11 @@
               </v-card-title>
               <v-card-text>
                 <ul>
-                  <li><span class="fieldname">Teams in division 1:</span> {{ enrollment.teams1 }}</li>
-                  <li><span class="fieldname">Teams in division 2:</span> {{ enrollment.teams2 }}</li>
-                  <li><span class="fieldname">Teams in division 3:</span> {{ enrollment.teams3 }}</li>
-                  <li><span class="fieldname">Teams in division 4:</span> {{ enrollment.teams4 }}</li>
-                  <li>T<span class="fieldname">Teams in division 5:</span> {{ enrollment.teams5 }}</li>
+                  <li>{{ $t('Teams in division') }} 1: {{ enrollment.teams1 }}</li>
+                  <li>{{ $t('Teams in division') }} 2: {{ enrollment.teams2 }}</li>
+                  <li>{{ $t('Teams in division') }} 3: {{ enrollment.teams3 }}</li>
+                  <li>{{ $t('Teams in division') }} 4: {{ enrollment.teams4 }}</li>
+                  <li>{{ $t('Teams in division') }} 5: {{ enrollment.teams5 }}</li>
                 </ul>
               </v-card-text>
             </v-card>
@@ -39,10 +40,10 @@
               </v-card-title>
               <v-card-text>
                 <ul>
-                  <li><span class="fieldname">Teams grouped by pairing number:</span> {{ groupingvalue }} </li>
-                  <li><span class="fieldname">Distribution of teams in same division:</span> {{ splittingvalue }} </li>
-                  <li><span class="fieldname">Regional preferences:</span> {{ enrollment.wishes.regional }} </li>
-                  <li><span class="fieldname">Remarks:</span> {{ enrollment.wishes.remarks }} </li>
+                  <li>{{ $t('Teams grouped by pairing number') }}: {{ groupingvalue }} </li>
+                  <li>{{ $t('Distribution of teams in same division') }}: {{ splittingvalue }} </li>
+                  <li>{{ $t('Regional preferences') }}: {{ enrollment.wishes.regional }} </li>
+                  <li>{{ $t('Remarks') }}: {{ enrollment.wishes.remarks }} </li>
                 </ul>
               </v-card-text>
             </v-card>
@@ -50,17 +51,17 @@
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
               <v-card-title class="card-title">
-                Name
+                {{ $t("Name") }}
               </v-card-title>
               <v-card-text>
-                <span class="fieldname">Name of the club</span>, as shown in results and pairings: {{ enrollment.name }}
+                {{ $t('Name of the club as shown in results and pairings')  }}: {{ enrollment.name }}
               </v-card-text>
             </v-card>
           </v-col>
         </v-row>
         <v-row>
           <v-btn @click="modifyEnrollment" :disabled="new Date() > stopdate">
-            Edit
+            {{ $t('Edit') }}
           </v-btn>
         </v-row>
       </v-container>
@@ -69,19 +70,18 @@
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
               <v-card-title class="card-title">
-                Teams
+                {{ $t('Teams') }}
               </v-card-title>
               <v-card-text>
-                <p>Number of teams per division</p>
-                <v-text-field v-model="enrollment.teams1" label="division 1"
+                <v-text-field v-model="enrollment.teams1" :label="$t('Teams in division') + ' 1'"
                   type="number" min="0" max="1" />
-                <v-text-field v-model="enrollment.teams2" label="division 2"
+                <v-text-field v-model="enrollment.teams2" :label="$t('Teams in division') + ' 2'"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams3" label="division 3"
+                <v-text-field v-model="enrollment.teams3" :label="$t('Teams in division') + ' 3'"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams4" label="division 4"
+                <v-text-field v-model="enrollment.teams4" :label="$t('Teams in division') + ' 4'"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams5" label="division 5"
+                <v-text-field v-model="enrollment.teams5" :label="$t('Teams in division') + ' 5'"
                   type="number" min="0" max="15" />
               </v-card-text>
             </v-card>
@@ -89,40 +89,38 @@
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
               <v-card-title class="card-title">
-                Wishes
+                {{ $t('Wishes') }}
               </v-card-title>
               <v-card-text>
-                <div>Teams grouped by pairing number</div>
-                <v-select label="Grouping"
+                <v-select :label="$t('Teams grouped by pairing number')"
                   v-model="enrollment.wishes.grouping" :items="grouping" />
-                <div>Distribution of teams in same division</div>  
-                <v-select :label="Distribution"
+                <v-select :label="$t('Distribution of teams in same division')"
                   v-model="enrollment.wishes.split" :items="splitting" />
                 <v-text-field v-model="enrollment.wishes.regional"
-                  label="Regional preferences" /> 
-                <v-textarea rows="5" v-model="enrollment.wishes.remarks" label="Other wishes" />
+                  :label="$t('Regional preferences')" /> 
+                <v-textarea rows="5" v-model="enrollment.wishes.remarks" :label="$t('Remarks')" />
               </v-card-text>                                                     
             </v-card>            
           </v-col>
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
               <v-card-title class="card-title">
-                Name
+                {{ $t('Name') }}
               </v-card-title>
               <v-card-text>
-                You can define a name for your club when the results and standings are displayed.
-                As a default, you clubname is used.
-                <v-text-field v-model="enrollment.name" label="Name" />
+                {{ $t('You can define a name for your club when the results and standings are displayed.') }}
+                {{ $t('As a default, you clubname is used.') }} 
+                <v-text-field v-model="enrollment.name" :label="$t('Name')" maxlength="20" :rules="[rules.count20]"/>
               </v-card-text>                                                     
             </v-card>            
           </v-col>
         </v-row>
         <v-row>
           <v-btn @click="saveEnrollment">
-            Save
+            {{ $t('Save') }}
           </v-btn>&nbsp;
           <v-btn @click="cancelEnrollment">
-            Cancel
+            {{ $t('Cancel') }}
           </v-btn>
         </v-row>
       </v-container>
@@ -130,6 +128,7 @@
   </v-container>
 </template>
 <script>
+
 import { INTERCLUBS_STATUS, STOPDATE, empty_enrollment } from '@/util/interclubs.js'
 
 export default {
@@ -139,26 +138,29 @@ export default {
   data() {
     return {
       grouping: [
-        { "text": "No preference", "value": "0" },
-        { "text": "1 group", "value": "1" },
-        { "text": "2 opposite groups", "value": "2" },
+        { "text": this.$t("No preference"), "value": "0" },
+        { "text": this.$t("1 group"), "value": "1" },
+        { "text": this.$t("2 opposite groups"), "value": "2" },
       ],
       splitting: [
-        { "text": "In 1 series", "value": "1" },
-        { "text": "In multiple series", "value": "2" },
+        { "text": this.$t("In 1 series"), "value": "1" },
+        { "text": this.$t("In multiple series"), "value": "2" },
       ],
       enrollment: empty_enrollment,
+      rules: {
+        count20: (x) => (x && x.length <= 20 || 'Max 20 characters')
+      },
       status: INTERCLUBS_STATUS.CONSULTING,
       stopdate: STOPDATE,
     }
   },
 
   props: {
-    club: Object
+    club: Object,
   },
 
   computed: {
-    logintoken() { return this.$store.state.newlogin.value },
+    logintoken() { return this.$store.state.oldlogin.value },
     groupingvalue() {
       const gr = this.grouping.filter(x => x.value == this.enrollment.wishes.grouping)
       return gr.length > 0 ? gr[0].text : ""
@@ -179,7 +181,6 @@ export default {
     },
 
     async find_interclubenrollment() {
-      console.log('find interclub enrollment', this.club.id, this.club.idclub)
       if (!this.club.id) {
         this.enrollment = empty_enrollment
         return
@@ -191,6 +192,7 @@ export default {
         })
         if (reply.data) {
           this.enrollment = reply.data
+          if (!this.enrollment.name.length) this.enrollment.name = this.club.name_short
         }
         else {
           this.enrollment.id = null
@@ -202,19 +204,38 @@ export default {
         }
         else {
           console.error('Getting existing enrollment failed', reply.data.detail)
-          this.$root.$emit('snackbar', { text: 'Getting existing enrollment failed' })
+          this.$root.$emit('snackbar', { text: this.$t('Getting existing enrollment failed') })
         }
       }
     },
 
     async modifyEnrollment() {
-      this.status = INTERCLUBS_STATUS.MODIFYING
-      this.enrollment.name = this.club.name_long
+      try {
+        const reply = await this.$api.club.verify_club_access({
+          token: this.logintoken,
+          idclub: this.club.idclub,
+          role: "InterclubAdmin"
+        })
+        this.status = INTERCLUBS_STATUS.MODIFYING
+      } catch (error) {
+        const reply = error.response
+        switch (reply.status) {
+          case 401:
+            this.gotoLogin()
+            break;
+          case 403:
+            this.$root.$emit('snackbar', { text: this.$t("You don't have the access right to perfom this action") })
+            break;
+          default:
+            console.error('Getting accessrules club failed', reply.data.detail)
+            this.$root.$emit('snackbar', { text: this.$t('Getting accessrules club failed') })
+        }
+      }
     },
 
     async saveEnrollment() {
       try {
-        const reply1 = await this.$api.interclub.mgmt_set_interclubenrollment({
+        const reply1 = await this.$api.interclub.set_interclubenrollment({
           token: this.logintoken,
           idclub: this.club.idclub,
           name: this.enrollment.name,
@@ -229,25 +250,25 @@ export default {
         this.find_interclubenrollment(this.club)
       } catch (error) {
         const reply = error.response
-        console.error('Saving enrollment', reply.data.detail)
-        this.$root.$emit('snackbar', { text: 'Saving enrollment' })
+        switch (reply.status) {
+          case 401:
+            this.gotoLogin()
+            break;
+          case 403:
+            this.$root.$emit('snackbar', { text: this.$t("You don't have the access right to perfom this action") })
+            break;
+          default:
+            console.error('Getting accessrules club failed', reply.data.detail)
+            this.$root.$emit('snackbar', { text: this.$t('Saving enrollment failed') })
+        }        
       }
     },
 
     async setupEnrollment(){
-      console.log('setting up Enrollment')
       await this.find_interclubenrollment()
     },
 
   },
 
-
-
 }
 </script>
-
-<style scoped?>
-.fieldname {
-  color: purple
-}
-</style>

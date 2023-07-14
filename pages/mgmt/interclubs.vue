@@ -17,25 +17,21 @@
     </h2>
     <div class="elevation-2">
 
-      <v-tabs v-model="tab" color="deep-purple" @change="call_childmethods">
+      <v-tabs v-model="tab" color="deep-purple" @change="updateTab">
         <v-tabs-slider color="deep-purple"></v-tabs-slider>
         <v-tab>Enrollment</v-tab>
         <v-tab>Venue</v-tab>
-        <v-tab>Player list</v-tab>
         <v-tab>Downloads</v-tab>
       </v-tabs>
       <v-tabs-items v-model="tab">
-        <v-tab-item>
-          <MgmtinterclubEnrollment @interface="registerChildMethod" :club="activeclub" />
+        <v-tab-item :eager="true">
+          <MgmtinterclubEnrollment ref="enrollment" :club="activeclub" />
         </v-tab-item>
-        <v-tab-item>
-          <MgmtinterclubVenue @interface="registerChildMethod" :club="activeclub" />
+        <v-tab-item :eager="true">
+          <MgmtinterclubVenue ref="venues" :club="activeclub" />
         </v-tab-item>
-        <v-tab-item>
-          <MgmtinterclubPlayerlist :club="activeclub" />
-        </v-tab-item>
-        <v-tab-item>
-          <MgmtinterclubDownloads />
+        <v-tab-item :eager="true">
+          <MgmtinterclubDownloads ref="downloads" />
         </v-tab-item>
       </v-tabs-items>
     </div>
@@ -49,61 +45,82 @@ const noop = function () { }
 
 export default {
 
-  name: 'Interclub',
+  name: 'Interclubs',
 
   layout: 'mgmt',
 
   data() {
     return {
       activeclub: {},
-      childmethods: {
-        find_interclubenrollment: noop,
-        find_interclubvenues: noop,
-        playerlist_init: noop,
-      },
       clubs: [],
       idclub: null,
-      tab: null,
+      tab: -1,
     }
   },
 
   computed: {
-    logintoken() { return this.$store.state.newlogin.value }
+    logintoken() { 
+      return this.$store.state.newlogin.value 
+    },
+    person() {
+      return this.$store.state.person
+    },
   },
 
   head: {
     title: 'Management Interclubs',
+    script: [
+      {
+        src: 'https://accounts.google.com/gsi/client',
+        defer: true
+      }
+    ]
   },
 
-  mounted() {
-    this.$store.commit('newlogin/startup')
-    if (!this.logintoken.length) {
-      this.gotoLogin()
-    }
-    this.getClubs()
+  async mounted() {
+    await this.checkAuth()
+    await this.getClubs()
   },
 
   methods: {
 
-    call_childmethods() {
-      Object.keys(this.childmethods).forEach((v) => {
-        this.childmethods[v]()
-      })
+    async checkAuth() {
+      console.log('checking if auth is already set')
+      if (!this.logintoken) {
+        if (this.person.credential.length === 0) {
+          this.$router.push('/mgmt')
+        }
+        if (!this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
+          this.$router.push('/mgmt')
+        }
+        // now login using the Google auth token
+        await this.$api.root.login({
+          logintype: 'google',
+          token: this.person.credential
+        }).then(
+          (resp) => {
+            this.$store.commit('newlogin/update', resp.data)
+          },
+          (error) => {
+            const resp = error.response
+            console.log('failed login', resp.data.detail)
+            this.$router.push('/mgmt')
+          }
+        )
+      }
     },
 
     async getClubs() {
       try {
-        const reply = await this.$api.club.mgmt_get_clubs({
-          logintoken: this.logintoken
-        })
+        const reply = await this.$api.club.anon_get_clubs()
         this.clubs = reply.data.clubs
         this.clubs.forEach(p => {
           p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
         })
         console.log('clubs from server', this.clubs)
       } catch (error) {
+        console.error('errpr', error)
         const reply = error.response
-        console.error('getting mgmt_get_clubs', reply)
         if (reply.status === 401) {
           this.gotoLogin()
         } else {
@@ -113,14 +130,6 @@ export default {
           })
         }
       }
-    },
-
-    gotoLogin() {
-      this.$router.push('/mgmt/login?url=__mgmt__interclub')
-    },
-
-    registerChildMethod(methodname, method) {
-      this.childmethods[methodname] = method
     },
 
     selectclub() {
@@ -137,7 +146,19 @@ export default {
         })
       }
       console.log('club selected', this.idclub, this.activeclub)
-      this.$nextTick(() => this.call_childmethods())
+      this.$nextTick(()=> this.$refs.enrollment.setupEnrollment())       
+    },
+
+    updateTab(){
+      console.log('updateTab', this.tab, this.$refs)
+      switch (this.tab) {
+        case 0:
+          this.$refs.enrollment.setupEnrollment()
+          break
+        case 1:
+          this.$refs.venues.setupVenues()
+          break
+      }
     }
 
   }

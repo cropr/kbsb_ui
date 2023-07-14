@@ -9,9 +9,11 @@ content_nl: |-
   ### Belangrijke links
 
   - De [Eloratings](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
-  - Raadpleging van de [resultaten van de interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
   - Raadpleging van de [clubdetails](/clubs/info)
+  - Raadpleging van de [interclubs 2023-24](/interclubs/info)
+  - Raadpleging van de resultaten van de [interclubs 2022-23](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
   - Het gebruik van [Club Manager](/clubs/manager) door de bestuurders van de club 
+  - Het gebruik van [Interclubs Manager](/interclubs/manager) door de bestuurders van de club 
   - Raadpleging van de [toernooiuitslagen in SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
   
 
@@ -22,9 +24,11 @@ content_fr: |-
   ### Liens importants
 
   - Le [classement Elo](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
-  - La consultation des [résultats des Interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
-  - La [consultation des données des cercles](/clubs/info)
+  - La consultation des [données des cercles](/clubs/info)
+  - La consultation des [interclubs 2023-24](/interclubs/info)
+  - La consultation des résultats des [Interclubs 20220-23](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
   - L'utilisation de [Club Manager](/clubs/manager) par les administrateurs du club
+  - L'utilisation de [Interclubs Manager](/interclubs/manager) par les administrateurs du club
   - La consultation des [résultats des tournois SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
 
 
@@ -35,9 +39,11 @@ content_de: |-
   ### Wichtige Links
 
     - Die [Elo-Wertung](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
-    - Konsultation der [Ergebnisse von Interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
     - Die Abfrage der [Clubinformationen](/clubs/info) 
+    - Die Abfrage der [Interclubs-Informationen 2023-24](/clubs/info) 
+    - Die Abfrage der Ergebnisse von [Interclubs 2022-23](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
     - Die Verwendung von [Club-Manager](/clubs/manager) durch die Clubadministratoren
+    - Die Verwendung von [Interclubs-Manager](/interclubs/manager) durch die Clubadministratoren
     - Die Abfrage der [Turnierergebnisse von SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
 
 
@@ -48,11 +54,12 @@ content_en: |-
   ### Important links
 
    - The [Elo ratings](https://www.frbe-kbsb.be/sites/manager/GestionFICHES/FRBE_Fiche.php)
-   - Consultation of the [results of Interclubs](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
    - Consultation the [club details](/clubs/info)
+   - Consultation the [interclubs 2023-24](/interclubs/info)
+   - Consultation of the results of [Interclubs 2023-24](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
    - The use of [Club Manager](/clubs/manager) by the club's administrators
+   - The use of [Interclubs Manager](/interclubs/manager) by the club's administrators
    - Consultation of [tournament results of SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
-
 
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
 updated_at: 1684614874
