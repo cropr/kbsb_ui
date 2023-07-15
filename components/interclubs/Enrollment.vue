@@ -73,15 +73,16 @@
                 {{ $t('Teams') }}
               </v-card-title>
               <v-card-text>
-                <v-text-field v-model="enrollment.teams1" :label="$t('Teams in division') + ' 1'"
+                <p>{{ $t('Number of teams per division') }}</p>
+                <v-text-field v-model="enrollment.teams1" :label="$t('Division') + ' 1'"
                   type="number" min="0" max="1" />
-                <v-text-field v-model="enrollment.teams2" :label="$t('Teams in division') + ' 2'"
+                <v-text-field v-model="enrollment.teams2" :label="$t('Division') + ' 2'"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams3" :label="$t('Teams in division') + ' 3'"
+                <v-text-field v-model="enrollment.teams3" :label="$t('Division') + ' 3'"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams4" :label="$t('Teams in division') + ' 4'"
+                <v-text-field v-model="enrollment.teams4" :label="$t('Division') + ' 4'"
                   type="number" min="0" max="15" />
-                <v-text-field v-model="enrollment.teams5" :label="$t('Teams in division') + ' 5'"
+                <v-text-field v-model="enrollment.teams5" :label="$t('Division') + ' 5'"
                   type="number" min="0" max="15" />
               </v-card-text>
             </v-card>
@@ -92,13 +93,16 @@
                 {{ $t('Wishes') }}
               </v-card-title>
               <v-card-text>
-                <v-select :label="$t('Teams grouped by pairing number')"
+                <div>{{ $t('Teams grouped by pairing number') }}</div>
+                <v-select :label="$t('Grouping')"
                   v-model="enrollment.wishes.grouping" :items="grouping" />
-                <v-select :label="$t('Distribution of teams in same division')"
+                <div>{{ $t('Distribution of teams in same division') }}</div>   
+                <v-select :label="$t('Distribution')"
                   v-model="enrollment.wishes.split" :items="splitting" />
+                <div>{{ $t('Regional preferences') }}</div>
                 <v-text-field v-model="enrollment.wishes.regional"
-                  :label="$t('Regional preferences')" /> 
-                <v-textarea rows="5" v-model="enrollment.wishes.remarks" :label="$t('Remarks')" />
+                  :label="$t('Regional')" /> 
+                <v-textarea rows="5" v-model="enrollment.wishes.remarks" :label="$t('Other wishes')" />
               </v-card-text>                                                     
             </v-card>            
           </v-col>
@@ -109,7 +113,7 @@
               </v-card-title>
               <v-card-text>
                 {{ $t('You can define a name for your club when the results and standings are displayed.') }}
-                {{ $t('As a default, you clubname is used.') }} 
+                {{ $t('As a default, your clubname is used.') }} 
                 <v-text-field v-model="enrollment.name" :label="$t('Name')" maxlength="20" :rules="[rules.count20]"/>
               </v-card-text>                                                     
             </v-card>            
@@ -217,6 +221,7 @@ export default {
           role: "InterclubAdmin"
         })
         this.status = INTERCLUBS_STATUS.MODIFYING
+        this.enrollment.name = this.club.name_short
       } catch (error) {
         const reply = error.response
         switch (reply.status) {

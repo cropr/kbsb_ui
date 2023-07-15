@@ -209,7 +209,7 @@ export default {
 
     async modifyEnrollment() {
       this.status = INTERCLUBS_STATUS.MODIFYING
-      this.enrollment.name = this.club.name_long
+      this.enrollment.name = this.club.name_short
     },
 
     async saveEnrollment() {
