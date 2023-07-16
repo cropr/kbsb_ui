@@ -4,8 +4,6 @@ blueprint: contentpage
 title: 'Help login'
 title_nl: Login
 content_nl: |-
-  ## Login
-
   Je gebruikt je stamnummer + wachtwoord van de oude site
 
   Gebruikersnamen die geen stamnummer zijn worden niet gesupporteerd
@@ -17,5 +15,5 @@ content_fr: "Cette page n'est pas disponible en français"
 content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
 content_en: 'This page is not available in English'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1689524786
+updated_at: 1689525634
 ---
