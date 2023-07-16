@@ -9,6 +9,7 @@
             </v-icon>
             <label class="headline ml-3">{{ $t('Sign in') }}</label>
             <v-spacer />
+            <help-popup file="login" />
           </v-card-title>
           <v-divider />
           <v-card-text>
