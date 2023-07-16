@@ -1,7 +1,7 @@
 ---
 id: 19575762-c70e-4a6a-95a4-e03bd85ed9a0
 blueprint: contentpage
-title: 'Club contact'
+title: 'Help Club Contact'
 title_nl: Contactgegevens
 content_nl: |-
   Het hoofd e-mailadres moet altijd ingevuld zijn.  Alle communicatie
@@ -33,5 +33,5 @@ content_en: |-
 
   Each field can contain more than one address, separated by commas.
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1689520425
+updated_at: 1689520636
 ---
