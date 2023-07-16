@@ -59,9 +59,9 @@
         <template #activator>
           <v-list-item-content>{{ $t('Competitions') }}</v-list-item-content>
         </template>
-        <v-list-item to="/interclubs/interclubs-2023-24">
+        <v-list-item to="/interclubs/info">
           <v-list-item-content>
-            Interclubs 2023-34
+            Interclubs 2023-24
           </v-list-item-content>
         </v-list-item>
         <v-list-item to="/interclubs/interclubs-2022-23">
