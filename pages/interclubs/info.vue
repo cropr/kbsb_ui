@@ -9,10 +9,10 @@
       <v-tab>{{ $t('Standings') }}</v-tab> -->
     </v-tabs>
     <v-tabs-items v-model="tab">
-      <v-tab-item>
+      <v-tab-item :eager="true">
         <InterclubsAnnouncements />
       </v-tab-item>
-      <v-tab-item>
+      <v-tab-item :eager="true">
         <InterclubsDates />
       </v-tab-item>
     </v-tabs-items>

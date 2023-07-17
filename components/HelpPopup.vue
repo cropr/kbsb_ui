@@ -30,9 +30,7 @@ export default {
 
   async fetch() {
     const f = `help-${this.file}`
-    console.log("f", f)
     this.page = (await this.$content('pages', f).fetch())
-    console.log('page', this.page)
   },
 
   props: {
