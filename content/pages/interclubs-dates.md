@@ -10,7 +10,7 @@ content_nl: |-
   - Ronde 5: 03-12-23
   - Ronde 6: 28-01-24
   - Ronde 7: 04-02-24
-  - Ronde 8: 25-02-24
+  - Ronde 8: 18-02-24
   - Ronde 9: 10-03-24
   - Ronde 10: 24-03-24
   - Ronde 11: 21-04-24
@@ -22,7 +22,7 @@ content_fr: |-
   - Ronde 5: 03-12-23
   - Ronde 6: 28-01-24
   - Ronde 7: 04-02-24
-  - Ronde 8: 25-02-24
+  - Ronde 8: 18-02-24
   - Ronde 9: 10-03-24
   - Ronde 10: 24-03-24
   - Ronde 11: 21-04-24
@@ -34,7 +34,7 @@ content_de: |-
   - Runde 5: 03.12.23
   - Runde 6: 28.01.24
   - Runde 7: 04.02.24
-  - Runde 8: 25.02.24
+  - Runde 8: 18.02.24
   - Runde 9: 10.03.24
   - Runde 10: 24.03.24
   - Runde 11: 21.04.24
@@ -46,12 +46,12 @@ content_en: |-
   - Round 5: 03-12-23
   - Round 6: 28-01-24
   - Round 7: 04-02-24
-  - Round 8: 25-02-24
+  - Round 8: 18-02-24
   - Round 9: 10-03-24
   - Round 10: 24-03-24
   - Round 11: 21-04-24
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1689343214
+updated_at: 1689681869
 title_nl: Data
 title_fr: Dates
 title_de: Daten
