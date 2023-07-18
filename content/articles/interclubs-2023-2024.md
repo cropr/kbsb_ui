@@ -34,7 +34,7 @@ text_nl: |-
 title_fr: 'Interclubs 2023-2024'
 intro_fr: "Ici plus d'informations sur le calendrier des Interclubs Nationaux."
 text_fr: |-
-  Tout d'abord, toutes les infos sur les interclubs nationaux de la saison dernière. Vous pouvez voir les éléments suivants dans ce fichier :
+  Tout d'abord, toutes les infos sur les interclubs nationaux de la saison dernière. Vous pouvez voir les éléments suivants dans ce [fichier](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/ICN_NIC_2022_2023_Apercu_Overzicht__079157.xlsx) :
   - Classement final 2022-2023.
   - Quelles équipes montent, quelles équipes descendent ?
   - Qui sont les meilleurs deuxièmes et qui peut encore monter si une ou plusieurs équipes ne peuvent pas monter ?
@@ -48,8 +48,8 @@ text_fr: |-
 
   Ensuite, les données sur la nouvelle saison interclubs.
 
-  - Vous pouvez voir le dernier état des règles de compétition ici (uniquement en NL pour l'instant).
-  - Et ici vous pouvez voir les données financières (Combien coûte l'inscription ? Que coûte une amende ? Quels sont les prix ?)
+  - Vous pouvez voir le dernier état des règles de compétition [ici](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/Wedstrijdreglement%20van%20de%20KBSB%2020230617__663171.docx) (uniquement en NL pour l'instant).
+  - Et [ici](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/financi%C3%ABle_cijfers_NIC_2023_2024__385182.xlsx) vous pouvez voir les données financières (Combien coûte l'inscription ? Que coûte une amende ? Quels sont les prix ?)
   - Vous pouvez inscrire une ou plusieurs équipes via InterclubManager (depuis le menu c'est Outils > InterclubManager ou via [ce lien](https://www.frbe-kbsb-ksb.be/interclubs/manager)). Encore une fois un site sécurisé, accessible uniquement aux personnes autorisées. A noter qu'il y a deux onglets : le premier pour les détails de l'équipe et les éventuels souhaits, le second pour une ou plusieurs salles de jeux. Dans le cas de plusieurs salles, indiquez clairement quelle salle sera utilisée quand et/ou par quelles équipes. **La date limite d'inscription est le 31/07/2023.** Il est toujours possible de modifier les souhaits ultérieurement ou de s'inscrire ultérieurement, mais sans aucune garantie que les souhaits seront exaucés.
   - Le paiement ne peut être effectué qu'APRÈS réception d'une facture et doit être effectué avec référence au décompte. **La date d'échéance du paiement est le 31/08/2023.**
   - Dans les premiers jours d'août, les clubs peuvent être contactés concernant les meilleurs deuxièmes. Ainsi **la répartition complète** des 12 équipes en première, des 24 équipes en deuxième, des 48 équipes en troisième et des 96 équipes en quatrième division devrait être connue **vers le 05/08/2023**.
@@ -65,5 +65,5 @@ title_en: 'Interclubs 2023-2024'
 intro_en: 'See here more information about the timetable of the National Interclubs.'
 text_en: 'For now, please look at the NL text.'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1689669648
+updated_at: 1689669830
 ---
