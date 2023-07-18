@@ -31,6 +31,8 @@ text_nl: |-
   De volgende stap in het inschrijvingsproces van de NIC is zorgen voor spelers. Om dit te doen moeten eerst de clubs hun ledenhernieuwingen doen of nieuwe leden inschrijven. Controleer ook dat elke buitenlandse speler een FIDE-ID heeft en ook dat deze als Belgische ELO de FIDE-ELO (of als deze er geen heeft, de buitenlandse ELO) heeft gekregen. Alle verrichtingen rond de ledenadministratie dien je nog te doen via [de oude website](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php).
 
   Vanaf begin september kan men beginnen aan de spelerslijsten. De uiterste termijn hiervoor is 16/09/2023. Maar hier zal later meer over geïnformeerd worden.
+
+  Voor alle zekerheid staan [hier](https://www.frbe-kbsb-ksb.be/interclubs/info) de data van alle rondes nog eens vermeld. Gelieve de datum van ronde 8 (18/02/2024) goed te controleren, omdat deze begin maart gewijzigd werd op vraag van de Franstaligen.
 title_fr: 'Interclubs 2023-2024'
 intro_fr: "Ici plus d'informations sur le calendrier des Interclubs Nationaux."
 text_fr: |-
@@ -58,12 +60,66 @@ text_fr: |-
   La prochaine étape du processus d'inscription des ICN consiste à fournir des joueurs. Pour ce faire, les clubs doivent d'abord faire leurs renouvellements d'affiliations ou inscrire de nouveaux membres. Vérifiez également que chaque joueur étranger possède un ID FIDE et aussi que son ELO belge est bien l'ELO FIDE (ou s'il n'en a pas, l'ELO étranger). Il vous reste à effectuer toutes les transactions liées à l'administration des membres via [l'ancien site](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php).
 
   Dès le début du mois de septembre, vous pouvez commencer avec les listes de force. La date limite pour cela est le 16/09/2023. Mais vous serez informés plus à ce sujet plus tard.
+
+  Pour être sûr, [ici](https://www.frbe-kbsb-ksb.be/interclubs/info) les dates de toutes les rondes sont indiquées. Veuillez vérifier attentivement la date de la ronde 8 (18/02/2024), car il a été modifié début mars à la demande des francophones.
 title_de: 'Interclubs 2023-2024'
 intro_de: 'Weitere Informationen zum Zeitplan der Nationalen Interclubs finden Sie hier.'
-text_de: 'Bitte schauen Sie sich zunächst den NL Text an.'
+text_de: |-
+  Zunächst einmal alle Infos zu den nationalen Interclubs der letzten Saison. In [dieser Datei](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/ICN_NIC_2022_2023_Apercu_Overzicht__079157.xlsx) können Sie Folgendes sehen:
+  - Endergebnis 2022-2023.
+  - Wer steigt auf, wer steigt ab?
+  - Wer sind die besten Zweitplatzierten und wer ist noch aufstiegsberechtigt, wenn ein oder mehrere Teams nicht aufsteigen können?
+  - Was sind die Preise pro Club?
+  - Was sind die Bußgelder pro Club?
+  - Wie ist die Finanzübersicht pro Club? --> Die Vereine, die zahlen müssen (wird angezeigt, wenn „te innen / à encaisser“ steht), müssen dies **VOR DEM 15.08.2023** NACH Erhalt einer Rechnung tun (bitte Abrechnung angeben). Die Clubs, die eine Einzahlung benötigen (angezeigt durch „te storten /  à verser“), sollten prüfen, ob die IBAN-Nr. und der BIC-Code korrekt ist (falls nicht, antworten Sie sofort an [interclubs@frbe-kbsb-ksb.be](interclubs@frbe-kbsb-ksb.be)).
+  - Wer hat einen Norm bestanden?
+  - Übersicht der Vereine mit ihren Mannschaften in den verschiedenen Divisionen für die kommende Saison.
+
+  Bitte überprüfen Sie vor Beginn der neuen Saison, ob alle Vereinsinformationen korrekt sind. Sie können dies überprüfen, indem Sie im Hauptmenü der KBSB-Website auf Vereine und dann auf Club Info klicken (oder [diesen Link](https://www.frbe-kbsb-ksb.be/clubs/info)). Die weitere E-Mail-Kommunikation über NIC erfolgt mit dem Interclubleiter und dem Schatzmeister (und der Haupt-E-Mail-Adresse). Wenn dies nicht in Ordnung ist, muss ein Clubverantwördliche dies über Vereine > ClubManager (oder [diesen Link](https://www.frbe-kbsb-ksb.be/clubs/manager)) korrigieren. Es versteht sich von selbst, dass es sich hierbei um eine sichere Seite handelt und nur autorisierte Personen innerhalb des Vereins diese ändern können.
+
+  Dann die Daten zur neuen Interclub-Saison.
+
+  - Den aktuellen Stand der Wettbewerbsregeln können Sie [hier](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/Wedstrijdreglement%20van%20de%20KBSB%2020230617__663171.docx) einsehen (vorerst nur in NL).
+  - Und [hier](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/financi%C3%ABle_cijfers_NIC_2023_2024__385182.xlsx) können Sie die Finanzdaten einsehen (Wie viel kostet die Registrierung? Was kostet ein Bußgeld? Wie hoch sind die Preise?)
+  - Sie können ein oder mehrere Teams über InterclubManager registrieren (im Menü finden Sie Werkzuge > InterclubManager oder über [diesen Link](https://www.frbe-kbsb-ksb.be/interclubs/manager)). Auch hier handelt es sich um eine sichere Website, die nur von autorisierten Personen betreten werden darf. Bitte beachten Sie, dass es zwei Reiter gibt: den ersten für Teamdetails und eventuelle Wünsche, den zweiten für eine oder mehrere Spielhallen. Geben Sie bei mehreren Spielhallen deutlich an, welche Spielhalle wann und/oder von welchen Teams genutzt wird. **Anmeldeschluss ist der 31.07.2023.** Nachträgliche Änderungen der Wünsche oder eine nachträgliche Anmeldung sind weiterhin möglich, jedoch ohne Gewähr, dass den Wünschen entsprochen wird.
+  - Die Zahlung kann erst NACH Erhalt einer Rechnung erfolgen und muss unter Bezugnahme auf die Abrechnung erfolgen. **Zahlungstermin ist der 31.08.2023.**
+  - In den ersten Augusttagen können Vereine bezüglich der besten Zweitplatzierten kontaktiert werden. Auf diese Weise sollte **die vollständige Verteilung** der 12 Mannschaften in der ersten, der 24 Mannschaften in der zweiten, der 48 Mannschaften in der dritten und der 96 Mannschaften in der vierten Abteilung **um den 05.08.2023** bekannt sein.
+  - Dann wird der **Kalender** erstellt und wir hoffen, ihn **bis zum 20.08.2023** zu veröffentlichen.
+
+  Der nächste Schritt im NIC-Registrierungsprozess ist die Bereitstellung von Spielern. Dazu müssen die Clubs zunächst ihre Mitgliedschaft verlängern oder neue Mitglieder anmelden. Überprüfen Sie außerdem, ob jeder ausländische Spieler eine FIDE-ID hat und ob er als belgischer ELO die FIDE-ELO (oder, falls er keine hat, die ausländische ELO) erhalten hat. Sie müssen weiterhin alle Transaktionen im Zusammenhang mit der Mitgliederverwaltung über [die alte Website](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php) durchführen.
+
+  Ab Anfang September können Sie mit den Spielerlisten beginnen. Die Frist hierfür endet am 16.09.2023. Aber dazu wird es später noch mehr geben.
+
+  Allerdings sind [hier](https://www.frbe-kbsb-ksb.be/interclubs/info) noch die Termine aller Runden aufgeführt. Bitte überprüfen Sie das Datum der 8. Runde (18.02.2024) sorgfältig, da es Anfang März auf Wunsch der Französischsprachigen geändert wurde.
 title_en: 'Interclubs 2023-2024'
 intro_en: 'See here more information about the timetable of the National Interclubs.'
-text_en: 'For now, please look at the NL text.'
+text_en: |-
+  First of all, all the info about last season's national interclubs. You can see the following things in [this file](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/ICN_NIC_2022_2023_Apercu_Overzicht__079157.xlsx):
+  - Final score 2022-2023.
+  - Who will promote, who will be relegate?
+  - Who are the best runners-up and who is still eligible to promote if one or more teams cannot promote?
+  - What are the prices per club?
+  - What are the fines per club?
+  - What is the financial overview per club? --> The clubs that have to pay (shown when it says „te innen / à encaisser“) must do so **BEFORE 15/08/2023** AFTER receipt of an invoice (please quote the statement). The clubs that need to receive (shown when it says "te storten /  à verser"), should check if the IBAN no. and the BIC code is correct (if not, respond immediately to [interclubs@frbe-kbsb-ksb.be](interclubs@frbe-kbsb-ksb.be)).
+  - Who scored a norm?
+  - Overview of the clubs with their teams in the various divisions for the coming season.
+
+  Before starting the new season, please check that all club information is correct. You can check this by clicking on Clubs in the main menu on the KBSB website and then Club info (or [this link](https://www.frbe-kbsb-ksb.be/clubs/info)). Further email communication about NIC will be with the interclubs director and treasurer (and main email address). If this is not in order, a club manager must correct this via Clubs > ClubManager (or [this link](https://www.frbe-kbsb-ksb.be/clubs/manager)). It goes without saying that this is a secure site and that only authorized persons within the club can change this.
+
+  Then the data about the new interclub season.
+
+  - You can see the latest state of the competition rules [here](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/Wedstrijdreglement%20van%20de%20KBSB%2020230617__663171.docx) (only in NL for now).
+  - And [here](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/financi%C3%ABle_cijfers_NIC_2023_2024__385182.xlsx) you can see the financial data (How much does registration cost? What does a fine cost? What are the prices?)
+  - You can register one or more teams via InterclubManager (from the menu this is Tools > InterclubManager or via [this link](https://www.frbe-kbsb-ksb.be/interclubs/manager)). Again a secure site, to be entered by only authorized persons. Please note that there are two tabs: the first for team details and any wishes, the second for one or more playing venues. In the case of multiple playing venues, clearly indicate which playing venue will be used when and/or by which teams. **The registration deadline is 31/07/2023.** Making changes to the wishes afterwards or registering afterwards is still possible, but without any guarantee that the wishes will be granted.
+  - Payment may only be made AFTER receipt of an invoice and must be made with reference to the statement. **Payment due date is 31/08/2023.**
+  - In the first days of August, clubs can be contacted regarding best runners-up. In this way **the complete distribution** of the 12 teams in first, the 24 teams in second, the 48 teams in third and the 96 teams in fourth division **around 05/08/2023** should be known.
+  - Then the **the calendar** will be made and the hope is to publish it **by 20/08/2023**.
+
+  The next step in the NIC enrollment process is providing players. To do this, the clubs must first do their membership renewals or enroll new members. Also check that every foreign player has a FIDE-ID and also that as a Belgian ELO he has received the FIDE-ELO (or if he does not have one, the foreign ELO). You still have to do all transactions related to the member administration via [the old website](https://www.frbe-kbsb.be/sites/manager/GestionCOMMON/GestionLogin.php).
+
+  From the beginning of September you can start with the player lists. The deadline for this is 16/09/2023. But more will be informed about this later.
+
+  To be sure, [here](https://www.frbe-kbsb-ksb.be/interclubs/info) the dates of all rounds are listed. Please check the date of round 8 (18/02/2024) carefully, because it was changed at the beginning of March at the request of the French speaking Federation.
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1689669830
+updated_at: 1689682657
 ---
