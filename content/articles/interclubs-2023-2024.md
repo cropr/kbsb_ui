@@ -7,7 +7,7 @@ active_since: '2023-07-17'
 title_nl: 'Interclubs 2023-2024'
 intro_nl: 'Ziehier meer info over het tijdschema van de Nationale Interclubs.'
 text_nl: |-
-  Vooreerst alle info over de nationale interclubs van vorig seizoen. Je kan in dit bestand de volgende zaken zien:
+  Vooreerst alle info over de nationale interclubs van vorig seizoen. Je kan in dit [bestand](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/ICN_NIC_2022_2023_Apercu_Overzicht__079157.xlsx) de volgende zaken zien:
   - Eindstand 2022-2023.
   - Wie promoveert er, wie degradeert er?
   - Wie zijn de beste tweedes en wie komt nog in aanmerking om te promoveren indien één of meerdere ploegen niet kunnen promoveren?
@@ -21,8 +21,8 @@ text_nl: |-
 
   Vervolgens de gegevens over het nieuwe interclubseizoen.
 
-  - Je kan hier de laatste stand van de wedstrijdreglementen zien (voorlopig enkel in het NL).
-  - En hier kun je de financiële gegevens zien (Hoeveel kost een inschrijving? Wat kost een boete? Wat zijn de prijzen?)
+  - Je kan [hier](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/Wedstrijdreglement%20van%20de%20KBSB%2020230617__663171.docx) de laatste stand van de wedstrijdreglementen zien (voorlopig enkel in het NL).
+  - En [hier](https://www.frbe-kbsb-ksb.be/api/v1/filecontent/financi%C3%ABle_cijfers_NIC_2023_2024__385182.xlsx) kun je de financiële gegevens zien (Hoeveel kost een inschrijving? Wat kost een boete? Wat zijn de prijzen?)
   - Eén of meerdere ploegen inschrijven doe je via InterclubManager (vanuit de menu is dit Tools > InterclubManager ofwel via [deze link](https://www.frbe-kbsb-ksb.be/interclubs/manager)). Weeral een beveiligde site, in te geven door enkel geoorloofde personen. Let op dat er twee tabbladen zijn: de eerste voor de ploeggegevens en eventuele wensen, de tweede voor één of meerdere speelzalen. In geval van meerdere lokalen geef duidelijk aan welk lokaal wanneer en/of door welke ploegen gebruikt wordt. **Uiterlijke inschrijftermijn is 31/07/2023.** Wijzigingen aanbrengen aan de wensen nadien of inschrijven nadien is nog mogelijk, echter zonder enige garantie op het toekennen van de wensen.
   - De betaling mag enkel gebeuren NA ontvangst van een factuur en dient te gebeuren met vermelding van de mededeling. **De uiterlijke betalingsdatum is 31/08/2023.**
   - In de eerste dagen van augustus kunnen clubs gecontacteerd worden in verband met beste tweedes. Op die manier zou **de volledige verdeling** van de 12 ploegen in eerste, de 24 ploegen in tweede, de 48 ploegen in derde en de 96 ploegen in vierde afdeling **rond 05/08/2023** gekend moeten zijn.
@@ -65,5 +65,5 @@ title_en: 'Interclubs 2023-2024'
 intro_en: 'See here more information about the timetable of the National Interclubs.'
 text_en: 'For now, please look at the NL text.'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1689667935
+updated_at: 1689669648
 ---
