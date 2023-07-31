@@ -59,7 +59,7 @@
           </v-col>
         </v-row>
         <v-row>
-          <v-btn @click="modifyEnrollment" :disabled="new Date() > stopdate">
+          <v-btn @click="modifyEnrollment">
             Edit
           </v-btn>
         </v-row>
@@ -130,7 +130,7 @@
   </v-container>
 </template>
 <script>
-import { INTERCLUBS_STATUS, STOPDATE, empty_enrollment } from '@/util/interclubs.js'
+import { INTERCLUBS_STATUS, empty_enrollment } from '@/util/interclubs.js'
 
 export default {
 
@@ -149,7 +149,6 @@ export default {
       ],
       enrollment: empty_enrollment,
       status: INTERCLUBS_STATUS.CONSULTING,
-      stopdate: STOPDATE,
     }
   },
 
