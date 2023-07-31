@@ -12,7 +12,7 @@ export const empty_enrollment = {
   wishes: {},
 };
 
-export const STOPDATE = new Date("2023-07-31");
+export const STOPDATE = new Date("2023-08-05");
 
 export const INTERCLUBS_ROUNDS = {
   1: "2023-09-24",
