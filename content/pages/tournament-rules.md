@@ -5,7 +5,9 @@ title: 'Tournament Rules'
 parent: 8dce013d-4f3a-4dc5-b18b-ebce97fa6545
 title_nl: 'Wedstrijdreglement van de KBSB'
 content_nl: |-
-  _Goedgek. door de Bijzondere Algemene Vergadering (BAV) van 20 juni 2009. Goedgek. door de Algemene Vergadering (AV) van 20 maart 2010. Goedgek. door de BAV van 15 Januari 2011. Goedgek. door de BAV van 18 juni 2011. Goedgek. door het BO van 4 september 2011. Goedgek. door de BAV van 26.11.2011. Goedgek. door de BAV van 2 juni 2012. Goedgek. door de BAV van 1 juni 2013. Goedgek. door de AV van 7 december 2013. Goedgek. door de BAV van 2 augustus 2014, verwerkt door het BO van 23 augustus 2014. Goedgek. door de AV van 4 oktober 2014. Goedgek. door de BAV van 6 juni 2015.Goedgek. door de AV van 17 oktober 2015. Goedgek. door de AV van 22 oktober 2016. Goedgek. door de BAV van 25 februari 2017. Goedgek. door het BO (eensluidendheid nl/fr teksten +ARTT. 35 en 38) op 1 juli en 2 september 2017. Goedgek. door de AV van 18 november 2017. Goedgek. door de AV van 20 oktober 2018. Goedgek. door de AV van 9 november 2019. Goedgek. door de AV van 29 augustus 2020. Goedgek. door de BAV van 13/02/2021._
+  _Goedgek. door de Bijzondere Algemene Vergadering (BAV) van 20 juni 2009. Goedgek. door de Algemene Vergadering (AV) van 20 maart 2010. Goedgek. door de BAV van 15 Januari 2011. Goedgek. door de BAV van 18 juni 2011. Goedgek. door het BO van 4 september 2011. Goedgek. door de BAV van 26.11.2011. Goedgek. door de BAV van 2 juni 2012. Goedgek. door de BAV van 1 juni 2013. Goedgek. door de AV van 7 december 2013. Goedgek. door de BAV van 2 augustus 2014, verwerkt door het BO van 23 augustus 2014. Goedgek. door de AV van 4 oktober 2014. Goedgek. door de BAV van 6 juni 2015.Goedgek. door de AV van 17 oktober 2015. Goedgek. door de AV van 22 oktober 2016. Goedgek. door de BAV van 25 februari 2017. Goedgek. door het BO (eensluidendheid nl/fr teksten +ARTT. 35 en 38) op 1 juli en 2 september 2017. Goedgek. door de AV van 18 november 2017. Goedgek. door de AV van 20 oktober 2018. Goedgek. door de AV van 9 november 2019. Goedgek. door de AV van 29 augustus 2020. Goedgek. door de BAV van 13/02/2021, de AV van 27 november 2021 en de AV van 3 december 2022._
+
+  _Huidige versie goedgekeurd op de BAV van 17 juni 2023._
 
   ## Algemene schikkingen 
 
@@ -26,7 +28,7 @@ content_nl: |-
 
   a. 	De spelregels zijn deze van de FIDE
 
-  b. 	Voor elke competitie worden de reglementen en voorwaarden duidelijk omschreven. In deze voorwaarden worden opgenomen het minimum prijzenfonds en de vereisten waaraan het speelmateriaal, de speelzaal en het verblijf van de** **spelers moeten voldoen.
+  b. 	Voor elke competitie worden de reglementen en voorwaarden duidelijk omschreven. In deze voorwaarden worden opgenomen het minimum prijzenfonds en de vereisten waaraan het speelmateriaal, de speelzaal en het verblijf van de spelers moeten voldoen.
 
   c. 	In elke officiële competitie geldt rookverbod in de speelzaal.
 
@@ -49,17 +51,13 @@ content_nl: |-
 
   ## Artikel 3 – Aansluitingen
 
-  Tegenwoordig worden de aansluitingen via de module Players Manager behandeld die te vinden is op de website van de KBSB. Hierin is het mogelijk dat elke mandataris zelf op elk moment een benodigde lijst kan maken.
-
   a. Zolang een club niet voldaan heeft aan al zijn financiële verplichtingen tegenover KBSB mag die club en zijn bestuursleden (voorzitter, ondervoorzitter, secretaris, penningmeester, toernooileider) in overeenstemming met de statuten aan geen enkele nationale competitie deelnemen.
 
   b. Elk lid van een club moet in overeenstemming met de statuten in regel zijn met zijn KBSB-bijdrage op het ogenblik van inschrijving voor elke officiële competitie.
 
   c. Buitenlandse spelers, uitgenodigd op een wedstrijd ingericht met steun van de KBSB zijn van deze verplichting vrijgesteld.
 
-  d. _Geschrapt._
-
-  e. Wanneer een speler niet aangesloten blijkt te zijn, wordt zijn waarborg verbeurd verklaard en worden zijn uitslagen geannuleerd, met daar nog boven de sancties tegen zijn club zoals voorzien in het IR.
+  e. Wanneer een speler niet aangesloten blijkt te zijn, wordt zijn waarborg verbeurd verklaard en worden zijn uitslagen geannuleerd, met daar nog boven de sancties tegen zijn club zoals voorzien in het intern reglemen.
 
   f. De nationale penningmeester en de Verantwoordelijke Nationale Toernooien (VNT) of hun vervangers worden belast met het toezicht op de strikte naleving van deze bepaling.
 
@@ -69,6 +67,16 @@ content_nl: |-
 
   i. Een speler die deelneemt aan een competitie of toernooi dat meetelt voor nationale elo dient aangesloten te zijn bij een Belgische of buitenlandse club. Zendt een organisatie toch resultaten door van een niet-aangesloten speler voor nationale eloverwerking, dan wordt die speler ter persoonlijke titel ingeschreven op kosten van de organiserende club of instantie. In geval van ploegencompetitie is het lidgeld verschuldigd door de club die de speler opstelt in de competitie.
 
+  j. Een speler die deelneemt aan een competitie of toernooi dat meetelt voor
+  fide elo, dient een fide-id te hebben. De KBSB kan enkel fide-ids
+  uitvaardigen met BEL als federatie aan spelers die officieel aangesloten zijn.
+  Zendt een organisatie resultaten voor fide-eloverwerking door van een niet-
+  aangesloten speler zonder FIDE-id, dan wordt die speler ingeschreven op
+  kosten van de organiserende club of instantie onder de Belgische federatie.
+  Zou de federatie niet goed zijn, dan zullen ook alle kosten die aangerekend
+  worden om naar de juiste federatie te transfereren, verhaald worden op de
+  organiserende club of instantie.
+
   ### Artikel 4 - Verantwoordelijkheid van de inrichter
 
   De met een toernooi-inrichting belaste mandataris van het BO is tegenover de KBSB verantwoordelijk voor de toepassing van huidig reglement en voor het nakomen van de minimum voorwaarden voorzien door de KBSB.
@@ -77,19 +85,15 @@ content_nl: |-
 
   In principe, en behoudens uitdrukkelijk toegestane afwijking, behoren de inschrijvingsgelden van door de KBSB ingerichte competities tot de bevoegdheid van de KBSB en moeten ze op de financiële rekening van deze laatste gestort worden, uiterlijk op de afsluitingsdatum der aanmeldingen. Alleen de nationale penningmeester is gemachtigd om terugbetalingen te doen, en zulks alleen voor de niet weerhouden reservespelers of voor de clubs wiens inschrijving werd geweigerd.
 
-  ## Artikel 6 - Spelers aangesloten bij meerdere clubs
+  ### Artikel 6 - Spelers aangesloten bij meerdere clubs
 
   a. Elke speler heeft een hoofdclub en mag lid zijn van meer dan één club.
-
-  b. _Geschrapt_.
 
   c. Een speler mag in eenzelfde competitie niet worden opgesteld door twee verschillende clubs. Hij mag wel voor een andere club uitkomen, mits schriftelijke toestemming van zijn hoofdclub, behalve wanneer deze laatste niet deel neemt aan die competitie.
 
   ### Artikel 7 – Transfer
 
   a. Elk lid van een club kan tussen 1 juni en 31 juli vrij van hoofdclub veranderen.
-
-  b. _Afgeschaft_.
 
   c. Elke transfer wordt van toepassing op 1 augustus.
 
@@ -142,7 +146,7 @@ content_nl: |-
       - aantal deelnemers
       - winnaars (eventueel volledige uitslag)
       - informatie omtrent eventueel beroep tegen beslissing van u als wedstrijdleider
-   - lijst van andere toernooien om globaal inzicht te krijgen van de arbitersactiviteiten met als gegevens
+    - lijst van andere toernooien om globaal inzicht te krijgen van de arbitersactiviteiten met als gegevens
       - naam toernooi
       - datum en plaats
       - gegevens inrichter
@@ -250,7 +254,7 @@ content_nl: |-
 
     - loting.
 
-  c) Indien er onvoldoende speelsters kunnen geselecteerd worden volgens de FIDE-ratinglijst, dan dient niet de FIDE-ratinglijst genomen te worden, maar wel de nationale ratinglijst die gangbaar was 3 maanden voorafgaand op de begindag van het evenement.
+  c) Geschrapt.
 
   ### Artikel 12 - Welke competities en welke partijen tellen voor de quotering
 
@@ -263,7 +267,7 @@ content_nl: |-
 
   Indien een aantal zetten binnen de eerste tijdscontrole dient gespecificeerd te worden, wordt aangeraden dat het 40 worden. Zo genieten de spelers van uniformiteit.
 
-  De maximale speeltijd per dag staat beschreven in het FIDE-handboek.`
+  De maximale speeltijd per dag staat beschreven in het FIDE-handboek.
 
   Indien men partijen wil laten verwerken voor het bekomen van FIDE-normen, dan dienen de thans geldende FIDE-regels nageleefd te worden.
 
@@ -283,12 +287,11 @@ content_nl: |-
 
   c. 	De klassementsleider is niet verplicht rekening te houden met uitslagen die hem met meer dan 6 maanden vertraging bereiken.
 
-
   d. 	De mededeling van deze volledige uitslagen en het bijhouden van de fiches is verplicht. De organisator van het toernooi is verantwoordelijk voor de verzending van de resultaten aan de klassementsleiding van de KBSB. Bij ernstige nalatigheid of bij herhaalde onregelmatigheden zijn er sancties voorzien (cf. Kampioenschap van België, Nationale Interclubs, Internationale wedstrijden, enz.).
 
-  e. 	_Afgeschaft._
-
-  f. 	_Afgeschaft._
+  e. Alle resultaten die in de voorbije 3 klassementsperiodes niet verwerkt
+  konden worden omdat een of beide spelers niet over een quotering
+  beschikten worden opnieuw opgenomen voor verwerking
 
   g. 	Het BO beslist over de aanvaarde programma’s voor de verzending van resultaten. Het is de verantwoordelijkheid van de clubs om de programma’s die ze gebruiken, te updaten door die updates die op de website van de KBSB of op een door de KBSB gemachtigde website staan, af te halen.
 
@@ -373,10 +376,6 @@ content_nl: |-
 
   Elke klacht moet schriftelijk, overeenkomstig de procedure beschreven in het Intern Reglement, ingediend worden.
 
-  ### Artikel 16 – afgeschaft
-
-  ### Artikel 17 – afgeschaft
-
   ### Artikel 18 - Wijzigingen van de reglementen
 
   Elke wijziging van onderhavig reglement wordt van kracht op de datum, bepaald door de Algemene Vergadering of door het BO.
@@ -396,33 +395,28 @@ content_nl: |-
 
   Het deelnemersveld omvat :
 
-  a. 	de kampioen van het vorig expertenkampioenschap
+  a. de kampioen van het vorig expertenkampioenschap
 
-  b. 	de kampioen van de open groep van het vorig kampioenschap
+  b. de kampioen van de open groep van het vorig kampioenschap
 
-  c. 	de kampioen/kampioene met de hoogste gebruikte elo uit alle jeugdcategorieën op het allerlaatste BJK (en bij gelijkheid in gebruikte elo de oudste speler), voor zover dit minimum 2150 is
+  c. de kampioen/kampioene met de hoogste gebruikte elo uit alle
+  jeugdcategorieën op het allerlaatste BJK (en bij gelijkheid in gebruikte elo
+  de oudste speler), voor zover dit minimum 2250 is en de kandidaat nog
+  jeugdspeler is.
 
-  d. 	twee spelers van de federatie met de meest aangesloten sportbeoefenaars op 1 januari, één speler van elke andere federatie
+  d. twee spelers van de federatie met de meest aangesloten sportbeoefenaars
+  op 1 januari, één speler van elke andere federatie.
 
-  e. 	de best gerangschikte spelers op FIDE-rating volgens art. 11 zodat een aantal van 10 spelers bereikt wordt.
+  e. de best gerangschikte spelers op FIDE-rating volgens art. 11 zodat een
+  aantal van 10 spelers bereikt wordt.
 
   **Bijkomende criteria voor het bepalen van de gerechtigden uit de Expertengroep.**
 
   1. Bij afzeggingen in de punten a, b en c mag geen beroep gedaan worden op de volgende(n) in de eindrangschikking.
 
-  2. Er is een minimum FIDE-rating van 2300 vereist voor alle deelnemers, behalve voor de Belgische Jeugdkampioen.
+  2. Er is een minimum FIDE-rating van 2300 vereist voor alle deelnemers, behalve voor de Belgische Jeugdkampioen, waar 2250 vereist word.
 
-  3. De spelers dienen actief te staan in de FIDE-ratinglijst, met uitzondering van de Belgische Jeugdkampioen.
-
-  **Nationaal Dameskampioenschap.**
-
-  10 deelneemsters; gesloten groep (dus 9 rondes).
-
-  Het deelneemsterveld omvat:
-
-  1. de kampioene van het vorig kampioenschap (ingeval van afzegging, mag geen beroep gedaan worden op de volgende(n) in de eindrangschikking)
-
-  2. de best gerangschikte speelsters op FIDE-rating en vervolgens op nationale rating volgens art. 11 zodat een aantal van 10 speelsters bereikt wordt.
+  3. De spelers dienen actief te staan in de FIDE-ratinglijst.
 
   **Open Toernooi.**
 
@@ -442,7 +436,7 @@ content_nl: |-
     - duur in tijd vanaf het reële aanvangsuur (wit en zwart samen) waarbinnen geen remise mag voorgesteld worden
     - met of zonder de toestemming van de arbiter
 
-  Een voorbeeld van de Sofia-regels: zonder goedkeuring van de wedstrijdleider kan een speler geen remise voorstellen aan zijn tegenstander vooraleer dat er minstens 20 zetten per speler uitgevoerd zijn én er minstens één uur in totaal is gespeeld.
+  Een voorbeeld van de Sofia-regels: zonder goedkeuring van de wedstrijdleider kan een speler **geen remise** voorstellen aan zijn tegenstander vooraleer dat er minstens 20 zetten per speler uitgevoerd zijn én er minstens één uur in totaal is gespeeld.
 
   ### Artikel 20 -Inschrijving
 
@@ -462,15 +456,23 @@ content_nl: |-
 
   h. De loting van paringsnummers waarna ook de kalender zal bekend zijn, dient liefst te gebeuren in een openingsceremonie die minimaal 2u voorafgaandelijk aan het begin van de eerste ronde plaats vindt. Indien de organisatie geen openingsceremonie kan inrichten, dan zal de loting maximaal 24u voor aanvang van de eerste ronde gehouden worden.
 
-  i. De exacte inschrijvingsdatum voor zowel de punten b-c-d-e als de termijn voor punt f zal jaarlijks bepaald worden door het BO.  Ook het bedrag van het inschrijvingsgeld voor alle deelnemers uit de open reeks wordt door het BO bepaald. Eveneens kan zij een verminderd inschrijvingsgeld bepalen voor bepaalde categorieën (vb. jeugd, titelhouders). De organisatie kan een verhoogd inschrijvingsgeld toepassen voor inschrijvingen die later dan één week voor aanvang van het toernooi gebeuren en voor betalingen ter plaatse, mits dit aangekondigd staat op de uitnodigingen.
+  i. De exacte inschrijvingsdatum voor zowel de punten b-c-d-e als de termijn voor punt f zal jaarlijks bepaald worden door het BO.  Ook het bedrag van het inschrijvingsgeld voor alle deelnemers uit de open reeks wordt door het BO bepaald. 
 
-  ### Artikel 21 - Onkosten van de deelnemers.**
+  j. Ook het bedrag van het inschrijvingsgeld voor alle deelnemers uit de open
+  reeks wordt door het bestuursorgaan bepaald. Eveneens kan zij een
+  verminderd inschrijvingsgeld bepalen voor bepaalde categorieën (vb. jeugd,
+  titelhouders. De organisatie kan een verhoogd inschrijvingsgeld
+  toepassen voor inschrijvingen die later dan één week voor aanvang van het
+  toernooi gebeuren en voor betalingen ter plaatse, mits dit aangekondigd
+  staat op de uitnodigingen.
+
+  ### Artikel 21 - Onkosten van de deelnemers.
 
   Behoudens andersluidende beslissing van het BO zijn de kosten voor verplaatsing, logement en maaltijden ten laste van de deelnemers. Indien er toch kosten worden terugbetaald, dan dient dit te gebeuren op de laatste speeldag.
 
   ### Artikel 22 - Tempo
 
-  Alle partijen worden gespeeld volgens het Fischer-tempo van 40 zetten in 1u30 gevolgd door 30 minuten voor het einde van de partij met een increment van 30 seconden vanaf zet één.
+  Alle partijen worden gespeeld volgens het Fischer-tempo van 40 zetten in 1u30 gevolgd door 30 minuten voor het einde van de partij met een increment van 30 seconden vanaf zet één tenzij de VNT op aanraden van de organisator een ander tempo geldig voor eloverwerking en normen goedkeurt.
 
   ### Artikel 23 - Prijzen
 
@@ -501,13 +503,11 @@ content_nl: |-
 
   ### Artikel 28 – Titels en prijzen
 
-  a. 	_Afgeschaft._
-
   b. 	De bepaling van het aantal prijzen, evenals de verdeling ervan, valt onder de bevoegdheid van het BO.
 
   c. 	Minstens 80% van de inschrijvingsgelden moeten in geldprijzen uitgekeerd worden.
 
-  ## Nationale Rapiskampioenschappen
+  ## Nationale Rapidkampioenschappen
 
   ### Artikel 28bis
 
@@ -531,8 +531,6 @@ content_nl: |-
 
 
   e. Prijzen
-
-  - _Afgeschaft_
 
   - De bepaling van het aantal prijzen, evenals de verdeling ervan, valt onder de bevoegdheid van het BO.
 
@@ -559,7 +557,7 @@ content_nl: |-
 
   ### Artikel 29 – Algemene bepalingen
 
-  De K.B.S.B. richt elk jaar een ploegenkampioenschap in.
+  De KBSB richt elk jaar een ploegenkampioenschap in.
 
   a. 	Volgens het aantal ingeschreven ploegen kunnen er meerdere afdelingen voorzien worden.
 
@@ -577,8 +575,8 @@ content_nl: |-
 
   h. 	De volgende definities zijn van toepassing op het reglement van de nationale interclubs:
 
-    - **Titularis:** een speler die op de spelerslijst gekoppeld wordt aan een ploeg.
-    - **Effectieve speler:** een speler die in een bepaalde ronde in een ploeg speelt.
+    - Titularis: een speler die op de spelerslijst gekoppeld wordt aan een ploeg.
+    - Effectieve speler: een speler die in een bepaalde ronde in een ploeg speelt.
 
   ### Artikel 30 - Inschrijvingen
 
@@ -592,13 +590,34 @@ content_nl: |-
 
   a. 	De ploegen bestaan uit acht spelers in afdeling I en II, uit zes spelers in afdeling III en uit vier spelers in afdeling IV en V.
 
-  b. 	Elke deelnemende club moet aan de Verantwoordelijke Nationale Toernooien, binnen de door hem bepaalde termijn en in het door het BO bepaald formaat en via het door het BO bepaald medium, een spelerslijst bezorgen. De spelers zullen opgesteld worden op basis van de laatst verschenen nationale of FIDE-klassering. Voor deze opstelling mag echter de quotering van elke speler met 100 punten verhoogd of verlaagd worden (=aangepaste ELO). Om informaticaredenen mag geen enkele speler van een zelfde club dezelfde aangepaste ELO hebben op de spelerslijst. Indien een club meerdere ploegen in eenzelfde afdeling opstelt, moet hij de titularissen voor elke ploeg aanduiden. Deze titularissen worden gekozen tussen de eerst geklasseerden, zoals in de volgende voorbeelden verduidelijkt wordt:
+  b. 	Elke deelnemende club moet aan de Verantwoordelijke Nationale Toernooien, binnen de door hem bepaalde termijn en in het door het BO bepaald formaat en via het door het BO bepaald medium, een spelerslijst bezorgen. De spelers zullen opgesteld worden op basis van de laatst verschenen nationale of FIDE-klassering. Voor deze opstelling mag echter de quotering van elke speler met 100 punten verhoogd of verlaagd worden (=aangepaste ELO). Om informaticaredenen mag geen enkele speler van een zelfde club dezelfde aangepaste ELO hebben op de spelerslijst. 
 
-  1e voorbeeld: een club heeft als 2 hoogste ploegen 2 ploegen in afdeling III: Van de 12 best gerangschikten spelen er 6 in ploeg 1, de andere 6 in ploeg 2.
+    **Geldig tot en met seizoen 2023-2024:**
+    
+    Indien een club meerdere ploegen in eenzelfde afdeling opstelt, moet hij de
+  titularissen voor elke ploeg aanduiden. Deze titularissen worden gekozen
+  tussen de eerst geklasseerden, zoals in de volgende voorbeelden
+  verduidelijkt wordt:
 
-  2e voorbeeld: de drie (eerste) ploegen van een club spelen in afdeling V: van de 12 best gerangschikte spelen er 4 in ploeg 1, 4 in ploeg 2 en 4 in ploeg 3.
+    - 1e voorbeeld: een club heeft als 2 hoogste ploegen 2 ploegen in afdeling
+  III: Van de 12 best gerangschikten spelen er 6 in ploeg 1, de andere 6 in
+  ploeg 2.
 
-  3e voorbeeld:  1 ploeg in afdeling I, 2 ploegen in afdeling II en 1 ploeg in afdeling III: In ploeg 1 de acht best gerangschikten; acht spelers van de gerangschikten tussen de 9de tot de 24ste plaats in ploeg 2 en de overigen in ploeg 3. De spelers met de 25ste tot 30ste plaats in ploeg 4.
+    - 2e voorbeeld: de drie (eerste) ploegen van een club spelen in afdeling V:
+  Van de 12 best gerangschikte spelen er 4 in ploeg 1, 4 in ploeg 2 en 4 in
+  ploeg 3.
+
+    - 3e voorbeeld: 1 ploeg in afdeling I, 2 ploegen in afdeling II en 1 ploeg in
+  afdeling III: In ploeg 1 de acht best gerangschikten; acht spelers van de gerangschikten tussen de 9de tot de 24ste plaats in ploeg 2 en de overigen in ploeg 3. De spelers met de 25ste tot 30ste plaats in ploeg 4
+
+    **Geldig vanaf seizoen 2024-2025:**
+    
+    De club kan aan elke ploeg tot X + 2 titularissen toewijzen aan elke ploeg
+  van 4 spelers, tot X + 3 titularissen aan elke ploeg van 6 spelers en tot X +
+  4 titularissen aan elke ploeg van 8 spelers. X is het aantal spelers dat elke
+  ronde moet opgesteld worden zoals beschreven in artikel 31a.
+
+    Een speler kan maar in 1 ploeg als titularis staan.
 
   c. 	Wanneer op de lijst spelers van een andere hoofdclub voorkomen, moet het nummer van die club achter de spelersnaam vermeld worden.
 
@@ -638,7 +657,13 @@ content_nl: |-
 
   h. Een club mag niet meer dan één ploeg hebben in eerste afdeling. Indien een ploeg van een club kampioen wordt in tweede afdeling en deze club heeft reeds een ploeg in eerste afdeling, dan mag deze ploeg niet promoveren. Haar plaats zal ingenomen worden door de beste eindigende ploeg uit dezelfde reeks die hiervoor in aanmerking komt
 
-  i. Een club mag één van zijn ploegen vrijwillig laten degraderen. Maar dan komt deze ploeg gedurende de twee daaropvolgende seizoenen niet in aanmerking voor een promotie of voor om het even welk prijzengeld.
+  i. Een club mag één van zijn ploegen vrijwillig laten degraderen. Maar dan komt deze ploeg gedurende de twee daaropvolgende seizoenen niet in aanmerking voor een promotie of voor om het even welk prijzengeld, tenzij de VNT anders zou beslissen op basis
+  van een ingediend dossier. Indien een club één of meerdere ploegen in een
+  hogere afdeling dan de afdeling van zijn laagste ploeg niet meer wil
+  inschrijven, dan wordt voor elke ploeg de eerstvolgende ploeg van die club
+  onder die hoger afdeling beschouwd als zijnde vrijwillig gedegradeerd tenzij
+  de Verantwoordelijke Nationale Toernooien anders zou beslissen op basis
+  van een ingediend dossier.
 
   j. Het BO beslist in alle niet voorziene gevallen.
 
@@ -651,15 +676,30 @@ content_nl: |-
 
   c. 	Bij een fout in de rangorde van opstelling van de spelers, verliest de te laag opgestelde speler de partij met forfait.
 
-  d. 	Bij opstelling van een niet-gerechtigde speler verliest de speler die partij door forfait. Bij herhaling tijdens eenzelfde competitie verliest de betrokken ploeg de wedstrijd met forfait en de bij artikel 35c voorziene sancties zijn van toepassing. Als niet-gerechtigde speler wordt beschouwd hetzij een speler die niet voorkomt op de door de Verantwoordelijke Nationale Toernooien goedgekeurde spelerslijst, hetzij een speler die niet meer aangesloten is op het ogenblik van zijn opstelling, hetzij een door de KBSB geschorste speler.
+  d. **Geldig vanaf seizoen 2024-2025:**
+  Elk team mag elke ronde titularissen en zoveel reservespelers opstellen als
+  nodig is in een ploeg. Die reservespelers mogen bij de datum van het
+  indienen van de spelerslijst geen FIDE-rating (indien geen FIDE-rating, dan
+  wordt de Belgische rating genomen) hebben die hoger is dan:
+   - 2300 in eerste klasse
+   - 2150 in tweede klasse
+   - 2000 in derde klasse
+   - 1800 in vierde klasse
+   - 1650 in vijfde klasse
+  Deze grenzen worden jaarlijks voor aanvang van het seizoen door het BO
+  bepaald als de gemiddelde elo van de teams per afdeling van vorig seizoen,
+  verhoogd met 50 tot 100 elo om zo op een afgerond getal eindigend op 50
+  of 00 te komen
 
-  e. 	Geen speler mag opgesteld worden in twee ontmoetingen die aanvankelijk op dezelfde datum voorzien waren.
+  e. 	Bij opstelling van een niet-gerechtigde speler verliest de speler die partij door forfait. Bij herhaling tijdens eenzelfde competitie verliest de betrokken ploeg de wedstrijd met forfait en de bij artikel 35c voorziene sancties zijn van toepassing. Als niet-gerechtigde speler wordt beschouwd hetzij een speler die niet voorkomt op de door de Verantwoordelijke Nationale Toernooien goedgekeurde spelerslijst, hetzij een speler die niet meer aangesloten is op het ogenblik van zijn opstelling, hetzij een door de KBSB geschorste speler.
 
-  f. 	Wanneer meerdere ploegen van eenzelfde club deelnemen, mag bij elke ontmoeting de gemiddelde ELO van een ploeg in een hogere afdeling niet lager zijn dan de gemiddelde ELO van de ploeg(en) van dezelfde club in een lagere afdeling(en). Deze regel geldt niet tussen de 4<sup>de</sup> en de 5<sup>de</sup> afdeling. De berekening van het ELO-gemiddelde van de ploegen van een club gebeurt op basis van de aangepaste ELO’s van elk van de spelers, zoals vermeld op de spelerslijst die voor de aanvang van de competitie door de club werd ingediend. Een nieuw ELO-klassement heeft met andere woorden geen invloed op de berekening van het gemiddelde.
+  f. 	Geen speler mag opgesteld worden in twee ontmoetingen die aanvankelijk op dezelfde datum voorzien waren.
+
+  g. 	Wanneer meerdere ploegen van eenzelfde club deelnemen, mag bij elke ontmoeting de gemiddelde ELO van een ploeg in een hogere afdeling niet lager zijn dan de gemiddelde ELO van de ploeg(en) van dezelfde club in een lagere afdeling(en). Deze regel geldt niet tussen de 4<sup>de</sup> en de 5<sup>de</sup> afdeling. De berekening van het ELO-gemiddelde van de ploegen van een club gebeurt op basis van de aangepaste ELO’s van elk van de spelers, zoals vermeld op de spelerslijst die voor de aanvang van de competitie door de club werd ingediend. Een nieuw ELO-klassement heeft met andere woorden geen invloed op de berekening van het gemiddelde.
 
   Een eerste overtreding wordt bestraft voor de betrokken ronde met een forfait voor alle borden van de ploegen van dezelfde club die een hogere ELO-gemiddelde hebben dan één van hun ploegen uit een hogere afdeling. Zulk een forfait is echter niet onderhevig aan de voorziene sancties in artikel 35. Een volgende overtreding in hetzelfde seizoen voor ploegen die wederom een hoger ELO-gemiddelde hebben dan ploeg(en) uit hogere afdelingen heeft wel de automatische uitsluiting voor dat seizoen tot gevolg.
 
-  g. 	Wanneer tijdens de competitie blijkt dat een speler die als niet-gequoteerde werd aangesloten toch een quotering had op het ogenblik van opstelling van de spelerslijst, verliest hij alle door hem tot dan toe gespeelde partijen door forfait. Bovendien kan hij van dan af worden uitgesloten van de competitie. Indien niet wordt de speler op die plaats op de spelerslijst geplaatst die overeenstemt met zijn elo, tenzij als de VNT er anders over beslist.
+  f. 	Wanneer tijdens de competitie blijkt dat een speler die als niet-gequoteerde werd aangesloten toch een quotering had op het ogenblik van opstelling van de spelerslijst, verliest hij alle door hem tot dan toe gespeelde partijen door forfait. Bovendien kan hij van dan af worden uitgesloten van de competitie. Indien niet wordt de speler op die plaats op de spelerslijst geplaatst die overeenstemt met zijn elo, tenzij als de VNT er anders over beslist.
 
   ### Artikel 34 – Tempo
 
@@ -781,11 +821,11 @@ content_nl: |-
    - 	Een scheidsrechter of verantwoordelijke van de ontmoeting kan een wedstrijd vanwege onaanvaardbare spelcondities niet laten doorgaan. Hij dient dan per ontmoeting, een rapport op te stellen, ondertekend door de twee ploegkapiteins en op te sturen naar de Verantwoordelijke Nationale Toernooien. Deze zal dan een beslissing nemen omtrent het herspelen of het verloren verklaren van de ontmoeting of hij zal eender ander passende beslissing nemen.
 
 
-  ### Internationale Toernooien
+  ## Internationale Toernooien
 
   De artikels 39 tot 42bis hebben geen betrekking op de internationale toernooien die voorbehouden zijn voor spelers jonger dan 20 jaar.
 
-  ## Artikel 39 - Algemene schikkingen.
+  ### Artikel 39 - Algemene schikkingen.
 
   1. De zending van één ploeg en/of van meerdere spelers als vertegenwoordiging van de KBSB naar een internationale competitie hangt af van de volgende voorwaarden:
 
@@ -799,7 +839,6 @@ content_nl: |-
 
        1. de plaats van de competitie zich bevindt in oorlogsgebied (ook burgeroorlog)
        2. de beschikbare vervoersmogelijkheden niet beantwoorden aan gepaste veiligheidsnormen
-       3. _Geschrapt._
        4. er te weinig financiële middelen beschikbaar zijn.
 
 
@@ -821,13 +860,11 @@ content_nl: |-
 
      - ten minste 30 partijen gespeeld te hebben ofwel in België waarbij die partijen verwerkt werden voor standaard FIDE-ELO, ofwel in het buitenland waarmee hij België vertegenwoordigde op een officieel FIDE- of ECU-event, ofwel een mix van de twee, en
 
-
      - minstens eenmaal deel genomen hebben aan het Belgisch kampioenschap (Jeugd, Experts, Dames of Open).
 
   Indien één van deze twee voorwaarden niet is vervuld, maar indien de speler wel de  andere voorwaarde twee maal heeft vervuld (dus minstens 60 partijen of twee maal deelname aan een BK), dan staat dit gelijk aan het vervuld zijn van beide voorwaarden.
 
   7. Voor de open competities is een minimum FIDE ELO van 2250 vereist om geselecteerd te worden (zie art. 11.b).
-
 
   8. Voor de competities uitsluitend voorbehouden aan de dames is een minimum FIDE ELO van 1800 (zie art. 11.b) vereist om geselecteerd te worden.
 
@@ -847,20 +884,21 @@ content_nl: |-
 
   De Internationale Verantwoordelijke zorgt voor de inschrijving van alle geïnteresseerde spelers. De inschrijvingsbedragen zijn ten laste van de spelers tenzij een andersluidende beslissing van het BO van de KBSB genomen wordt. Bovendien moeten de betrokken spelers zich ertoe verbinden om de reglementen van de ECU en de FIDE te respecteren en om de KBSB schadeloos te stellen o.a. in geval ze zich na inschrijving zouden terugtrekken.
 
+  Indien een kandidaat aan één van de voorwaarden van artikel 39 niet
+  beantwoordt, heeft hij/zij geen voorrang op de kandidaten die wel aan alle
+  voorwaarden beantwoorden. In geval er meerdere zulke kandidaten zouden zijn,
+  wordt de volgorde van hen bepaald door FIDE-elo volgens art. 11 b) en c).
+  Selectievolgorde: ELO in dalende volgorde volgens artikel 11.b en 11.c.
+
   Als in de bepalingen van de FIDE, de ECU of de organisatie het aantal gekwalificeerde spelers beperkt wordt, zal de Internationale Verantwoordelijke voorrang geven aan de kampioen of de kampioene van België (indien zij aan de minimum ELO-voorwaarden van artikel 39 beantwoorden) en daarna aan de andere kandidaten in dalende volgorde van ELO.
 
    
 
-  ### Artikel 41 - Europees Ploegenkampioenschap en Olympiades.
-
+  ### Artikel 41 - FIDE of ECU Internationale ploegentoernooien.
 
   a) Om een openploeg te kunnen afvaardigen op één van deze twee competities, moet er voldaan zijn aan de volgende voorwaarde : er dient een complete ploeg van spelers te zijn die beantwoorden aan de condities bepaald in artikel 39.
 
-  De Internationale Verantwoordelijke doet eerst beroep de kampioen van België (indien ook hij aan de voorwaarden van artikel 39 beantwoordt) en daarna op de kandidaten in dalende volgorde van ELO.
-
   b) Om een vrouwenploeg te kunnen afvaardigen op één van deze twee competities, moet er voldaan zijn aan de volgende voorwaarde : er dient een complete ploeg van speelsters te zijn die beantwoorden aan de condities bepaald in artikel 39.
-
-  De Internationale Verantwoordelijke doet eerst beroep op de kampioene van België (indien ook zij aan de voorwaarden van artikel 39 beantwoordt) en daarna op de kandidaten in dalende volgorde van ELO.
 
   c) 	De volgorde van opstelling van de spelers is vastgelegd volgens de ELO-rangschikking bepaald in artikel 39. De ploegkapitein kan afwijken van deze volgorde van opstelling na alle spelers van een ploeg hiervoor geraadpleegd te hebben.
 
@@ -868,9 +906,35 @@ content_nl: |-
 
   e)	De definitie van een minimale complete ploeg is een ploeg met als aantal spelers de spelers die elke ronde moeten spelen. Dus een ploeg zonder reservespelers en zonder coach.
 
+  f) Indien een kandidaat aan één van de voorwaarden van artikel 39 niet
+  beantwoordt, heeft hij/zij geen voorrang op de kandidaten die wel aan alle
+  voorwaarden beantwoorden. In geval er meerdere zulke kandidaten zouden
+  zijn, wordt de volgorde van hen bepaald door FIDE-elo volgens art. 11 b) en
+  c).
+
+  g) Selectievolgorde voor jaarlijkse internationale ploegentoernooien
+
+    1. De huidige kampioen/e van België.
+    2. ELO in dalende volgorde volgens artikel 11.b en 11.c
+
+  h) Selectievolgorde voor tweejaarlijkse internationale Ploegentornooien
+
+    1. Kampioenen van België van de twee voorafgaande jaren in dalende volgorde van FIDE ELO volgens artikel 11.b en 11.c
+    2. ELO in dalende volgorde volgens artikel 11.b en 11.c
+
   ### Artikel 42 - Andere internationale toernooien.
 
   Het BO van de KBSB kan beslissen dat zij zal deelnemen aan andere internationale competities, zowel individueel als per ploeg, die niet behandeld werden in de artikels 40 tot 41, op voorstel van de Internationale Verantwoordelijke. De samenstelling van de delegatie van de KBSB (spelers, speelsters, eventuele kapitein, eventuele begeleider) volgt de regels van artikel 39 en laat zich leiden door de vastgelegde artikels 40 en 41.
+
+  a. Indien een kandidaat aan één van de voorwaarden van artikel 39
+  niet beantwoordt, heeft hij/zij geen voorrang op de kandidaten die wel
+  aan alle voorwaarden beantwoorden. In geval er meerdere zulke
+  kandidaten zouden zijn, wordt de volgorde van hen bepaald door FIDE-elo
+  volgens art. 11 b) en c).
+
+  b. Als in de bepalingen van de organisator het aantal uitgenodigde
+  spelers beperkt is, zal de selectie gebeuren in dalende volgorde van ELO
+  volgens artikel 11.b en 11.c
 
   ### Artikel 42bis - Europabeker van clubs.
 
@@ -884,6 +948,14 @@ content_nl: |-
 
   Op hun vraag schrijft de Internationale Verantwoordelijke de geplaatste clubs in voor deze competitie. De inschrijvingsbedragen zijn ten laste van de clubs tenzij een andersluidende beslissing van het BO van de KBSB. De ingeschreven clubs verbinden zich ertoe om de reglementen van de FIDE, de ECU of de organisatie te respecteren en om de KBSB schadeloos te stellen o.a. in geval ze zich na inschrijving zouden terugtrekken.
 
+  ### Artikel 42ter
+
+  Indien er nieuwe formats uitkomen of afwijkingen komen zowel op FIDE/ECU als
+  op andere internationale toernooien die niet besproken zijn in dit hoofdstuk, dan
+  beslist het BO. Echter de logica van de selectievolgorde van individuele of
+  ploegentoernooien enerzijds en jaarlijks of tweejaarlijks anderzijds zal zoveel
+  mogelijk gevolgd worden.
+
   ## Jeugdreglement van de KBSB: Algemene regels
 
   ### Artikel 43 – Functie nationaal jeugdleider
@@ -895,8 +967,6 @@ content_nl: |-
   ### Artikel 44 – Voorwaarden deelname
 
   Alle jeugdkampioenschappen zijn voorbehouden aan de leden aangesloten bij een club die lid is van KBSB, die de leeftijd van 20 jaar niet bereikt hebben op 1 januari van het kalenderjaar.
-
-  ### Artikel 45 – Afgeschaft
 
   ### Artikel 46 – Definitie Elo
 
@@ -928,15 +998,37 @@ content_nl: |-
 
   ### Artikel 50 – Categorieën
 
-  Voor jongens en meisjes gelden de leeftijdscategorieën zoals bepaald door de FIDE. Jongens en meisjes spelen in principe een afzonderlijk toernooi voor zover dit geen problemen geeft voor de paringen. Anders spelen ze in een gemeenschappelijk toernooi maar dan worden prijzen en titels volledig gescheiden. In geval van onvoldoende deelnemers in één of meerdere categorieën, worden sommige categorieën samengevoegd.
+  Voor jongens en meisjes gelden de leeftijdscategorieën zoals bepaald door de
+  FIDE. Jongens en meisjes spelen een gemeenschappelijk toernooi. In geval van
+  onvoldoende deelnemers in één of meerdere categorieën, worden sommige
+  categorieën samengevoegd.
 
-  Voor alle leeftijdscategorieën bevatten de nationale jeugdkampioenschappen negen partijen gespeeld in zeven dagen. In elke categorie wordt een open kampioenschap georganiseerd. Het aantal deelnemers is onbeperkt.
+  Voor alle leeftijdscategorieën bevatten de nationale jeugdkampioenschappen
+  negen partijen gespeeld in zeven dagen. In elke categorie wordt een open
+  kampioenschap georganiseerd. Het aantal deelnemers is onbeperkt
 
-  De open kampioenschappen worden betwist volgens een Zwitsers systeem toegelaten door de FIDE of volgens de Bergertabellen indien het aantal deelnemers dit toelaat.
+  De open kampioenschappen worden betwist volgens een Zwitsers systeem
+  toegelaten door de FIDE of volgens de Bergertabellen indien het aantal
+  deelnemers dit toelaat.
 
-  ### Artikel 51 
+  Gevolgen voor de uitzendingen naar de Europese en wereldkampioenschappen.
+  De resultaten van het BJK vormen de basis voor de uitzendingen. Voor de
+  gemengde categorieën zijn de eerste twee deelnemers in het klassement van de
+  respectieve leeftijdscategorieën gekwalificeerd. Voor de meisjescategorieën
+  worden de eerste twee meisjes in het klassement van de respectieve
+  leeftijdscategorieën geselecteerd.
 
-  _Afgeschaft_
+  Indien een meisje (of meisjes) de keuze heeft (hebben) om in de open
+  Europese / wereldkampioenschappen of in de Europese /
+  wereldkampioenschappen voor meisjes te spelen, dan wordt (worden) de
+  volgende speler(s) of speelster(s) in de rangschikking van betreffende categorie
+  geselecteerd. Concreet: als het meisje (de meisjes) kiest (kiezen) voor deelname
+  aan het open kampioenschap, kan het volgende meisje (de volgende meisjes) in
+  de rangschikking deelnemen aan het meisjeskampioenschap. Indien zij ervoor
+  kiest (kiezen) om deel te nemen in de meisjescategorie, zal (zullen) haar (hun)
+  plaats(en) voor de open categorie worden ingenomen door de twee volgende
+  spelers in het klassement.
+
 
   ### Artikel 52 – Inschrijvingen
 
@@ -992,7 +1084,13 @@ content_nl: |-
 
   ### Artikel 60 – Internationale toernooien
 
-  De beste Belgische jeugdspelers nemen deel aan internationale jeugdtoernooien.  De lijst van die toernooien wordt beheerd door het BO.
+  De beste Belgische jeugdspelers nemen deel aan internationale jeugdtoernooien.
+  De lijst van die toernooien wordt opgemaakt door de verantwoordelijke
+  internationale jeugduitzendingen en goedgekeurd door het BO en gepubliceerd
+  voor aanvang van het Belgisch Jeugdkampioenschap. Sommige details zullen
+  gekend zijn (zoals plaats en datum); andere details misschien nog niet (zoals
+  prijs, deadline van inschrijving, andere modaliteiten). Deze zullen van zodra ze
+  bekend zijn, aangevuld worden in de publicaties.
 
   ### Artikel 61 - Rechtstreekse selectie
 
@@ -1010,10 +1108,6 @@ content_nl: |-
 
   Iedere geselecteerde speler die wenst deel te nemen aan een internationaal toernooi moet bij de verantwoordelijke internationale jeugduitzendingen zijn/haar kandidatuur indienen uiterlijk 14 dagen na het einde van het BJK.
 
-  ### Artikel 63 - Afgeschaft
-
-  ### Artikel 64  - Afgeschaft
-
   ### Artikel 65  - Bijkomende Deelnemers
 
   Iedere jeugdspeler die door de FIDE als Belg beschouwd wordt, kan bij de verantwoordelijke internationale jeugduitzendingen een aanvraag tot selectie indienen uiterlijk 14 dagen na het einde van het BJK.
@@ -1023,8 +1117,6 @@ content_nl: |-
    - aan welk toernooi de speler wenst deel te nemen
 
   De spelers die niet geselecteerd zijn op basis van de criteria opgenomen in artikel 62 worden enkel ingeschreven voor de competitie indien daardoor de inschrijving van de geselecteerde spelers niet in het gedrang komt. Ze worden ingeschreven op hun eigen risico. Zij stellen de K.B.S.B. vrij van elke aansprakelijkheid. De K.B.S.B. kan bovendien eisen dat zij voor hun burgerlijke aansprakelijkheid verzekerd zijn en, zo ze minderjarig zijn, dat ze op hun kosten begeleid worden door een meerderjarige die zal instaan voor het toezicht en begeleiding.
-
-  ### Artikel 66  - Afgeschaft
 
   ### Artikel 67 – Inschrijving
 
@@ -1092,7 +1184,7 @@ content_nl: |-
 
   2.	Snelschaakkampioenschappen : de blitzkampioenschappen worden in de verschillende categorieën op één dag afgewerkt. Het toernooi telt in principe 11 ronden en het speeltempo is 5 minuten per speler, per partij.
 
-  3.	Algemeen : Afhankelijk van het aantal deelnemers spelen ze een gesloten toernooi of volgens de regels van het « Zwitsers » systeem, die door de F.I.D.E. zijn goedgekeurd. Bij een beperkt aantal ronden wordt de scheidsrechter verzocht een Zwitsers systeem met versnelde paringen te gebruiken. Om de eindrangschikking te bepalen in geval van gelijkheid van punten, worden de door de F.I.D.E. voorziene scheidingssystemen toegepast. De gebruikte systemen moeten voor aanvang van het toernooi aan de deelnemers worden meegedeeld.
+  3.	Algemeen : Afhankelijk van het aantal deelnemers spelen ze een gesloten toernooi of volgens de regels van het « Zwitsers » systeem, die door de FIDE zijn goedgekeurd. Bij een beperkt aantal ronden wordt de scheidsrechter verzocht een Zwitsers systeem met versnelde paringen te gebruiken. Om de eindrangschikking te bepalen in geval van gelijkheid van punten, worden de door de FIDE voorziene scheidingssystemen toegepast. De gebruikte systemen moeten voor aanvang van het toernooi aan de deelnemers worden meegedeeld.
 
   ### Artikel 75 
 
@@ -1101,10 +1193,6 @@ content_nl: |-
   ### Artikel 76 - Inschrijvingsgeld 
 
   Het bedrag van het inschrijvingsgeld wordt elk jaar door de nationale jeugdleider vastgelegd.
-
-  ### Artikel 77 – Titels 
-
-  _Afgeschaft._
 
   ### Artikel 78 – Prijzen.
 
@@ -1116,7 +1204,7 @@ content_nl: |-
 
   b. Snelschaakpartijen: De blitzkampioenschappen dienen als selectiecriterium voor internationale blitztoernooien.
 
-  ## Nationaal interscholenkampioenschap_
+  ## Nationaal interscholenkampioenschap
 
   ### Artikel 80
 
@@ -1127,8 +1215,7 @@ content_nl: |-
    - minimaal 10 ploegen aangeduid door de VSF;
    - minimaal 10 ploegen aangeduid door de FEFB;
    - minimaal 3 ploegen aangeduid door de SVDB.
-
-
+  **
   Indien de organisatie meer ploegen kan ontvangen, mag ze de selectie van het aantal ploegen uitbreiden.
 
   De nationaal jeugdleider kan aan de organisatie een extra ploeg toekennen teneinde met een even aantal ploegen per reeks te spelen.
@@ -1177,9 +1264,9 @@ content_nl: |-
 
   Elke ploeg bestaat uit vier leerlingen van:
 
-  1. het middelbaar onderwijs van dezelfde Belgische school. Een leerling uit het lager onderwijs kan deelnemen aan het schoolschaakkampioenschap voor middelbaar onderwijs, wanneer die lagere school verbonden is aan de middelbare school.
+  1. het middelbaar onderwijs van **dezelfde Belgische school**. Een leerling uit het lager onderwijs kan deelnemen aan het schoolschaakkampioenschap voor middelbaar onderwijs, wanneer die lagere school verbonden is aan de middelbare school.
 
-  2. het lager onderwijs van dezelfde Belgische school. Een kleuter die in dezelfde school is ingeschreven mag deelnemen aan het schoolschaakkampioenschap voor lager onderwijs.
+  2. het lager onderwijs van **dezelfde Belgische school**. Een kleuter die in dezelfde school is ingeschreven mag deelnemen aan het schoolschaakkampioenschap voor lager onderwijs.
 
   Bij de aanmelding op het toernooi dienen de ploegkapiteins een officieel schoolattest voor te leggen (met de naam en de handtekening van de directeur/directrice), waaruit blijkt dat alle deelnemers ingeschreven zijn als leerlingen van één en dezelfde school.
 
@@ -2728,6 +2815,6 @@ content_de: 'Diese Seite ist nicht auf Deutsch verfügbar'
 title_en: 'Tournament rules of the RBCF'
 content_english: 'This page is not available in English'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1687972412
+updated_at: 1690924637
 content_en: 'This page is not available in English'
 ---
