@@ -1,22 +1,42 @@
-# kbsb
+# Content v2 Minimal Starter
 
-> A Vue.js project
+Look at the [Content documentation](https://content-v2.nuxtjs.org/) to learn more.
 
-## Build Setup
+## Setup
 
-``` bash
-# install dependencies
+Make sure to install the dependencies:
+
+```bash
+# yarn
+yarn install
+
+# npm
 npm install
 
-# serve with hot reload at localhost:8080
+# pnpm
+pnpm install
+```
+
+## Development Server
+
+Start the development server on http://localhost:3000
+
+```bash
 npm run dev
+```
 
-# build for production with minification
-npm run prod
+## Production
 
-## Deployment
+Build the application for production:
 
-# staging
+```bash
+npm run build
+```
 
-When the a new vommit is pushed to branch staging, the new deployment is automatically started
-using ba build tigger on cloud build
+Locally preview production build:
+
+```bash
+npm run preview
+```
+
+Checkout the [deployment documentation](https://v3.nuxtjs.org/docs/deployment) for more information.
