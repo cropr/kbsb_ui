@@ -8,10 +8,12 @@
   },
   "devDependencies": {
     "@nuxt/content": "^2.7.2",
+    "@nuxtjs/i18n": "^8.0.0-rc.3",
     "@types/node": "^18.17.3",
     "nuxt": "^3.6.5"
   },
   "dependencies": {
+    "@mdi/font": "^7.2.96",
     "sass": "^1.66.1",
     "showdown": "^2.1.0",
     "vuetify": "^3.4.0-alpha.0"

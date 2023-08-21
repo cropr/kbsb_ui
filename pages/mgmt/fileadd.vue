@@ -104,6 +104,7 @@ export default {
 }
 </script>
 
+<style>
 .dropbox {
   width: 100%;
   height: 100px;

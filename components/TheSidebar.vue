@@ -1,7 +1,7 @@
 <template>
   <div>
 
-    <div class="btn-language green darken-1">
+    <div class="btn-language green-darken-1">
       <v-btn text dark class="hover-darker btn-language" @click="setLocale('nl')">
         NL
       </v-btn>
@@ -16,7 +16,7 @@
       </v-btn>
     </div>
 
-    <v-list dark dense class="green darken-1">
+    <v-list dark dense color="green-darken-1">
       <v-list-item to="/">
         <v-list-item-content>{{ $t('Home') }}</v-list-item-content>
       </v-list-item>
