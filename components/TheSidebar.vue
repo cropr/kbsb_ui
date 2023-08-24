@@ -1,176 +1,94 @@
 <template>
-  <div>
+  <div >
 
-    <div class="btn-language green-darken-1">
-      <v-btn text dark class="hover-darker btn-language" @click="setLocale('nl')">
-        NL
+    <div>
+      <v-btn variant="text" class="text-white btn-language" 
+        @click="setLocale('nl')">NL
       </v-btn>
-      <v-btn text dark class="hover-darker btn-language" @click="setLocale('fr')">
-        FR
+      <v-btn variant="text" class="text-white btn-language" 
+        @click="setLocale('fr')">FR
       </v-btn>
-      <v-btn text dark class="hover-darker btn-language" @click="setLocale('de')">
+      <v-btn variant="text" class="bg-green-darken-1 text-white  btn-language"  @click="setLocale('de')">
         DE
       </v-btn>
-      <v-btn text dark class="hover-darker btn-language" @click="setLocale('en')">
+      <v-btn variant="text"  class="bg-green-darken-1 text-white  btn-language" @click="setLocale('en')">
         EN
       </v-btn>
     </div>
 
-    <v-list dark dense color="green-darken-1">
-      <v-list-item to="/">
-        <v-list-item-content>{{ $t('Home') }}</v-list-item-content>
-      </v-list-item>
+    <v-list nav>
+      <v-list-item to="/" :title="$t('Home')" />
 
-      <v-list-group no-action>
-        <template #activator>
-          <v-list-item-content>{{ $t('Administration') }}</v-list-item-content>
+      <v-list-group>
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$t('Administration')" />
         </template>
-        <v-list-item to="/admin/board">
-          <v-list-item-content>{{ $t('Board') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/admin/goal">
-          <v-list-item-content>{{ $t('Goal') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/admin/statutes">
-          <v-list-item-content>{{ $t('Statutes') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/admin/tournamentrules">
-          <v-list-item-content>{{ $t('Tournament rules') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/admin/internalrules">
-          <v-list-item-content>{{ $t('Internal rules') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/admin/reports">
-          <v-list-item-content>{{ $t('Reports') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/admin/vademecum">
-          <v-list-item-content>Vademecum</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/admin/regional">
-          <v-list-item-content>{{ $t('Regional') }} </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/admin/commissions">
-          <v-list-item-content>{{ $t('Committees') }} </v-list-item-content>
-        </v-list-item>
-
+        <v-list-item to="/admin/board" :title="$t('Board')" />
+        <v-list-item to="/admin/goal" :title="$t('Goal')" />
+        <v-list-item to="/admin/statutes" :title="$t('Statutes')" />
+        <v-list-item to="/admin/tournamentrules" :title="$t('Tournament rules')" />
+        <v-list-item to="/admin/internalrules" :title="$t('Internal rules')" />
+        <v-list-item to="/admin/reports" :title="$t('Reports')" />
+        <v-list-item to="/admin/vademecum" title="Vademecum" />
+        <v-list-item to="/admin/regional" :title="$t('Regional')" />
+        <v-list-item to="/admin/commissions" :title="$t('Committees')" />
       </v-list-group>
 
-      <v-list-group no-action>
-        <template #activator>
-          <v-list-item-content>{{ $t('Competitions') }}</v-list-item-content>
+      <v-list-group>
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$t('Competitions')" />
         </template>
-        <v-list-item to="/interclubs/info">
-          <v-list-item-content>
-            Interclubs 2023-24
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/interclubs/interclubs-2022-23">
-          <v-list-item-content>
-            Interclubs 2022-23
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/competition/championships-adult">
-          <v-list-item-content>{{ $t('BC Adults') }} </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/competition/championships-blitz">
-          <v-list-item-content>{{ $t('BC Blitz') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/competition/championships-rapid">
-          <v-list-item-content>{{ $t('BC Rapid') }} </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/competition/international-adult">
-          <v-list-item-content>{{ $t('International competitions') }}</v-list-item-content>
-        </v-list-item>
+        <v-list-item to="/interclubs/info" title="Interclubs 2023-24" />
+        <v-list-item to="/interclubs/interclubs-2022-23" title="Interclubs 2022-23" />
+        <v-list-item to="/competition/championships-adult" :title="$t('BC Adults')" />
+        <v-list-item to="/competition/championships-blitz" :title="$t('BC Blitz')" />
+        <v-list-item to="/competition/championships-rapid" :title="$t('BC Rapid')" />
+        <v-list-item to="/competition/international-adult" :title="$t('International competitions')" />
       </v-list-group>
 
-      <v-list-group no-action>
-        <template #activator>
-          <v-list-item-content>{{ $t('Clubs') }}</v-list-item-content>
+      <v-list-group>
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$t('Clubs')" />
         </template>
-        <v-list-item to="/clubs/info">
-          <v-list-item-content>Club Info</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/clubs/manager">
-          <v-list-item-content>Club Manager</v-list-item-content>
-        </v-list-item>
+        <v-list-item to="/clubs/info" title="Club Info" />
+        <v-list-item to="/clubs/manager" title="Club Manager" />
       </v-list-group>
       
-      <v-list-group no-action>
-        <template #activator>
-          <v-list-item-content>{{ $t('Youth') }}</v-list-item-content>
+      <v-list-group>
+        <template  v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$t('Youth')" />
         </template>
-        <v-list-item to="/youth/championships-youth">
-          <v-list-item-content>{{ $t('BC Youth') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/youth/international-youth">
-          <v-list-item-content>{{ $t('International') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/youth/school-chess">
-          <v-list-item-content>{{ $t('BC School chess') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/youth/g-licence">
-          <v-list-item-content>{{ $t('G License') }} </v-list-item-content>
-        </v-list-item>
+        <v-list-item to="/youth/championships-youth" :title="$t('BC Youth')" />
+        <v-list-item to="/youth/international-youth" :title="$t('International')" />
+        <v-list-item to="/youth/school-chess" :title="$t('BC School chess')" />
+        <v-list-item to="/youth/g-licence" :title="$t('G License')" />
       </v-list-group>
 
-      <v-list-group no-action>
-        <template #activator>
-          <v-list-item-content>{{ $t('Useful information') }}</v-list-item-content>
+      <v-list-group>
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$t('Useful Information')" />
         </template>
-        <v-list-item to="/info/calendar">
-          <v-list-item-content>{{ $t('Calendar') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/info/email-addresses">
-          <v-list-item-content>{{ $t('Email addresses') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/info/elo-processing">
-          <v-list-item-content>{{ $t('ELO processing') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/info/gdpr">
-          <v-list-item-content>{{ $t('GDPR') }}</v-list-item-content>
-        </v-list-item>
+        <v-list-item to="/info/calendar" :title="$t('Calendar')" />
+        <v-list-item to="/info/email-addresses" :title="$t('Email addresses')" />
+        <v-list-item to="/info/elo-processing" :title="$t('ELO processing')" />
+        <v-list-item to="/info/gdpr" :title="$t('GDPR')" />
       </v-list-group>
 
-      <v-list-group no-action>
-        <template #activator>
-          <v-list-item-content>{{ $t('Tools') }}</v-list-item-content>
+      <v-list-group>
+        <template v-slot:activator="{ props }">
+          <v-list-item v-bind="props" :title="$t('Tools')" />
         </template>
-        <v-list-item :to="gotorating">
-          <v-list-item-content>
-            {{ $t('ELO tournaments') }}
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item :href="phpbaseurl + 'sites/manager/GestionCOMMON/GestionLogin.php'">
-          <v-list-item-content>
-            Player Manager
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/clubs/manager">
-          <v-list-item-content>Club Manager</v-list-item-content>
-        </v-list-item>
-        <v-list-item to="/interclubs/manager">
-          <v-list-item-content>
-            Interclub Manager
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item :href="phpbaseurl + 'sites/manager/GestionFICHES/FRBE_Fiche.php'">
-          <v-list-item-content>
-            ELO
-          </v-list-item-content>
-        </v-list-item>
-        <v-list-item :href="phpbaseurl + 'sites/manager/GestionSWAR/SwarResults.php'">
-          <v-list-item-content>{{ $t('Results SWAR') }}</v-list-item-content>
-        </v-list-item>
-        <v-list-item :href="phpbaseurl + 'sites/manager/CalcNorm/norm.php'">
-          <v-list-item-content>
-            Calc Norm
-          </v-list-item-content>
-        </v-list-item>
+        <v-list-item :to="gotorating" :title="$t('ELO tournaments')" />
+        <v-list-item title="Player Manager" 
+          :href="phpbaseurl + 'sites/manager/GestionCOMMON/GestionLogin.php'" />
+        <v-list-item to="/clubs/manager" title="Club Manager" />
+        <v-list-item to="/interclubs/manager" title="Interclub Manager" />
+        <v-list-item title="Elo" :href="phpbaseurl + 'sites/manager/GestionFICHES/FRBE_Fiche.php'" />
+        <v-list-item :title="$t('Results SWAR')" :href="phpbaseurl + 'sites/manager/GestionSWAR/SwarResults.php'" />
+        <v-list-item title="Calc Norm" :href="phpbaseurl + 'sites/manager/CalcNorm/norm.php'" />
       </v-list-group>
 
-      <v-list-item to="/info/partners">
-        <v-list-item-content>Partners</v-list-item-content>
-      </v-list-item>
+      <v-list-item to="/info/partners" title="Partners" />
     </v-list>
 
   </div>
@@ -187,6 +105,7 @@ export default {
     return {
       fixtoolbar: false,
       authenticated: false,
+
       phpbaseurl
     }
   },
@@ -208,17 +127,7 @@ export default {
 </script>
 
 <style scoped>
-.v-application .primary--text {
-  color: white !important;
-}
 
-.v-list-item__content {
-  color: white !important;
-}
-
-.fixtoolbar {
-  top: 50px;
-}
 
 .btn-language {
   min-width: 0 !important;

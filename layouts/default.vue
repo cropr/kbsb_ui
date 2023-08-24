@@ -1,14 +1,14 @@
 <template>
   <v-app>
+    <v-navigation-drawer v-model="drawer" class="bg-green-darken-1 text-white">
+      <TheSidebar />
+    </v-navigation-drawer>
     <v-app-bar color="green-darken-2">
       <v-app-bar-nav-icon @click="drawer = !drawer" />
       <v-app-bar-title>
         FRBE- KBSB-KSB
       </v-app-bar-title>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer">
-      <!-- <TheSideBar /> -->
-    </v-navigation-drawer>
     <v-main>
       <slot />
     </v-main>
