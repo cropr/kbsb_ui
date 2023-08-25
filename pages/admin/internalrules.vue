@@ -10,14 +10,14 @@
           FR
         </v-tab>
       </v-tabs>
-      <v-tabs-items v-model="tab">
-        <v-tab-item>
-          <div class="mt-2" v-html="pagecontent_nl" />
-        </v-tab-item>
-        <v-tab-item>
-          <div class="mt-2" v-html="pagecontent_fr" />
-        </v-tab-item>
-      </v-tabs-items>
+      <v-window v-model="tab">
+        <v-window-item>
+          <div class="mt-2" v-html="data.content_nl" />
+        </v-window-item>
+        <v-window-item>
+          <div class="mt-2" v-html="data.content_fr" />
+        </v-window-item>
+      </v-window>
     </v-container>
   </v-container>
 </template>

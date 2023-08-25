@@ -1,98 +1,61 @@
+<script setup>
+import showdown from 'showdown'
+import { ref } from 'vue'
+
+const { locale } = useI18n()
+console.log('locale', locale)
+const ttitle = `title_${locale.value}`
+console.log('ttitle', ttitle)
+const { data }  = await useAsyncData('index', () => queryContent('/pages/statutes').findOne())
+const tab = ref(null)
+const mdConverter = new showdown.Converter()
+function md(s) { return  mdConverter.makeHtml(s)}
+</script>
+
 <template>
   <v-container>
-    <h1>{{ pagetitle }}</h1>
-    <v-container class="mt-1 markedcontent elevation-2">
-      <v-tabs v-model="tab" light slider-color="deep-purple">
-        <v-tab class="mx-2">
-          NL
-        </v-tab>
-        <v-tab class="mx-2">
-          FR
-        </v-tab>
-      </v-tabs>
-      <v-tabs-items v-model="tab">
-        <v-tab-item>
-          <div class="mt-2" v-html="pagecontent_nl" />
-        </v-tab-item>
-        <v-tab-item>
-          <div class="mt-2" v-html="pagecontent_fr" />
-        </v-tab-item>
-      </v-tabs-items>
-    </v-container>
+    <ContentRenderer :value="data">
+      <h1 v-html="data[ttitle] ? data[ttitle] : data.title" />
+      <v-container class="mt-1 elevation-2">
+        <v-tabs v-model="tab" light slider-color="deep-purple">
+          <v-tab class="mx-2"> NL </v-tab>
+          <v-tab class="mx-2"> FR </v-tab>
+        </v-tabs>
+        <v-window v-model="tab">
+          <v-window-item>
+            <div class="mt-2 markdowncontent" v-html="md(data.content_nl)" />
+          </v-window-item>
+          <v-window-item>
+            <div class="mt-2 markdowncontent" v-html="md(data.content_fr)" />
+          </v-window-item>
+        </v-window>
+      </v-container>
+    </ContentRenderer>
   </v-container>
 </template>
 
-<script>
+<style>
 
-import showdown from 'showdown'
-
-export default {
-
-  layout: 'default',
-
-  data () {
-    return {
-      page: {},
-      tab: 0
-    }
-  },
-
-  async fetch () {
-    this.page = await this.$content('pages', 'statutes').fetch()
-  },
-
-  head: {
-    title: 'Statuten - Statutes',
-    link: [
-      {
-        rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900'
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Material+Icons'
-      },
-      {
-        rel: 'stylesheet',
-        href:
-          'https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css'
-      },
-      { rel: 'favicon', href: 'favicon.ico' }
-    ],
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'home', name: 'description', content: 'Meta description' }
-    ],
-    script: [
-      {
-        src: 'https://apis.google.com/js/platform.js',
-        async: true,
-        defer: true
-      }
-    ]
-  },
-
-  computed: {
-    pagecontent_nl () {
-      const pcontent = this.page.content_nl
-      const converter = new showdown.Converter()
-      return converter.makeHtml(pcontent)
-    },
-
-    pagecontent_fr () {
-      const pcontent = this.page.content_fr
-      const converter = new showdown.Converter()
-      return converter.makeHtml(pcontent)
-    },
-
-    pagetitle () {
-      const locale = this.$i18n.locale
-      const pti18 = this.page[`title_${locale}`]
-      const ptitle = pti18 && pti18.length ? pti18 : this.page.title
-      return ptitle
-    }
-  }
+.markdowncontent ul, .markdowncontent ol { 
+    display: block;
+    list-style: disc outside none;
+    margin: 1em 0;
+    padding: 0 0 0 40px;
 }
-</script>
+.markdowncontent ol { 
+    list-style-type: decimal;
+}
+
+.markdowncontent li {
+    display: list-item;
+}
+
+.markdowncontent ul ul, .markdowncontent ol ul {
+    list-style-type: circle;
+    margin-left: 15px; 
+}
+.markdowncontent ol ol, .markdowncontent ul ol { 
+    list-style-type: lower-latin;
+    margin-left: 15px; 
+}
+</style>

@@ -47,8 +47,3 @@ export default {
   components: { TheCredentials, TheFooter }
 }
 </script>
-<style scoped>
-.footer a {
-  color: white;
-}
-</style>

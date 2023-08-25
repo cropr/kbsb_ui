@@ -2,18 +2,10 @@
   <div >
 
     <div>
-      <v-btn variant="text" class="text-white btn-language" 
-        @click="setLocale('nl')">NL
-      </v-btn>
-      <v-btn variant="text" class="text-white btn-language" 
-        @click="setLocale('fr')">FR
-      </v-btn>
-      <v-btn variant="text" class="bg-green-darken-1 text-white  btn-language"  @click="setLocale('de')">
-        DE
-      </v-btn>
-      <v-btn variant="text"  class="bg-green-darken-1 text-white  btn-language" @click="setLocale('en')">
-        EN
-      </v-btn>
+      <v-btn variant="text" class="btn-language" @click="setLocale('nl')">NL</v-btn>
+      <v-btn variant="text" class="btn-language" @click="setLocale('fr')">FR</v-btn>
+      <v-btn variant="text" class="btn-language"  @click="setLocale('de')">DE</v-btn>
+      <v-btn variant="text" class="btn-language" @click="setLocale('en')">EN</v-btn>
     </div>
 
     <v-list nav>
@@ -34,7 +26,7 @@
         <v-list-item to="/admin/commissions" :title="$t('Committees')" />
       </v-list-group>
 
-      <v-list-group>
+      <!-- <v-list-group>
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$t('Competitions')" />
         </template>
@@ -44,9 +36,9 @@
         <v-list-item to="/competition/championships-blitz" :title="$t('BC Blitz')" />
         <v-list-item to="/competition/championships-rapid" :title="$t('BC Rapid')" />
         <v-list-item to="/competition/international-adult" :title="$t('International competitions')" />
-      </v-list-group>
+      </v-list-group> -->
 
-      <v-list-group>
+      <!-- <v-list-group>
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$t('Clubs')" />
         </template>
@@ -86,7 +78,7 @@
         <v-list-item title="Elo" :href="phpbaseurl + 'sites/manager/GestionFICHES/FRBE_Fiche.php'" />
         <v-list-item :title="$t('Results SWAR')" :href="phpbaseurl + 'sites/manager/GestionSWAR/SwarResults.php'" />
         <v-list-item title="Calc Norm" :href="phpbaseurl + 'sites/manager/CalcNorm/norm.php'" />
-      </v-list-group>
+      </v-list-group> -->
 
       <v-list-item to="/info/partners" title="Partners" />
     </v-list>
@@ -94,36 +86,13 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { phpbaseurl } from '@/util/cms'
+const { locale, setLocale } = useI18n()
 
-export default {
-
-  name: 'TheSidebar',
-
-  data() {
-    return {
-      fixtoolbar: false,
-      authenticated: false,
-
-      phpbaseurl
-    }
-  },
-
-  computed: {
-    gotorating() {
-      return this.$i18n.locale === 'nl' ? '/tools/ratingnl' : '/tools/ratingfr'
-    }
-  },
-
-  methods: {
-    setLocale(l) {
-      this.$i18n.setLocale(l)
-    },
-  }
-
+function gotorating(){
+  
 }
-
 </script>
 
 <style scoped>

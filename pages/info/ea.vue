@@ -1,3 +1,14 @@
+<script setup>
+import showdown from 'showdown'
+const { locale } = useI18n()
+
+const {data}  = await useAsyncData('index', () => queryContent('/pages/es').findOne())
+
+const mdConverter = new showdown.Converter()
+
+function md(s) { return  mdConverter.makeHtml(s)}
+</script>
+
 <template>
   <v-container>
     <ContentRenderer :value="data" >
@@ -6,13 +17,3 @@
     </ContentRenderer>
   </v-container>
 </template>
-
-<script setup>
-import showdown from 'showdown'
-
-const {data}  = await useAsyncData('index', () => queryContent('/pages/es').findOne())
-
-const mdConverter = new showdown.Converter()
-
-function md(s) { return  mdConverter.makeHtml(s)}
-</script>
