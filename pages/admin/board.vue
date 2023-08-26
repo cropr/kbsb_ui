@@ -148,25 +148,28 @@ const { data: honorpres } = await useAsyncData('honorpres', () =>
         </div>
       </v-col>
     </v-row>
-    <h2 class="mt-3">
-      {{ $t("Honorary members") }}
-    </h2>
-    <ul>
-      <li v-for="bm in honorary" :key="bm.last_name">
-        {{ bm.first_name }} {{ bm.last_name }}
-      </li>
-    </ul>
-    <h2 class="mt-3">
-      {{ $t("Honorary president") }}
-    </h2>
-    <ul>
-      <li
-        v-for="bm in honorpres"
-        :key="bm.last_name"
-      >
-        {{ bm.first_name }} {{ bm.last_name }}
-      </li>
-    </ul>
+    <div class="markdowncontent">
+      <h2 class="mt-3">
+        {{ $t("Honorary members") }}
+      </h2>
+      <ul>
+        <li v-for="bm in honorary" :key="bm.last_name">
+          {{ bm.first_name }} {{ bm.last_name }}
+        </li>
+      </ul>
+      <h2 class="mt-3">
+        {{ $t("Honorary president") }}
+      </h2>
+      <ul>
+        <li
+          v-for="bm in honorpres"
+          :key="bm.last_name"
+        >
+          {{ bm.first_name }} {{ bm.last_name }}
+        </li>
+      </ul>
+    </div>
+
   </v-container>
 </template>
 

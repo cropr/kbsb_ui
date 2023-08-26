@@ -1,98 +1,34 @@
+<script setup>
+import showdown from 'showdown'
+import { ref } from 'vue'
+
+const { locale } = useI18n()
+const ttitle = `title_${locale.value}`
+const { data }  = await useAsyncData('index', () => queryContent('/pages/internal-rules').findOne())
+const tab = ref(null)
+const mdConverter = new showdown.Converter()
+function md(s) { return  mdConverter.makeHtml(s)}
+</script>
+
 <template>
   <v-container>
-    <h1>{{ pagetitle }}</h1>
-    <v-container class="mt-1 markedcontent elevation-2">
-      <v-tabs v-model="tab" light slider-color="deep-purple">
-        <v-tab class="mx-2">
-          NL
-        </v-tab>
-        <v-tab class="mx-2">
-          FR
-        </v-tab>
-      </v-tabs>
-      <v-window v-model="tab">
-        <v-window-item>
-          <div class="mt-2" v-html="data.content_nl" />
-        </v-window-item>
-        <v-window-item>
-          <div class="mt-2" v-html="data.content_fr" />
-        </v-window-item>
-      </v-window>
-    </v-container>
+    <ContentRenderer :value="data">
+      <h1 v-html="data[ttitle] ? data[ttitle] : data.title" />
+      <v-container class="mt-1 elevation-2">
+        <v-tabs v-model="tab" light slider-color="deep-purple">
+          <v-tab class="mx-2"> NL </v-tab>
+          <v-tab class="mx-2"> FR </v-tab>
+        </v-tabs>
+        <v-window v-model="tab">
+          <v-window-item>
+            <div class="mt-2 markdowncontent" v-html="md(data.content_nl)" />
+          </v-window-item>
+          <v-window-item>
+            <div class="mt-2 markdowncontent" v-html="md(data.content_fr)" />
+          </v-window-item>
+        </v-window>
+      </v-container>
+    </ContentRenderer>
   </v-container>
 </template>
 
-<script>
-
-import showdown from 'showdown'
-
-export default {
-
-  layout: 'default',
-
-  data () {
-    return {
-      tab: 0,
-      page: {}
-    }
-  },
-
-  async fetch () {
-    this.page = await this.$content('pages', 'internal-rules').fetch()
-  },
-
-  head: {
-    title: 'Intern reglement KBSB - Règlement interne FRBE',
-    link: [
-      {
-        rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900'
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Material+Icons'
-      },
-      {
-        rel: 'stylesheet',
-        href:
-          'https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css'
-      },
-      { rel: 'favicon', href: 'favicon.ico' }
-    ],
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'home', name: 'description', content: 'Meta description' }
-    ],
-    script: [
-      {
-        src: 'https://apis.google.com/js/platform.js',
-        async: true,
-        defer: true
-      }
-    ]
-  },
-
-  computed: {
-    pagecontent_nl () {
-      const pcontent = this.page.content_nl
-      const converter = new showdown.Converter()
-      return converter.makeHtml(pcontent)
-    },
-
-    pagecontent_fr () {
-      const pcontent = this.page.content_fr
-      const converter = new showdown.Converter()
-      return converter.makeHtml(pcontent)
-    },
-
-    pagetitle () {
-      const locale = this.$i18n.locale
-      const pti18 = this.page[`title_${locale}`]
-      const ptitle = pti18 && pti18.length ? pti18 : this.page.title
-      return ptitle
-    }
-  }
-}
-</script>

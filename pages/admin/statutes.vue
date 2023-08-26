@@ -3,9 +3,7 @@ import showdown from 'showdown'
 import { ref } from 'vue'
 
 const { locale } = useI18n()
-console.log('locale', locale)
 const ttitle = `title_${locale.value}`
-console.log('ttitle', ttitle)
 const { data }  = await useAsyncData('index', () => queryContent('/pages/statutes').findOne())
 const tab = ref(null)
 const mdConverter = new showdown.Converter()
@@ -34,28 +32,3 @@ function md(s) { return  mdConverter.makeHtml(s)}
   </v-container>
 </template>
 
-<style>
-
-.markdowncontent ul, .markdowncontent ol { 
-    display: block;
-    list-style: disc outside none;
-    margin: 1em 0;
-    padding: 0 0 0 40px;
-}
-.markdowncontent ol { 
-    list-style-type: decimal;
-}
-
-.markdowncontent li {
-    display: list-item;
-}
-
-.markdowncontent ul ul, .markdowncontent ol ul {
-    list-style-type: circle;
-    margin-left: 15px; 
-}
-.markdowncontent ol ol, .markdowncontent ul ol { 
-    list-style-type: lower-latin;
-    margin-left: 15px; 
-}
-</style>

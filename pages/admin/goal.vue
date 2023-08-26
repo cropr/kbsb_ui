@@ -1,8 +1,9 @@
 <script setup>
 import showdown from 'showdown'
+
 const { locale } = useI18n()
-console.log('locale', locale)
-const ttitle = `title_${locale}`
+const ttitle = `title_${locale.value}`
+const tcontent = `content_${locale.value}`
 const { data }  = await useAsyncData('index', () => queryContent('/pages/goal').findOne())
 
 const mdConverter = new showdown.Converter()
@@ -12,9 +13,9 @@ function md(s) { return  mdConverter.makeHtml(s)}
 
 <template>
   <v-container>
-    <ContentRenderer :value="data" >
+    <ContentRenderer :value="data"  >
       <h1 v-html= "data[ttitle] ? data[ttitle] : data.title" />
-      <div v-html= "md(data.content_nl)" />
+      <div v-html= "md(data[tcontent])" class="markdowncontent" />
     </ContentRenderer>
   </v-container>
 </template>

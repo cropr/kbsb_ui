@@ -25,10 +25,3 @@ export default {
   data: () => ({drawer: null})
 }
 </script>
-
-<style>
-.footer a {
-  color: white;
-}
-
-</style>
