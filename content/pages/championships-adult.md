@@ -7,6 +7,10 @@ title_nl: "Belgisch kampioenschap 2023"
 title_fr: "Championnat de Belgique 2023"
 title_de: "Belgisch Meisterschaft 2023"
 title_en: "Belgian Championship 2023"
+content_nl: "Zie (Website Brugse meesters)[https://sites.google.com/view/brugsemeestersbe]. "
+content_fr: "Voir (Website Brugse meesters)[https://sites.google.com/view/brugsemeestersbe]"
+content_de: "See (Website Brugse meesters)[https://sites.google.com/view/brugsemeestersbe]"
+content_en: "See (Website Brugse meesters)[https://sites.google.com/view/brugsemeestersbe]"
 updated_by: b46560a0-b628-42f6-ba72-5624f1bbcac3
 updated_at: 1681479843
 ---
