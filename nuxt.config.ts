@@ -17,6 +17,9 @@ export default defineNuxtConfig({
     'vuetify/lib/styles/main.sass', 
     '@mdi/font/css/materialdesignicons.min.css'
   ],
+  experimental: {
+    payloadExtraction: false
+  },
   i18n: {
     lazy: true,
     locales: [
@@ -30,7 +33,7 @@ export default defineNuxtConfig({
     defaultLocale: "nl",
     vueI18n: './i18n.config.ts',
   },  
-  modules: ['@nuxt/content', '@nuxtjs/i18n'],
+  modules: ['@nuxt/content', '@nuxtjs/i18n', '@pinia/nuxt'],
   // vite: {
   //   define: {
   //     'process.env.DEBUG': false,

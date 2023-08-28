@@ -1,15 +1,61 @@
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { EMPTY_CLUB } from '@/util/club'
+
+const { locale } = useI18n()
+const { $backend } = useNuxtApp()
+const boardmembers = ref({})
+const club = ref({...EMPTY_CLUB})
+const clubs = ref([])
+
+const idclub = ref(null)
+
+async function get_clubs() {
+  try {
+    const reply = await $backend("club", "anon_get_clubs", {})
+    console.log('reply', reply)
+    clubs.value = reply.data.clubs;
+    clubs.value.forEach((p) => {
+      p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`;
+    });
+  } catch (error) {
+    const reply = error.response;
+    console.error("Getting clubs failed", reply);
+    // this.$root.$emit("snackbar", {
+    //   text: "Getting clubs failed",
+    // });
+  }
+}
+
+function selectclub() {
+  console.log('idclub selected', idclub) 
+  if (!idclub.value) {
+    club.value = {};
+  } else {
+    clubs.value.forEach((c) => {
+      console.log('club iter', c)
+      if (c.idclub == idclub.value) {
+        club.value = { ...EMPTY_CLUB, ...c };
+      }
+    });
+  }
+}
+
+onMounted(()=>(get_clubs()))
+
+</script>
+
 <template>
   <v-container>
     <h1>{{ $t("Club details") }}</h1>
     <v-card class="mt-2">
       <v-card-text>
         <p v-if="!club.idclub">{{ $t("Select a club to view the club details") }}</p>
-        <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub" color="deep-purple"
-          label="Club" clearable @change="selectclub">
-          <template v-slot:item="data">
-            {{ data.item.merged }}
-          </template>
-        </v-autocomplete>
+        <VAutocomplete v-model="idclub" :items="clubs" 
+          item-title="merged" item-value="idclub" color="green"
+          label="Club" clearable @update:model-value="selectclub" >
+
+        </VAutocomplete>
       </v-card-text>
     </v-card>
 
@@ -55,60 +101,6 @@
     </div>
   </v-container>
 </template>
-
-<script>
-
-import { boardroles, EMPTY_CLUB } from '@/util/club';
-
-export default {
-  name: "Details",
-
-  data() {
-    return {
-      boardroles: boardroles,
-      boardmembers: {},
-      club: {...EMPTY_CLUB},
-      clubs: [],
-      idclub: null,
-    };
-  },
-
-  methods: {
-    async get_clubs() {
-      try {
-        const reply = await this.$api.club.anon_get_clubs();
-        console.log('reply', reply)
-        this.clubs = reply.data.clubs;
-        this.clubs.forEach((p) => {
-          p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`;
-        });
-      } catch (error) {
-        const reply = error.response;
-        console.error("Getting clubs failed", reply.data);
-        this.$root.$emit("snackbar", {
-          text: "Getting clubs failed",
-        });
-      }
-    },
-
-    selectclub() {
-      if (!this.idclub) {
-        this.club = {};
-      } else {
-        this.clubs.forEach((c) => {
-          if (c.idclub == this.idclub) {
-            this.club = { ...EMPTY_CLUB, ...c };
-          }
-        });
-      }
-    },
-  },
-
-  async mounted() {
-    await this.get_clubs();
-  },
-};
-</script>
 
 <style scoped>
 .fieldname {

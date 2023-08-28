@@ -4,7 +4,7 @@ import { ref } from 'vue'
 
 const { locale } = useI18n()
 const ttitle = `title_${locale.value}`
-const { data }  = await useAsyncData('index', () => queryContent('/pages/internal-rules').findOne())
+const { data }  = await useAsyncData('internal-rules', () => queryContent('/pages/internal-rules').findOne())
 const tab = ref(null)
 const mdConverter = new showdown.Converter()
 function md(s) { return  mdConverter.makeHtml(s)}

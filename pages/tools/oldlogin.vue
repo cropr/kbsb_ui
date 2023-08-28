@@ -1,3 +1,47 @@
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
+import { useIdtokenStore}  from '@/store/idtoken'
+import showdown from 'showdown'
+
+const { locale } = useI18n()
+const localePath = useLocalePath()
+const { $backend } = useNuxtApp()
+const router = useRouter() 
+const route = useRoute()
+const idstore = useIdtokenStore()
+
+// help dialog 
+const ttitle = `title_${locale.value}`
+const tcontent = `content_${locale.value}`
+const { data: help }  = await useAsyncData('help-login', () => queryContent('/pages/help-login').findOne())
+const helpdialog = ref(false)
+const login = ref({})
+const url =  route.query.url
+const mdConverter = new showdown.Converter()
+function md(s) { return  mdConverter.makeHtml(s)}
+
+async function dologin() {
+  const returnUrl = this.url ? this.url.replaceAll("__", "/") : '/'
+  try {
+    const reply = await $backend("old", "login", {
+      idnumber: this.login.idnumber,
+      password: this.login.password
+    })
+    console.log('reply', reply)
+    idstore.updateToken(reply.data)
+  } 
+  catch(error) {
+    const reply = error.response
+    console.error('Login failed', reply)
+    // TODO snackbar
+    return
+  }
+  console.log('goint to ', returnUrl)
+  navigateTo(localePath(returnUrl))
+}
+
+</script>
 <template>
   <v-container>
     <v-row align="start">
@@ -8,8 +52,18 @@
               mdi-account
             </v-icon>
             <label class="headline ml-3">{{ $t('Sign in') }}</label>
-            <v-spacer />
-            <help-popup file="login" />
+            <v-btn icon="" color="green" class="float-right"><b>?</b>
+              <v-dialog v-model="helpdialog" width="20em"  activator="parent">
+                <ContentRenderer :value="help">
+                  <v-card>
+                    <v-card-title v-html="help[ttitle] ? help[ttitle] : help.title" />
+                    <v-divider></v-divider>
+                    <v-card-text class="pt-3 markdowncontent" v-html="md(help[tcontent])"> 
+                    </v-card-text>
+                  </v-card>
+                </ContentRenderer>
+              </v-dialog>            
+            </v-btn>
           </v-card-title>
           <v-divider />
           <v-card-text>
@@ -28,66 +82,4 @@
   </v-container>
 </template>
 
-<script>
-import Vue from 'vue'
 
-export default {
-  layout: 'default',
-
-  data() {
-    return {
-      login: {},
-      url: this.$route.query.url
-    }
-  },
-
-  head: {
-    title: 'Partners',
-    link: [
-      {
-        rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900'
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Material+Icons'
-      },
-      {
-        rel: 'stylesheet',
-        href:
-          'https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css'
-      },
-      { rel: 'favicon', href: 'favicon.ico' }
-    ],
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'home', name: 'description', content: 'Meta description' }
-    ]
-  },
-
-  methods: {
-
-
-    dologin() {
-      const returnUrl = this.url ? this.url.replaceAll("__", "/") : '/'
-      this.$api.old.login({
-        idnumber: this.login.idnumber,
-        password: this.login.password
-      }).then(
-        (reply) => {
-          this.$store.commit('oldlogin/update', reply.data)
-          this.$router.push(returnUrl)
-        },
-        (reply) => {
-          console.log('failed login', reply)
-        }
-      )
-    }
-  }
-}
-</script>
-
-<style>
-</style>

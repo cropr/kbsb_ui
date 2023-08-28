@@ -12,7 +12,6 @@
 import showdown from 'showdown'
 
 const {data}  = await useAsyncData('index', () => queryContent('/').findOne())
-console.log("data", data, data._rawValue.content_nl)
 
 const mdConverter = new showdown.Converter()
 

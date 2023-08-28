@@ -8,6 +8,4 @@ title_de: 'Internationale Wettbewerbe'
 title_en: 'International competitions'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
 updated_at: 1689345270
-content_nl: '!'
-content_english: 'This page is not available in English'
 ---

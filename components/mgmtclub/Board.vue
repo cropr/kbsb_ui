@@ -58,7 +58,7 @@
 
 <script>
 
-import { boardroles, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
+import { BOARDROLES, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 
 export default {
 
@@ -67,7 +67,7 @@ export default {
   data() {
     return {
       boardmembers: EMPTY_BOARD,
-      boardroles: boardroles,
+      boardroles: BOARDROLES,
       clubdetails: EMPTY_CLUB,
       copyclubdetails: null,
       status: CLUB_STATUS.CONSULTING,

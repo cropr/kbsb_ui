@@ -1,8 +1,116 @@
+<script setup>
+import { ref, onMounted, nextTick } from 'vue'
+import { EMPTY_CLUB } from '@/util/club'
+import { useIdtokenStore}  from '@/store/idtoken'
+import { storeToRefs } from 'pinia'
+
+const { locale } = useI18n()
+const localePath = useLocalePath()
+const { $backend } = useNuxtApp()
+const idstore = useIdtokenStore()
+const { token: idtoken } = storeToRefs(idstore)
+
+
+const clubmembers = ref(null)
+const activeclub = ref({})
+const clubs = ref([])
+const idclub = ref(null)
+const waiting_dialog =ref(false)
+const board = ref(null)
+const detail = ref(null)
+const access = ref(null)
+
+function checkAuth() {
+  if (!idtoken.value) {
+    gotoLogin()
+  }
+}
+
+async function getClubs() {
+  try {
+    const reply = await $backend("club","anon_get_clubs", {})        
+    clubs.value = reply.data.clubs
+    clubs.value.forEach(p => {
+      p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
+    })
+  } catch (error) {
+    const reply = error.response
+    console.error('Getting clubs failed', reply)
+    // this.$root.$emit('snackbar', {
+    //   text: 'Getting clubs failed'
+    // })
+  }
+}
+
+async function getClubMembers() {
+  waiting_dialog.value = true
+  try {
+    const reply = await $backend("old", "get_clubmembers",{
+      idclub: idclub.value,
+    })
+    waiting_dialog.value = false
+    const members = reply.data.activemembers
+    members.forEach(p => {
+      p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
+    })
+    clubmembers.value = members.sort((a, b) =>
+      (a.last_name > b.last_name ? 1 : -1))
+  } catch (error) {
+    this.waiting_dialog = false        
+    const reply = error.reply
+    if (reply.status == 401) {
+      gotoLogin()
+    }
+    else {
+      console.error('Getting club members failed', reply)
+      // this.$root.$emit('snackbar', { text: this.$t('Getting club members failed') })
+    }
+  }
+}
+
+async function gotoLogin() {
+  await navigateTo(localePath('/tools/oldlogin?url=__clubs__manager'))
+}
+
+async function selectclub() {
+  if (!idclub.value) {
+    activeclub.value = {}
+    return
+  }
+  try {
+    const reply = await $backend("club", "verify_club_access", {
+      idclub: idclub.value,
+      role: "ClubAdmin",
+      token: idtoken.value,
+    })
+    clubs.value.forEach((c) => {
+      if (c.idclub == idclub.value) {
+        activeclub.value = { ...EMPTY_CLUB, ...c }
+      }
+    })
+    nextTick(()=>{
+      details.setupDetails()
+    })
+    // TODO
+    this.$nextTick(() => detail.setupDetails())   // fill data on load 
+    clubmembers.value = null
+    await getClubMembers()   
+  } catch (error) {
+      console.error('Getting clubs failed', error)
+      // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
+  }
+}
+
+onMounted( async function(){
+  checkAuth()
+  await getClubs()
+})
+</script>
+
 <template>
   <v-container>
     <h1>Club Manager</h1>
     <v-dialog width="10em" v-model="waiting_dialog">
-      <template v-slot:activator="{ on, attrs }"></template>
       <v-card>
         <v-card-title>{{ $t('Loading...')}}</v-card-title>
         <v-card-text>
@@ -32,151 +140,16 @@
       </v-tabs>
       <v-tabs-items v-model="tab" >
         <v-tab-item :eager="true">
-          <ClubDetails :bus="bus" :club="activeclub" ref="detail" />
+          <ClubDetails :club="activeclub" ref="detail" />
         </v-tab-item>
         <v-tab-item :eager="true">
-          <ClubBoard :bus="bus" :club="activeclub" :clubmembers="clubmembers" ref="board"/>
+          <ClubBoard  :club="activeclub" :clubmembers="clubmembers" ref="board"/>
         </v-tab-item>
         <v-tab-item :eager="true">
-          <ClubAccess :bus="bus" :club="activeclub" :clubmembers="clubmembers" ref="access"/>
+          <ClubAccess  :club="activeclub" :clubmembers="clubmembers" ref="access"/>
         </v-tab-item>
       </v-tabs-items>
     </div>
+
   </v-container>
 </template>
-
-<script>
-import Vue from 'vue'
-import { EMPTY_CLUB } from '@/util/club'
-const noop = function () { }
-const tabsmapping = {
-  0: ""
-}
-
-export default {
-
-  name: 'Club',
-
-  layout: 'default',
-
-  data() {
-    return {
-      activeclub: {},
-      bus: new Vue(),
-      clubmembers: null,
-      clubs: [],
-      idclub: null,
-      tab: null,
-      waiting_dialog: false
-    }
-  },
-
-  computed: {
-    logintoken() { return this.$store.state.oldlogin.value },
-  },
-
-  async mounted() {
-    await this.checkAuth()
-    await this.getClubs()
-  },
-
-  methods: {
-
-    async checkAuth() {
-      if (!this.logintoken) {
-        this.gotoLogin()
-      }
-    },
-
-    async getClubs() {
-      try {
-        const reply = await this.$api.club.anon_get_clubs();        
-        this.clubs = reply.data.clubs
-        this.clubs.forEach(p => {
-          p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
-        })
-      } catch (error) {
-        const reply = error.response
-        console.error('Getting clubs failed', reply.data.detail)
-        this.$root.$emit('snackbar', {
-          text: 'Getting clubs failed'
-        })
-      }
-    },
-
-    async getClubMembers() {
-      this.waiting_dialog = true
-      try {
-        const reply = await this.$api.old.get_clubmembers({
-          idclub: this.idclub,
-        })
-        this.waiting_dialog = false
-        const members = reply.data.activemembers
-        members.forEach(p => {
-          p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
-        })
-        this.clubmembers = members.sort((a, b) =>
-          (a.last_name > b.last_name ? 1 : -1))
-      } catch (error) {
-        this.waiting_dialog = false        
-        const reply = error.reply
-        if (reply.status == 401) {
-          this.gotoLogin()
-        }
-        else {
-          console.error('Getting club members failed', reply.data.detail)
-          this.$root.$emit('snackbar', { text: this.$t('Getting club members failed') })
-        }
-      }
-    },
-
-    gotoLogin() {
-      this.$router.push('/tools/oldlogin?url=__clubs__manager')
-    },
-
-    async selectclub() {
-      if (!this.idclub) {
-        this.activeclub = {}
-        return
-      }
-      try {
-        const reply = await this.$api.club.verify_club_access({
-          idclub: this.idclub,
-          role: "ClubAdmin",
-          token: this.logintoken,
-        })
-        this.clubs.forEach((c) => {
-          if (c.idclub == this.idclub) {
-            this.activeclub = { ...EMPTY_CLUB, ...c }
-          }
-        })
-        this.$nextTick(()=> this.bus.$emit("setupdetails"))   // fill data on load 
-        this.clubmembers = null
-        await this.getClubMembers()   
-      } catch (error) {
-          console.error('Getting clubs failed', error)
-          this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-      }
-    },
-
-    updateTab(){
-      switch (this.tab) {
-        case 0:
-          this.bus.$emit("setupdetails")
-          break
-        case 1:
-          console.log('emitting board')
-          this.bus.$emit("setupboard")
-          break
-        case 2:
-          console.log('emitting access')
-          this.bus.$emit("setupaccess")
-          break
-      }
-    }
-  }
-
-}
-</script>
-
-<style></style>``

@@ -1,0 +1,1 @@
+import{_ as e,c as a,o as c,a as n}from"./entry.9cd865fb.js";const o={},t=n("h1",null,"Club Manager",-1),s=[t];function r(_,l){return c(),a("div",null,s)}const f=e(o,[["render",r]]);export{f as default};

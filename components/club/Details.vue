@@ -1,3 +1,123 @@
+<script setup>
+import { ref, computed, onMounted } from 'vue'
+import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
+const { localePath } = useLocalePath()
+
+defineProps({
+  club: Object
+})
+
+const clubdetails = ref(EMPTY_CLUB)
+let copyclubdetails = null
+const mbr_items =  ref([])
+const statuscm = ref(CLUB_STATUS.CONSULTING)
+
+const logintoken = computed(()=> { return this.$store.state.oldlogin.value } )
+const status_consulting = computed(() => (statuscm.value == CLUB_STATUS.CONSULTING))
+const status_modifying = computed(() => (statuscm.value == CLUB_STATUS.MODIFYING))
+
+function cancelClub() {
+  statuscm.value = CLUB_STATUS.CONSULTING
+  get_clubdetails()
+}
+
+async function get_clubdetails() {
+  if (!club.value.id) {
+    clubdetails.value = EMPTY_CLUB
+    return
+  }
+  try {
+    const reply = await $backend("club", "clb_get_club", {
+      idclub: club.value.idclub,
+      token: logintoken.value
+    })
+    readClubdetails(reply.data)
+  } catch (error) {
+    switch (reply.status) {
+      case 401:
+        gotoLogin()
+        break
+      case 403:
+        console.error('Permission denied', reply.data.detail)
+        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
+        break
+      default:
+        console.error('Getting clubs failed', reply.data.detail)
+        // this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
+    }
+  }
+}
+
+function gotoLogin() {
+  navigateTo(localePath('/mgmt/login?url=__clubs__manager'))
+}
+
+async function modifyClub() {
+  try {
+    const reply = await $backend("club", "verify_club_access", {
+      idclub: club.value.idclub,
+      role: "ClubAdmin",
+      token: logintoken.value,
+    })
+    statuscm.value = CLUB_STATUS.MODIFYING
+  } catch (error) {
+    const reply = error.response
+    switch (reply.status) {
+      case 401:
+        gotoLogin()
+        break
+      default:
+        console.error('Getting clubs failed', reply.data.detail)
+        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
+    }
+  }
+}
+
+function readClubdetails(details) {
+  clubdetails.value = { ...EMPTY_CLUB, ...details }
+  copyclubdetails = JSON.parse(JSON.stringify(details))
+}
+
+async function saveClub() {
+  // build a a diff between clubdetails and its cooy
+  let update = {}
+  for (const [key, value] of Object.entries(clubdetails.value)) {
+    if (value != copyclubdetails[key]) {
+      update[key] = value
+    }
+  }
+  try {
+    const reply = await $backend("club", "clb_update_club",{
+      ...update,
+      idclub: clubdetails.value.idclub,
+      token: logintoken.value,
+    })
+    statuscm.value = CLUB_STATUS.CONSULTING
+    // this.$root.$emit('snackbar', { text: this.$t('Club saved') })
+  } catch (error) {
+    const reply = error.response
+    switch (reply.status) {
+      case 401:
+        this.gotoLogin()
+        break
+      case 403:
+        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
+        break
+      default:
+        console.error('Getting clubs failed', reply.data.detail)
+        // this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
+    }
+  }
+}
+
+async function setupDetails(){
+  console.log("running setuoDetails")
+  await get_clubdetails()
+}
+
+</script>
+
+
 <template>
   <v-container>
     <p v-if="!club.idclub">{{ $t('Select a club to view the club details') }}</p>
@@ -165,143 +285,6 @@
     </div>
   </v-container>
 </template>
-<script>
-
-import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
-
-export default {
-
-  name: 'Details',
-
-  data() {
-    return {
-      clubmembers: {},
-      clubdetails: EMPTY_CLUB,
-      copyclubdetails: null,
-      mbr_items: [],
-      status: CLUB_STATUS.CONSULTING,
-    }
-  },
-
-  props: {
-    bus: Object,
-    club: Object,
-  },
-
-  computed: {
-    logintoken() { return this.$store.state.oldlogin.value },
-    status_consulting() { return this.status == CLUB_STATUS.CONSULTING },
-    status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
-  },
-
-
-  methods: {
-
-    cancelClub() {
-      this.status = CLUB_STATUS.CONSULTING
-      this.get_clubdetails()
-    },
-
-    async get_clubdetails() {
-      if (!this.club.id) {
-        this.clubdetails = EMPTY_CLUB
-        return
-      }
-      try {
-        const reply = await this.$api.club.clb_get_club({
-          idclub: this.club.idclub,
-          token: this.logintoken
-        })
-        this.readClubdetails(reply.data)
-      } catch (error) {
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
-        }
-      }
-    },
-
-    gotoLogin() {
-      this.$router.push('/mgmt/login?url=__clubs__manager')
-    },
-
-    async modifyClub() {
-      try {
-        const reply = await this.$api.club.verify_club_access({
-          idclub: this.club.idclub,
-          role: "ClubAdmin",
-          token: this.logintoken,
-        })
-        this.status = CLUB_STATUS.MODIFYING
-      } catch (error) {
-        const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-        }
-      }
-    },
-
-    readClubdetails(details) {
-      this.clubdetails = { ...EMPTY_CLUB, ...details }
-      this.copyclubdetails = JSON.parse(JSON.stringify(details))
-    },
-
-    async saveClub() {
-      // build a a diff between clubdetails ans its cooy
-      let update = {}
-      for (const [key, value] of Object.entries(this.clubdetails)) {
-        if (value != this.copyclubdetails[key]) {
-          update[key] = value
-        }
-      }
-      try {
-        const reply = await this.$api.club.clb_update_club({
-          ...update,
-          idclub: this.clubdetails.idclub,
-          token: this.logintoken,
-        })
-        this.status = CLUB_STATUS.CONSULTING
-        this.$root.$emit('snackbar', { text: this.$t('Club saved') })
-      } catch (error) {
-        const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
-        }
-      }
-    },
-
-    async setupDetails(){
-      await this.get_clubdetails()
-    }
-
-  },
-
-  async mounted() {
-    this.bus.$on("setupdetails", this.setupDetails)
-  },
-
-}
-</script>
 
 <style scoped>
 .fieldname {

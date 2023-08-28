@@ -1,6 +1,197 @@
+<script setup>
+import {ref, computed, nextTick} from 'vue'
+import { visibility_items, CLUB_STATUS, ROLES } from '@/util/club'
+
+const props = defineProps({
+  club: Object,
+  clubmembers: Array,
+})
+
+// const clubrights = ref({})
+// const clubadmin = ref ({})
+// const clubmemberitems = ref ([])
+// const interclubadmin = ref ({})
+// const interclubcaptain = ref({})
+// const newclubadmin = ref (null)
+// const newinterclubadmin = ref (null)
+// const newinterclubcaptain= ref( null)
+// const roles = ref( ROLES)
+// const statusc = ref(CLUB_STATUS.CONSULTING)
+// const visibility_items = ref ([...visibility_items])
+
+
+// const status_consulting = computed(() => statusc == CLUB_STATUS.CONSULTING)
+// const status_modifying = computed(() => statusc == CLUB_STATUS.MODIFYING)
+
+// function addClubAdmin() {
+//   const cm = clubmembers.value.find(m => m.idnumber == newclubadmin.value)
+//   clubadmin.value[newclubadmin.value] = cm.merged
+//   nextTick(() => newclubadmin.value = null);
+// }
+
+// function addInterclubAdmin() {
+//   interclubadmin.value[newinterclubadmin.value] = clubmembers.value.find(
+//     m => m.idnumber == newinterclubadmin.value).merged
+//   nextTick(() => newinterclubadmin.value = null);
+// }
+
+// function addInterclubCaptain() {
+//   interclubcaptain.value[newinterclubcaptain.value] = clubmembers.valuefind(
+//     m => m.idnumber == newinterclubcaptain.value).merged
+//   nextTick(() => newinterclubcaptain.value = null);
+// }
+
+// function cancelAccess() {
+//   statusc.value = CLUB_STATUS.CONSULTING
+//   get_clubrights()
+// }
+
+// function deleteClubAdmin(m) {
+//   // don't delete last member
+//   if (Object.keys(clubadmin.value).length == 1) return
+//   clubadmin.value.splice(m, 1)
+// }
+
+// function deleteInterclubAdmin(m) {
+//   // don't delete last member
+//   if (Object.keys(this.interclubadmin).length == 1) return
+//   interclubadmin.splice(m, 1)
+// }
+
+// function deleteInterclubCaptain(m) {
+//   interclubcaptainsplice(m, 1)
+// }
+
+// async function get_clubrights() {
+//   if (!club.value.id) {
+//     clubrights.value = {}
+//     return
+//   }
+//   try {
+//     const reply = await $backend("club", "clb_get_club", {
+//       idclub: club.value.idclub,
+//       token: idtoken
+//     })
+//     readClubrights(reply.data)
+//   } catch (error) {
+//     console.log('getting club rights NOK')
+//     const reply = error.reply
+//     if (reply.status == 401) {
+//       gotoLogin()
+//     }
+//     else {
+//       console.error('Getting club details failed', reply.data.detail)
+//       // this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
+//     }
+//   }
+// }
+
+// function gotoLogin() {
+//   navigateTo(localePath('/tools/oldlogin?url=__club__manager'))
+// }
+
+// async function modifyAccess() {
+//   try {
+//     const reply = await $backend("club", "verify_club_access", {
+//       idclub: club.value.idclub,
+//       role: "ClubAdmin",
+//       token: idtoken,
+//     })
+//     statusc.value = CLUB_STATUS.MODIFYING
+//     clubmemberitems.value = clubmembers.value.map((x) => {
+//       return {
+//         value: x.idnumber,
+//         text: x.merged,
+//       }
+//     })
+//   } catch (error) {
+//     const reply = error.response
+//     switch (reply.status) {
+//       case 401:
+//         gotoLogin()
+//         break
+//       default:
+//         console.error('Getting clubs failed', reply.data.detail)
+//         // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
+//     }
+//   }
+// }
+
+// function readClubrights(details) {
+//   details.clubroles.forEach((cr) => {
+//     console.log('cr', cr)
+//     clubrights.value[cr.nature] = cr.memberlist
+//   })
+//   clubadmin.value = Object.fromEntries(clubrights.value["ClubAdmin"].map(
+//     (x) => {
+//       const cm = clubmembers.value.find(m => m.idnumber == x)
+//       cm.merged = `${x} ${cm.first_name} ${cm.last_name}` 
+//       return [x, cm.merged]
+//     }
+//   ))
+//   interclubadmin = Object.fromEntries(clubrights.value["InterclubAdmin"].map(
+//     (x) => {
+//       const cm = clubmembers.value.find(m => m.idnumber == x)
+//       cm.merged = `${x} ${cm.first_name} ${cm.last_name}` 
+//       return [x, cm.merged]
+//     }
+//   ))
+//   interclubcaptain.value = Object.fromEntries(clubrights.value["InterclubCaptain"].map(
+//     (x) => {
+//       const cm = clubmembers.value.find(m => m.idnumber == x)
+//       cm.merged = `${x} ${cm.first_name} ${cm.last_name}` 
+//       return [x, cm.merged]
+//     }
+//   ))
+
+// }
+
+// async function saveAccess() {
+//   try {
+//     const reply = await $backend("club"," clb_update_club", {
+//       idclub: club.value.idclub,
+//       clubroles: [
+//         {
+//           nature: "ClubAdmin",
+//           memberlist: Object.keys(clubadmin.value)
+//         },
+//         {
+//           nature: "InterclubAdmin",
+//           memberlist: Object.keys(interclubadmin.value)
+//         },
+//         {
+//           nature: "InterclubCaptain",
+//           memberlist: Object.keys(interclubcaptain.value)
+//         },
+//       ],
+//       token: idtoken,
+//     })
+//     statusc.value = CLUB_STATUS.CONSULTING
+//     // this.$root.$emit('snackbar', { text: 'Club saved' })
+//     get_clubrights()
+//   } catch (error) {
+//     const reply = error.response
+//     if (reply.status === 401) {
+//       gotoLogin()
+//     }
+//     else {
+//       console.error('Saving access rights failed', reply.data.detail)
+//       // this.$root.$emit('snackbar', { text: this.$t('Saving access rights failed') })
+//     }
+//   }
+// }
+
+function setupAccess() {
+  console.log('running setupAccess')
+  // get_clubrights()
+}
+
+</script>
+
+
 <template>
   <v-container>
-    <p v-if="!club.idclub">{{ $t('Select a club to view the access rights') }}</p>
+    <!-- <p v-if="!club.idclub">{{ $t('Select a club to view the access rights') }}</p>
     <div v-if="club.idclub">
       <v-container v-show="status_consulting">
         <h2>{{ $t('Consulting access rights') }}</h2>
@@ -97,219 +288,10 @@
           <v-btn @click="cancelAccess">{{ $t('Cancel') }}</v-btn>
         </v-row>
       </v-container>
-    </div>
+    </div> -->
 
   </v-container>
 </template>
-<script>
-import Vue from 'vue'
-import { visibility_items, CLUB_STATUS, ROLES } from '@/util/club'
-
-export default {
-
-  name: 'Access',
-
-  data() {
-    return {
-      clubrights: {},
-      clubadmin: {},
-      clubmemberitems: [],
-      interclubadmin: {},
-      interclubcaptain: {},
-      newclubadmin: null,
-      newinterclubadmin: null,
-      newinterclubcaptain: null,
-      roles: ROLES,
-      status: CLUB_STATUS.CONSULTING,
-      visibility_items: [...visibility_items],
-    }
-  },
-
-  props: {
-    bus: Object,
-    club: Object,
-    clubmembers: Array,
-  },
-
-  computed: {
-    logintoken() { return this.$store.state.oldlogin.value },
-    status_consulting() { return this.status == CLUB_STATUS.CONSULTING },
-    status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
-  },
-
-  methods: {
-
-
-    addClubAdmin() {
-      const cm = this.clubmembers.find(m => m.idnumber == this.newclubadmin)
-      this.clubadmin[this.newclubadmin] = cm.merged
-      this.$nextTick(() => this.newclubadmin = null);
-    },
-
-    addInterclubAdmin() {
-      this.interclubadmin[this.newinterclubadmin] = this.clubmembers.find(
-        m => m.idnumber == this.newinterclubadmin).merged
-      this.$nextTick(() => this.newinterclubadmin = null);
-    },
-
-    addInterclubCaptain() {
-      this.interclubcaptain[this.newinterclubcaptain] = this.clubmembers.find(
-        m => m.idnumber == this.newinterclubcaptain).merged
-      this.$nextTick(() => this.newinterclubcaptain = null);
-    },
-
-    cancelAccess() {
-      this.status = CLUB_STATUS.CONSULTING
-      this.get_clubrights(this.club)
-    },
-
-    deleteClubAdmin(m) {
-      // don't delete last member
-      if (Object.keys(this.clubadmin).length == 1) return
-      Vue.delete(this.clubadmin, m)
-    },
-
-    deleteInterclubAdmin(m) {
-      // don't delete last member
-      if (Object.keys(this.interclubadmin).length == 1) return
-      Vue.delete(this.interclubadmin, m)
-    },
-
-    deleteInterclubCaptain(m) {
-      Vue.delete(this.interclubcaptain, m)
-    },
-
-    async get_clubrights() {
-      if (!this.club.id) {
-        this.clubrights = {}
-        return
-      }
-      try {
-        const reply = await this.$api.club.clb_get_club({
-          idclub: this.club.idclub,
-          token: this.logintoken
-        })
-        this.readClubrights(reply.data)
-      } catch (error) {
-        console.log('getting club rights NOK')
-        const reply = error.reply
-        if (reply.status == 401) {
-          this.gotoLogin()
-        }
-        else {
-          console.error('Getting club details failed', reply.data.detail)
-          this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
-        }
-      }
-    },
-
-    gotoLogin() {
-      this.$router.push('/mgmt/login?url=__club__manager')
-    },
-
-    async modifyAccess() {
-      try {
-        const reply = await this.$api.club.verify_club_access({
-          idclub: this.club.idclub,
-          role: "ClubAdmin",
-          token: this.logintoken,
-        })
-        this.status = CLUB_STATUS.MODIFYING
-        this.clubmemberitems = this.clubmembers.map((x) => {
-          return {
-            value: x.idnumber,
-            text: x.merged,
-          }
-        })
-      } catch (error) {
-        const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-        }
-      }
-    },
-
-    readClubrights(details) {
-      details.clubroles.forEach((cr) => {
-        console.log('cr', cr)
-        this.clubrights[cr.nature] = cr.memberlist
-      })
-      this.clubadmin = Object.fromEntries(this.clubrights["ClubAdmin"].map(
-        (x) => {
-          const cm = this.clubmembers.find(m => m.idnumber == x)
-          cm.merged = `${x} ${cm.first_name} ${cm.last_name}` 
-          return [x, cm.merged]
-        }
-      ))
-      this.interclubadmin = Object.fromEntries(this.clubrights["InterclubAdmin"].map(
-        (x) => {
-          const cm = this.clubmembers.find(m => m.idnumber == x)
-          cm.merged = `${x} ${cm.first_name} ${cm.last_name}` 
-          return [x, cm.merged]
-        }
-      ))
-      this.interclubcaptain = Object.fromEntries(this.clubrights["InterclubCaptain"].map(
-        (x) => {
-          const cm = this.clubmembers.find(m => m.idnumber == x)
-          cm.merged = `${x} ${cm.first_name} ${cm.last_name}` 
-          return [x, cm.merged]
-        }
-      ))
-
-    },
-
-    async saveAccess() {
-      try {
-        const reply = await this.$api.club.clb_update_club({
-          idclub: this.club.idclub,
-          clubroles: [
-            {
-              nature: "ClubAdmin",
-              memberlist: Object.keys(this.clubadmin)
-            },
-            {
-              nature: "InterclubAdmin",
-              memberlist: Object.keys(this.interclubadmin)
-            },
-            {
-              nature: "InterclubCaptain",
-              memberlist: Object.keys(this.interclubcaptain)
-            },
-          ],
-          token: this.logintoken,
-        })
-        this.status = CLUB_STATUS.CONSULTING
-        this.$root.$emit('snackbar', { text: 'Club saved' })
-        this.get_clubrights()
-      } catch (error) {
-        const reply = error.response
-        if (reply.status === 401) {
-          this.gotoLogin()
-        }
-        else {
-          console.error('Saving access rights failed', reply.data.detail)
-          this.$root.$emit('snackbar', { text: this.$t('Saving access rights failed') })
-        }
-      }
-    },
-
-    async setupAccess() {
-      await this.get_clubrights()
-    }
-
-  },
-
-  mounted() {
-    this.bus.$on("setupaccess", this.setupAccess)
-  },
-
-}
-</script>
 
 <style scoped>
 .memberselect {

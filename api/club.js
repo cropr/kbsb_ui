@@ -1,37 +1,39 @@
-export default (context) => ({
+import axios from "axios";
+
+export default {
   // mgmt nethods
 
-  async mgmt_add_club(options) {
+  mgmt_add_club: async function (options) {
     const { token, ...options1 } = options;
     console.log("add club", options1, token);
-    const resp = await context.$axios.post("/api/v1/club", options1, {
+    const resp = await axios.post("/api/v1/club", options1, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     return resp;
   },
-  async mgmt_delete_club(options) {
+  mgmt_delete_club: async function (options) {
     const { id, token } = options;
-    const resp = await context.$axios.delete(`/api/v1/club/${id}`, {
+    const resp = await axios.delete(`/api/v1/club/${id}`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     return resp;
   },
-  async mgmt_get_club(options) {
+  mgmt_get_club: async function (options) {
     const { idclub, token } = options;
-    const resp = await context.$axios.get(`/api/v1/club/${idclub}`, {
+    const resp = await axios.get(`/api/v1/club/${idclub}`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     return resp;
   },
-  async mgmt_update_club(options) {
+  mgmt_update_club: async function (options) {
     const { idclub, token, ...options1 } = options;
-    const resp = await context.$axios.put(`/api/v1/club/${idclub}`, options1, {
+    const resp = await axios.put(`/api/v1/club/${idclub}`, options1, {
       headers: {
         Authorization: "Bearer " + token,
       },
@@ -41,66 +43,59 @@ export default (context) => ({
 
   // clb nethods
 
-  async clb_get_club(options) {
+  clb_get_club: async function (options) {
     const { idclub, token } = options;
-    const resp = await context.$axios.get(`/api/v1/c/club/${idclub}`, {
+    const resp = await axios.get(`/api/v1/c/club/${idclub}`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     return resp;
   },
-  async clb_get_clubs(options) {
+  clb_get_clubs: async function (options) {
     const { token } = options;
     console.log("api get_old_clubs", token);
-    const resp = await context.$axios.get("/api/v1/c/clubs", {
+    const resp = await axios.get("/api/v1/c/clubs", {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     return resp;
   },
-  async clb_update_club(options) {
+  clb_update_club: async function (options) {
     const { idclub, token, ...options1 } = options;
-    const resp = await context.$axios.put(
-      `/api/v1/c/club/${idclub}`,
-      options1,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const resp = await axios.put(`/api/v1/c/club/${idclub}`, options1, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return resp;
   },
 
   // anon nethods
 
-  async anon_get_club(options) {
+  anon_get_club: async function (options) {
     const { id } = options;
-    const resp = await context.$axios.get(`/api/v1/a/club/${id}`, {});
+    const resp = await axios.get(`/api/v1/a/club/${id}`, {});
     return resp;
   },
-  async anon_get_clubs(options) {
-    const resp = await context.$axios.get("/api/v1/a/clubs");
+  anon_get_clubs: async function (options) {
+    const resp = await axios.get("/api/v1/a/clubs");
     return resp;
   },
-  async anon_get_csv_clubs(options) {
-    const resp = await context.$axios.get("/api/v1/a/csv/clubs");
+  anon_get_csv_clubs: async function (options) {
+    const resp = await axios.get("/api/v1/a/csv/clubs");
     return resp;
   },
 
   // other
-  async verify_club_access(options) {
+  verify_club_access: async function (options) {
     const { idclub, token, role } = options;
-    const resp = await context.$axios.get(
-      `/api/v1/c/clubs/${idclub}/access/${role}`,
-      {
-        headers: {
-          Authorization: "Bearer " + token,
-        },
-      }
-    );
+    const resp = await axios.get(`/api/v1/c/clubs/${idclub}/access/${role}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
     return resp;
   },
-});
+};

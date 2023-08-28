@@ -19,7 +19,6 @@ const pageoptions = [
 ]
 
 const filteredfiles = computed(()=> {
-  console.log('filter files', files)
   if (!files.value) return []
   if (!filter.value.board && !filter.value.ga) { 
     return files.value

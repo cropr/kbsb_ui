@@ -1,5 +1,7 @@
 import axios from "axios";
 import file from "@/api/file";
+import club from "@/api/club";
+import old from "@/api/old";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
@@ -101,7 +103,9 @@ axios.interceptors.response.use(
 );
 
 const factories = {
+  club,
   file,
+  old,
 };
 
 export default defineNuxtPlugin((nuxtApp) => {

@@ -1,4 +1,4 @@
-export const boardroles = {
+export const BOARDROLES = {
   president: {
     fr: "président",
     en: "president",

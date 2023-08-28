@@ -1,13 +1,15 @@
-export default (context) => ({
-  async login(options) {
-    return await context.$axios.post("/api/v1/old/login", options);
+import axios from "axios";
+
+export default {
+  login: async function (options) {
+    return await axios.post("/api/v1/old/login", options);
   },
-  async get_clubmembers(options) {
+  get_members: async function (options) {
     const { idclub } = options;
-    return await context.$axios.get(`/api/v1/old/clubmembers/${idclub}`);
+    return await axios.get(`/api/v1/old/clubmembers/${idclub}`);
   },
-  async get_member(options) {
+  get_member: async function (options) {
     const { idnumber } = options;
-    return await context.$axios.get(`/api/v1/old/activemember/${idnumber}`);
+    return await axios.get(`/api/v1/old/activemember/${idnumber}`);
   },
-});
+};

@@ -4,15 +4,9 @@
   
 <script>
 
-import { boardroles } from '@/util/club';
+import { BOARDROLES } from '@/util/club';
 
 export default {
-
-  data() {
-    return {
-      boardroles: [],
-    };
-  },
 
   props: {
     fieldname: String
@@ -20,8 +14,8 @@ export default {
 
   computed: {
     i18n_field (){
-      if (this.fieldname in boardroles) {
-        return boardroles[this.fieldname][this.$i18n.locale] || ""
+      if (this.fieldname in BOARDROLES) {
+        return BOARDROLES[this.fieldname][this.$i18n.locale] || ""
       }
       else return ""
     }
