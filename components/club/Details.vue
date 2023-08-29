@@ -1,20 +1,30 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
+import { useIdtokenStore}  from '@/store/idtoken'
+import { storeToRefs } from 'pinia'
+import showdown from 'showdown'
+
 const { localePath } = useLocalePath()
-
-defineProps({
-  club: Object
-})
-
+const { locale } = useI18n()
+const { $backend } = useNuxtApp()
+const props = defineProps(['club'])
 const clubdetails = ref(EMPTY_CLUB)
-let copyclubdetails = null
-const mbr_items =  ref([])
+const helpdialog = ref(false)
 const statuscm = ref(CLUB_STATUS.CONSULTING)
-
-const logintoken = computed(()=> { return this.$store.state.oldlogin.value } )
+const idstore = useIdtokenStore()
+const { token: idtoken } = storeToRefs(idstore)
+const { data: help }  = await useAsyncData('help-login', () => queryContent('/pages/help-club-contact').findOne())
 const status_consulting = computed(() => (statuscm.value == CLUB_STATUS.CONSULTING))
 const status_modifying = computed(() => (statuscm.value == CLUB_STATUS.MODIFYING))
+const mdConverter = new showdown.Converter()
+const ttitle = `title_${locale.value}`
+const tcontent = `content_${locale.value}`
+let copyclubdetails = null
+
+function md(s) { 
+  return  mdConverter.makeHtml(s)
+}
 
 function cancelClub() {
   statuscm.value = CLUB_STATUS.CONSULTING
@@ -22,17 +32,19 @@ function cancelClub() {
 }
 
 async function get_clubdetails() {
-  if (!club.value.id) {
+  if (!props.club.idclub) {
     clubdetails.value = EMPTY_CLUB
     return
   }
   try {
     const reply = await $backend("club", "clb_get_club", {
-      idclub: club.value.idclub,
-      token: logintoken.value
+      idclub: props.club.idclub,
+      token: idtoken.value
     })
     readClubdetails(reply.data)
   } catch (error) {
+    console.log('failed get  club details', error)
+    const reply = error.response
     switch (reply.status) {
       case 401:
         gotoLogin()
@@ -45,19 +57,20 @@ async function get_clubdetails() {
         console.error('Getting clubs failed', reply.data.detail)
         // this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
     }
+    return
   }
 }
 
 function gotoLogin() {
-  navigateTo(localePath('/mgmt/login?url=__clubs__manager'))
+  navigateTo(localePath('/tools/login?url=__clubs__manager'))
 }
 
 async function modifyClub() {
   try {
     const reply = await $backend("club", "verify_club_access", {
-      idclub: club.value.idclub,
+      idclub: props.club.idclub,
       role: "ClubAdmin",
-      token: logintoken.value,
+      token: idtoken.value,
     })
     statuscm.value = CLUB_STATUS.MODIFYING
   } catch (error) {
@@ -89,8 +102,8 @@ async function saveClub() {
   try {
     const reply = await $backend("club", "clb_update_club",{
       ...update,
-      idclub: clubdetails.value.idclub,
-      token: logintoken.value,
+      idclub: props.club.idclub,
+      token: idtoken.value,
     })
     statuscm.value = CLUB_STATUS.CONSULTING
     // this.$root.$emit('snackbar', { text: this.$t('Club saved') })
@@ -110,10 +123,13 @@ async function saveClub() {
   }
 }
 
-async function setupDetails(){
-  console.log("running setuoDetails")
-  await get_clubdetails()
+function setupDetails(){
+  console.log("running setupDetails")
+  nextTick(() => get_clubdetails())
 }
+
+defineExpose({setupDetails})
+
 
 </script>
 
@@ -162,15 +178,9 @@ async function setupDetails(){
           </v-col>                      
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card>
-              <v-card-title>
-                <v-layout class="mt-2">
-                  <v-flex grow>
-                    <h4>{{ $t('Contact') }}</h4>
-                  </v-flex>
-                  <v-flex>
-                    <help-popup file="club_contact" />
-                  </v-flex>
-                </v-layout>
+              <v-card-title class="mt-2">
+                <v-btn icon="mdi-help" color="green" size="small" class="float-right" @click="helpdialog = true"/>                
+                <h4>{{ $t('Contact') }}</h4>
               </v-card-title>
               <v-card-text>
                 <div><span class="fieldname">{{ $t('Main email address') }}</span>: {{
@@ -283,6 +293,16 @@ async function setupDetails(){
         </v-row>
       </v-container>
     </div>
+    <v-dialog v-model="helpdialog" width="20em">
+      <ContentRenderer :value="help">
+        <v-card>
+          <v-card-title v-html="help[ttitle] ? help[ttitle] : help.title" />
+          <v-divider></v-divider>
+          <v-card-text class="pa-3 ma-1 markdowncontent" v-html="md(help[tcontent])"> 
+          </v-card-text>
+        </v-card>
+      </ContentRenderer>
+    </v-dialog> 
   </v-container>
 </template>
 

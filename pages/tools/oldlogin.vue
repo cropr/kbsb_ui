@@ -52,18 +52,7 @@ async function dologin() {
               mdi-account
             </v-icon>
             <label class="headline ml-3">{{ $t('Sign in') }}</label>
-            <v-btn icon="" color="green" class="float-right"><b>?</b>
-              <v-dialog v-model="helpdialog" width="20em"  activator="parent">
-                <ContentRenderer :value="help">
-                  <v-card>
-                    <v-card-title v-html="help[ttitle] ? help[ttitle] : help.title" />
-                    <v-divider></v-divider>
-                    <v-card-text class="pt-3 markdowncontent" v-html="md(help[tcontent])"> 
-                    </v-card-text>
-                  </v-card>
-                </ContentRenderer>
-              </v-dialog>            
-            </v-btn>
+            <v-btn icon="mdi-help" color="green" class="float-right" @click="helpdialog = true" />           
           </v-card-title>
           <v-divider />
           <v-card-text>
@@ -79,6 +68,16 @@ async function dologin() {
         </v-card>
       </v-col>
     </v-row>
+    <v-dialog v-model="helpdialog" width="20em">
+      <ContentRenderer :value="help">
+        <v-card>
+          <v-card-title v-html="help[ttitle] ? help[ttitle] : help.title" />
+          <v-divider></v-divider>
+          <v-card-text class="pa-3 ma-1 markdowncontent" v-html="md(help[tcontent])"> 
+          </v-card-text>
+        </v-card>
+      </ContentRenderer>
+    </v-dialog> 
   </v-container>
 </template>
 
