@@ -18,9 +18,9 @@ text_fr: |-
   En raison de problèmes techniques et de la soumission tardive des informations par certains clubs, nous avons manqué la date limite du 20 août.
 
   De plus, le trésorier est inactif pour des raisons personnelles et **plusieurs factures de tout genre** (interclubs de la saison écoulée, interclubs de la saison à venir, traitement Elo FIDE de toute la saison 2022-2023) n'ont toujours pas été établies. 
-  Pour ces raisons,** la date limite de paiement** (31 août) sera bien entendu **reportée**. Nous demandons aux clubs d'attendre leur paiement jusqu'à ce qu’ils reçoivent une demande de paiement.
+  Pour ces raisons, **la date limite de paiement** (31 août) sera bien entendu **reportée**. Nous demandons aux clubs d'attendre leur paiement jusqu'à ce qu’ils reçoivent une demande de paiement.
 text_de: 'Dieser Artikel ist nicht auf Deutsch verfügbar'
 text_en: 'This article is not available in English'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1693323381
+updated_at: 1693330247
 ---
