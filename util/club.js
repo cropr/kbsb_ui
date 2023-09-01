@@ -59,6 +59,12 @@ export const BOARDROLES = {
     de: "Pressesprecher",
     nl: "persverantwoordelijke",
   },
+  material_manager: {
+    fr: "gestionnaire de matérial",
+    en: "material manager",
+    de: "Materialmanager",
+    nl: "materiaalverantwoordelijke",
+  },
 };
 
 export const CLUB_STATUS = {
@@ -77,12 +83,13 @@ export const EMPTY_BOARD = {
   webmaster: { idnumber: 0 },
   bar_manager: { idnumber: 0 },
   press_officer: { idnumber: 0 },
+  material_manager: { idnumber: 0 },
 };
 
 export const visibility_items = [
-  { text: "Hidden", value: "HIDDEN" },
-  { text: "Club", value: "CLUB" },
-  { text: "Public", value: "PUBLIC" },
+  { title: "Hidden", value: "HIDDEN" },
+  { title: "Club", value: "CLUB" },
+  { title: "Public", value: "PUBLIC" },
 ];
 
 export const EMPTY_CLUB = {

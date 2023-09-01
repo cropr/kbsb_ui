@@ -6,99 +6,42 @@ import old from "@/api/old";
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
 
+const error_messages = {
+  600: "Connectiom issue: server unreachable",
+  700: "You triggered a bug.  Please inform the webmaster.",
+  WrongUsernamePasswordCombination:
+    "Wrong combination of username and password",
+};
+
 axios.interceptors.response.use(
   (response) => {
-    return Promise.resolve(response);
+    return Promise.resolve({
+      data: response.data,
+      headers: response.headers,
+    });
   },
   (error) => {
-    //Log the user out if the JWT token is expired
-    // if (error) {
-    //   const originalRequest = error.config;
-    //   if (
-    //     error.hasOwnProperty("response") &&
-    //     error.response.hasOwnProperty("status")
-    //   ) {
-    //     if (error.response.status === 403 && !originalRequest._retry) {
-    //       originalRequest._retry = true;
-    //       appStore.logout();
-    //     } else if (error.response.status === 440) {
-    //       //Login timeout
-    //       appStore.logout();
-    //       router.push("/");
-    //     }
-    //   }
-    // }
-
-    // //Setup custom error message
-    // if (
-    //   !error.hasOwnProperty("response") ||
-    //   (error.response.status !== 403 && error.response.status !== 440)
-    // ) {
-    //   let message = "An unknown error occured.";
-    //   if (typeof error !== "undefined") {
-    //     if (error.hasOwnProperty("message")) {
-    //       if (error.message == "Network Error")
-    //         message =
-    //           "An unknow server error occured. Our databases might be momentarily offline.";
-    //       else message = error.message;
-    //     }
-
-    //     if (error.hasOwnProperty("response")) {
-    //       //Deal with validation errors
-    //       if (error.response.status == 422) {
-    //         error.response.data.detail.forEach((error) => {
-    //           error.loc.shift();
-    //           console.log("422 Error", error);
-    //           if (error.loc.includes("body"))
-    //             error.loc.splice(error.loc.indexOf("body"), 1);
-    //           if (error.loc.includes("data"))
-    //             error.loc.splice(error.loc.indexOf("data"), 1);
-    //           if (error.loc.includes("user"))
-    //             error.loc.splice(error.loc.indexOf("user"), 1);
-    //           if (error.loc.includes("counter"))
-    //             error.loc.splice(error.loc.indexOf("counter"), 1);
-    //           if (error.loc.includes("__root__"))
-    //             error.loc.splice(error.loc.indexOf("__root__"), 1);
-    //           if (error.loc.includes("zone_name")) {
-    //             error.loc = ["zone_name"];
-    //           }
-    //           if (error.loc.includes("room_name")) {
-    //             error.loc = ["room_name"];
-    //           }
-    //           if (error.loc.includes("room_type_name")) {
-    //             error.loc = ["room_type"];
-    //           }
-    //           console.log("Validation error", error);
-
-    //           if (error.type == "type_error" || error.type == "value_error") {
-    //             app.config.globalProperties.$toast.error(error.msg);
-    //           } else {
-    //             appStore.addError({
-    //               id: error.loc.join("."),
-    //               error: error.msg,
-    //             });
-    //             message =
-    //               "We have not been able to validate the request sent to the server.";
-    //           }
-    //         });
-    //       } else if (error.response.hasOwnProperty("data")) {
-    //         if (
-    //           error.response.data.hasOwnProperty("message") &&
-    //           error.response.data.message.length > 0
-    //         ) {
-    //           message = error.response.data.message;
-    //         } else if (
-    //           error.response.data.hasOwnProperty("detail") &&
-    //           error.response.data.detail.length > 0
-    //         ) {
-    //           message = error.response.data.detail;
-    //         }
-    //       }
-    //     }
-    //   }
-    // }
-
-    return Promise.reject(error);
+    if (error.response) {
+      const detail = error.response.data.detail;
+      console.warn("Axios", error.response.status, detail, error.request);
+      return Promise.reject({
+        code: error.response.status,
+        headers: error.response.headers,
+        message: detail ? error_messages[detail] : "Unknown error",
+      });
+    }
+    if (error.request) {
+      console.warn("Axios", "No response received", error.request);
+      return Promise.reject({
+        code: 600,
+        message: error_messages[600],
+      });
+    }
+    console.warn("Axios", "No request sent", error.message);
+    return Promise.reject({
+      code: 700,
+      message: error_messages[700],
+    });
   }
 );
 

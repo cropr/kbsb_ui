@@ -3,12 +3,14 @@ import { ref, computed, nextTick } from 'vue'
 import { BOARDROLES, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
-import showdown from 'showdown'
 
 const { localePath } = useLocalePath()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { $backend } = useNuxtApp()
-const props = defineProps(['club', 'clubmembers'])
+const props = defineProps({
+  club: Object,
+  clubmembers: Array,
+})
 const boardmembers = ref(EMPTY_BOARD)
 const boardroles =  ref(BOARDROLES)
 const clubdetails = ref(EMPTY_CLUB)
@@ -17,6 +19,10 @@ const { token: idtoken } = storeToRefs(idstore)
 const statusc = ref(CLUB_STATUS.CONSULTING)
 const status_consulting = computed(() => (statusc.value == CLUB_STATUS.CONSULTING))
 const status_modifying = computed(() => (statusc.value == CLUB_STATUS.MODIFYING))
+const t_vis_items = computed(()=>  visibility_items.map((x) =>({
+  title: t(x.title),
+  value: x.value
+})))
 let copyclubdetails = null
 
 function cancelClub() {
@@ -25,29 +31,29 @@ function cancelClub() {
 }
 
 async function get_clubdetails() {
-  // if (!props.club.idclub) {
-  //   clubdetails.value = EMPTY_CLUB
-  //   return
-  // }
-  // try {
-  //   const reply = await $backend("club","clb_get_club" ,{
-  //     idclub: props.club.idclub,
-  //     token: idtoken.value
-  //   })
-  //   readClubdetails(reply.data)
-  // } catch (error) {
-  //   switch (reply.status) {
-  //     case 401:
-  //       gotoLogin()
-  //       break
-  //     case 403:
-  //       // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-  //       break
-  //     default:
-  //       console.error('Getting clubs failed', reply.data.detail)
-  //       // this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
-  //   }
-  // }
+  if (!props.club.idclub) {
+    clubdetails.value = EMPTY_CLUB
+    return
+  }
+  try {
+    const reply = await $backend("club","clb_get_club" ,{
+      idclub: props.club.idclub,
+      token: idtoken.value
+    })
+    readClubdetails(reply.data)
+  } catch (error) {
+    switch (error.code) {
+      case 401:
+        gotoLogin()
+        break
+      case 403:
+        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
+        break
+      default:
+        console.error('Getting clubs failed', error.message.detail)
+        // this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
+    }
+  }
 }
 
 function gotoLogin() {
@@ -73,6 +79,7 @@ async function modifyClub() {
         // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
     }
   }
+  console.log('lclubmembers', lclubmembers.value)
 }
 
 function readClubdetails(details) {
@@ -99,21 +106,27 @@ async function saveClub() {
     // this.$root.$emit('snackbar', { text: this.$t('Club saved') })
   } catch (error) {
     const reply = error.response
-    switch (reply.status) {
-      case 401:
-        gotoLogin()
-        break
-      case 403:
-        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-        break
-      default:
-        console.error('Getting clubs failed', reply.data.detail)
-        // this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
+    if (reply.status ) {
+      switch (reply.status) {
+        case 401:
+          gotoLogin()
+          break
+        case 403:
+          // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
+          break
+        default:
+          console.error('Getting clubs failed', reply.data.detail)
+          // this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
+      }
+    }
+    else {
+      console.error('Failed ', error)
     }
   }
 }
 
 function setupBoard(){
+  console.log('running setupBoard')
   get_clubdetails()
 }
 
@@ -150,7 +163,7 @@ defineExpose({setupBoard})
   <v-container>
     <p v-if="!club.idclub">{{ $t('Select a club to view the club details') }}</p>
     <div v-if="club.idclub">
-      <v-container v-show="status_consulting">
+      <v-container v-if="status_consulting">
         <h2>{{ $t('Consulting board members') }}</h2>
         <v-row>
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(bm, f) in boardmembers" :key="f">
@@ -170,7 +183,7 @@ defineExpose({setupBoard})
           <v-btn @click="modifyClub">{{ $t('Modify') }}</v-btn>
         </v-row>        
       </v-container>
-      <v-container v-show="status_modifying">
+      <v-container v-if="status_modifying">
         <h2>{{ $t('Modify board members') }}</h2>
         <v-row>
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(bm, f) in boardmembers" :key="f">
@@ -179,14 +192,14 @@ defineExpose({setupBoard})
                 <tr-fieldname :fieldname="f" />
               </v-card-title>
               <v-card-text>
-                <v-autocomplete v-model="boardmembers[f].idnumber" :items="clubmembers" item-text="merged"
+                <v-autocomplete v-model="boardmembers[f].idnumber" :items="clubmembers" item-title="merged"
                   item-value="idnumber" color="green" clearable  @update:model-value="updateboard(f)">
                 </v-autocomplete>
                 <v-text-field label="Email" v-model="boardmembers[f].email"></v-text-field>
-                <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="green"
+                <v-select v-model="boardmembers[f].email_visibility" :items="t_vis_items" color="green"
                   @change="updateboard(f)" label="Email visibility" />
                 <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
-                <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="green"
+                <v-select v-model="boardmembers[f].mobile_visibility" :items="t_vis_items" color="green"
                   @change="updateboard(f)" label="Mobile visibility" />
               </v-card-text>
             </v-card>

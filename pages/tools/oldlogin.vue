@@ -4,7 +4,7 @@ import { useRouter, useRoute } from 'vue-router'
 import { useIdtokenStore}  from '@/store/idtoken'
 import showdown from 'showdown'
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const localePath = useLocalePath()
 const { $backend } = useNuxtApp()
 const router = useRouter() 
@@ -17,6 +17,8 @@ const tcontent = `content_${locale.value}`
 const { data: help }  = await useAsyncData('help-login', () => queryContent('/pages/help-login').findOne())
 const helpdialog = ref(false)
 const login = ref({})
+const snackbar = ref(null)
+const errortext = ref("")
 const url =  route.query.url
 const mdConverter = new showdown.Converter()
 function md(s) { return  mdConverter.makeHtml(s)}
@@ -32,9 +34,9 @@ async function dologin() {
     idstore.updateToken(reply.data)
   } 
   catch(error) {
-    const reply = error.response
-    console.error('Login failed', reply)
-    // TODO snackbar
+    console.error('Login failed', error)
+    errortext.value = t(error.message)
+    snackbar.value = true
     return
   }
   console.log('goint to ', returnUrl)
@@ -43,42 +45,47 @@ async function dologin() {
 
 </script>
 <template>
-  <v-container>
-    <v-row align="start">
-      <v-col cols="12" md="6" offset-md="3" lg="6" offset-lg="3">
-        <v-card>
-          <v-card-title>
-            <v-icon large>
+  <VContainer>
+    <VRow align="start">
+      <VCol cols="12" md="6" offset-md="3" lg="6" offset-lg="3">
+        <VCard>
+          <VCardTitle>
+            <VIcon large>
               mdi-account
-            </v-icon>
+            </VIcon>
             <label class="headline ml-3">{{ $t('Sign in') }}</label>
-            <v-btn icon="mdi-help" color="green" class="float-right" @click="helpdialog = true" />           
-          </v-card-title>
-          <v-divider />
-          <v-card-text>
-            <v-text-field v-model="login.idnumber" :label="$t('ID number')" />
-            <v-text-field v-model="login.password" xs="12" lg="6" :label="$t('Password')" type="password" />
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer />
-            <v-btn @click="dologin()">
+            <VBtn icon="mdi-help" color="green" class="float-right" @click="helpdialog = true" />           
+          </VCardTitle>
+          <VDivider />
+          <VCardText>
+            <VTextField v-model="login.idnumber" :label="$t('ID number')" />
+            <VTextField v-model="login.password" xs="12" lg="6" :label="$t('Password')" type="password" />
+          </VCardText>
+          <VCardActions>
+            <VSpacer />
+            <VBtn @click="dologin()">
               {{ $t('Submit') }}
-            </v-btn>
-          </v-card-actions>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-dialog v-model="helpdialog" width="20em">
+            </VBtn>
+          </VCardActions>
+        </VCard>
+      </VCol>
+    </VRow>
+    <VDialog v-model="helpdialog" width="20em">
       <ContentRenderer :value="help">
-        <v-card>
-          <v-card-title v-html="help[ttitle] ? help[ttitle] : help.title" />
-          <v-divider></v-divider>
-          <v-card-text class="pa-3 ma-1 markdowncontent" v-html="md(help[tcontent])"> 
-          </v-card-text>
-        </v-card>
+        <VCard>
+          <VCardTitle v-html="help[ttitle] ? help[ttitle] : help.title" />
+          <VDivider />
+          <VCardText class="pa-3 ma-1 markdowncontent" v-html="md(help[tcontent])" /> 
+        </VCard>
       </ContentRenderer>
-    </v-dialog> 
-  </v-container>
+    </VDialog>
+    <VSnackbar v-model="snackbar" timeout="6000">
+      {{ errortext }}
+      <template v-slot:actions>
+        <v-btn color="red-lighten-2" variant="text" @click="snackbar = false" icon="mdi-close" />
+      </template>
+    </VSnackbar>     
+  </VContainer>
 </template>
 
 

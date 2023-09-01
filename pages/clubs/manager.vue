@@ -19,6 +19,7 @@ const waitingdialog = ref(false)
 const board = ref(null)
 const detail = ref(null)
 const access = ref(null)
+const tab = ref(null)
 
 function checkAuth() {
   if (!idtoken.value) {
@@ -27,12 +28,10 @@ function checkAuth() {
 }
 
 async function getClubs() {
-  console.log('getting clubs')
   waitingdialog.value = true
   try {
     const reply = await $backend("club","anon_get_clubs", {})
     waitingdialog.value = false
-    console.log('getting club OK', reply)        
     clubs.value = reply.data.clubs
     clubs.value.forEach(p => {
       p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
@@ -95,11 +94,12 @@ async function selectclub() {
         activeclub.value = { ...EMPTY_CLUB, ...c }
       }
     })
+    getClubMembers() 
     nextTick(() => {
       detail.value.setupDetails()
       board.value.setupBoard()
+      access.value.setupAccess()
     })
-    getClubMembers()   
   } catch (error) {
       console.error('Getting clubs failed', error)
       // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
