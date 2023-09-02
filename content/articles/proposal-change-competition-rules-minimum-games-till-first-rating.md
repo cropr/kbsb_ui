@@ -19,7 +19,7 @@ text_nl: |-
   - klasseren we vanaf dat moment alle spelers zodra ze 5 officiële partijen tegen geklasseerde spelers speelden, steeds bij het volgende klassement
 
   # Voorstel wijziging wedstrijdreglement artikel 10 - klassering van de spelers
-  10.a (...) Elke aangesloten speler die ~~20~~ **5** partijen betwistte met geklasseerde spelers, krijgt een quotering (...)
+  10.a (...) Elke aangesloten speler die <s>20</s> **5** partijen betwistte met geklasseerde spelers, krijgt een quotering (...)
 
   10.e. Formule voor het berekenen van de ~~voorlopige~~ **eerste** quotering :
   Zij wordt uitgedrukt in de formule:  R = Rc + D(P), waarin:
@@ -99,5 +99,5 @@ text_en: |-
   Questions or comments can always be sent to the board, or directly to Steven Bellens (Rating officer KBSB):
   - [steven.bellens@frbe-kbsb-ksb.be](mailto:steven.bellens@frbe-kbsb-ksb.be)
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1693664892
+updated_at: 1693666885
 ---
