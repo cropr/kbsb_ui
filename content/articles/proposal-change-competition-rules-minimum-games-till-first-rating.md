@@ -21,14 +21,14 @@ text_nl: |-
   # Voorstel wijziging wedstrijdreglement artikel 10 - klassering van de spelers
   10.a (...) Elke aangesloten speler die <s>20</s> **5** partijen betwistte met geklasseerde spelers, krijgt een quotering (...)
 
-  10.e. Formule voor het berekenen van de ~~voorlopige~~ **eerste** quotering :
+  10.e. Formule voor het berekenen van de <s>voorlopige</s> **eerste** quotering :
   Zij wordt uitgedrukt in de formule:  R = Rc + D(P), waarin:
-      R = ~~voorlopige~~ **eerste** quotering
+      R = <s>voorlopige</s> **eerste** quotering
       Rc = gemiddelde waarde van de tegenstrevers
       D(P) = ratingverschil van de behaalde score uitgedrukt in %
-  ~~Deze voorlopige quotering is van toepassing zolang een speler geen twintig partijen gespeeld heeft tegen gequoteerde tegenstrevers. Een eerste voorlopige quotering wordt berekend nadat een speler tien partijen gespeeld heeft tegen gequoteerde spelers.~~
+  <s>Deze voorlopige quotering is van toepassing zolang een speler geen twintig partijen gespeeld heeft tegen gequoteerde tegenstrevers. Een eerste voorlopige quotering wordt berekend nadat een speler tien partijen gespeeld heeft tegen gequoteerde spelers.</s>
 
-  10.f.2 Elke speler die na ~~20~~ **5** partijen geen 1150 punten bereikt, krijgt automatisch een quotering van 1150 punten.
+  10.f.2 Elke speler die na <s>20</s> **5** partijen geen 1150 punten bereikt, krijgt automatisch een quotering van 1150 punten.
 
   # Implementatie & effecten
   Bij goedkeuring treedt deze wijziging in werking op 1 januari 2024. Op dat ogenblik zijn er ook neveneffecten die gekend horen te zijn, met name wanneer u als geklasseerde speler tegen een NC-speler speelt in de periode oktober - december 2023.
@@ -53,17 +53,17 @@ text_fr: |-
 
   # Proposition de modification du règlement de la compétition article 10 - classement des joueurs
 
-  10.a (...) Tout joueur affilié, ayant joué ~~20~~ **5** parties avec des joueurs classés,  reçoit une cote (...)
+  10.a (...) Tout joueur affilié, ayant joué <s>20</s> **5** parties avec des joueurs classés,  reçoit une cote (...)
 
-  10.e. Formule d'établissement de la **première** cote ~~provisoire~~ :
+  10.e. Formule d'établissement de la **première** cote <s>provisoire</s> :
   Elle est exprimée par la formule R = Rc + D(P) où :
-      R = **première** cote ~~provisoire~~.
+      R = **première** cote <s>provisoire</s>.
       Rc = valeur moyenne des adversaires.
       D(P) = la différence de cote extraite du tableau pour le score obtenu exprimé en %.
-  ~~Cette cote provisoire est d'application tant qu'un joueur n'a pas disputé 20 parties avec des joueurs cotés. Une première cote provisoire est établie après dix parties disputées avec des joueurs cotés.~~
+  <s>Cette cote provisoire est d'application tant qu'un joueur n'a pas disputé 20 parties avec des joueurs cotés. Une première cote provisoire est établie après dix parties disputées avec des joueurs cotés.</s>
 
 
-  10.f.2 Tout joueur qui, après ~~20~~ **5** parties, n'obtient pas 1150 pts se voit automatiquement donner une cote de 1150.
+  10.f.2 Tout joueur qui, après <s>20</s> **5** parties, n'obtient pas 1150 pts se voit automatiquement donner une cote de 1150.
 
   # Mise en œuvre et effets
   Lorsque cette modification sera approuvée, elle entrera en vigueur le 1er janvier 2024. À ce moment-là, il y aura également des effets secondaires qui doivent être connus, en particulier lorsque vous jouez contre un joueur NC en tant que joueur classé entre octobre et décembre 2023.
@@ -99,5 +99,5 @@ text_en: |-
   Questions or comments can always be sent to the board, or directly to Steven Bellens (Rating officer KBSB):
   - [steven.bellens@frbe-kbsb-ksb.be](mailto:steven.bellens@frbe-kbsb-ksb.be)
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1693666885
+updated_at: 1693677060
 ---
