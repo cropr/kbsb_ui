@@ -38,18 +38,18 @@ text_nl: |-
 
   Vragen of opmerkingen kunnen steeds gestuurd worden aan het bestuur, of rechtstreeks aan Steven Bellens (Rating officer KBSB):
   - [steven.bellens@frbe-kbsb-ksb.be](mailto:steven.bellens@frbe-kbsb-ksb.be)
-title_fr: 'Proposition de modification des règles de compétition pour un nombre minimum de partis'
-intro_fr: "Nous mettrons à l'ordre du jour de la prochaine Assemblée Générale une proposition de modification du règlement du concours. Nous suggérons de calculer le premier classement déjà après un minimum de 5 partis contre des adversaires classés. Cela contraste avec le minimum actuel de 20 partis."
+title_fr: 'Proposition de modification des règles de compétition pour un nombre minimum de parties'
+intro_fr: "Nous mettrons à l'ordre du jour de la prochaine Assemblée Générale une proposition de modification du règlement des tournois. Nous suggérons de calculer le premier classement déjà après un minimum de 5 parties contre des adversaires classés. Cela contraste avec le minimum actuel de 20 parties."
 text_fr: |-
   # Situation
 
-  De nombreux (jeunes) joueurs ont besoin d’une très longue période avant d’obtenir leur premier classement officiel. Il y a le fait que beaucoup jouent les uns contre les autres, mais en raison du manque de joueurs classés dans le groupe, ils ne construisent pas de partis pour calculer leur classement :
-  - En juillet 2023, il y avait 5150 joueurs dans la base de données avec un nombre de jeux ≠ 0 et ≤ 20
-  - En juillet 2023, il y avait 2895 joueurs dans la base de données avec un nombre de jeux ≥ 5 et ≤ 20
+  De nombreux (jeunes) joueurs ont besoin d’une très longue période avant d’obtenir leur premier classement officiel. Il y a le fait que beaucoup jouent les uns contre les autres, mais en raison du manque de joueurs classés dans le groupe, ils ne construisent pas de parties pour calculer leur classement :
+  - En juillet 2023, il y avait 5150 joueurs dans la base de données avec un nombre de parties ≠ 0 et ≤ 20
+  - En juillet 2023, il y avait 2895 joueurs dans la base de données avec un nombre de parties ≥ 5 et ≤ 20
 
   Cette proposition vise à donner à ces nouveaux joueurs leur premier classement beaucoup plus rapidement. Si cette proposition est approuvée :
-  - avec le classement du 1er janvier 2024, nous classons immédiatement tous les joueurs ayant un nombre de partis ≥ 5 et ≤ 20 en fonction de leur historique
-  - à partir de ce moment, nous classerons tous les joueurs dès qu'ils auront joué 5 partis officiels contre des joueurs classés, toujours avec le classement suivant
+  - Lors du 1er janvier 2024, nous classons immédiatement tous les joueurs ayant un nombre de parties ≥ 5 et ≤ 20 en fonction de leur historique
+  - à partir de ce moment, nous classerons tous les joueurs dès qu'ils auront joué 5 parties officielles contre des joueurs classés, toujours lors du classement suivant
 
   # Proposition de modification du règlement de la compétition article 10 - classement des joueurs
 
@@ -62,15 +62,13 @@ text_fr: |-
       D(P) = la différence de cote extraite du tableau pour le score obtenu exprimé en %.
   <s>Cette cote provisoire est d'application tant qu'un joueur n'a pas disputé 20 parties avec des joueurs cotés. Une première cote provisoire est établie après dix parties disputées avec des joueurs cotés.</s>
 
-
   10.f.2 Tout joueur qui, après <s>20</s> **5** parties, n'obtient pas 1150 pts se voit automatiquement donner une cote de 1150.
 
   # Mise en œuvre et effets
-  Lorsque cette modification sera approuvée, elle entrera en vigueur le 1er janvier 2024. À ce moment-là, il y aura également des effets secondaires qui doivent être connus, en particulier lorsque vous jouez contre un joueur NC en tant que joueur classé entre octobre et décembre 2023.
+  Lorsque cette modification sera approuvée, elle entrera en vigueur le 1er janvier 2024. À ce moment-là, il y aura également des effets secondaires qui doivent être connus, en particulier lorsque vous jouez contre un joueur NC en tant que joueur classé entre octobre et décembre 2023. 
   En effet, dès que les joueurs NC sont classés, nous prenons en compte leurs parties du dernier trimestre dans le classement de leurs adversaires. Ce n'est pas une modification en soi, mais ce sera beaucoup plus courant en janvier car nous classons une grande groupe de joueurs NC en une seule fois.
 
   # Contact
-
   Les questions ou commentaires peuvent toujours être envoyés au conseil d'administration, ou directement à Steven Bellens (Rating Officer KBSB):
   - [steven.bellens@frbe-kbsb-ksb.be](mailto:steven.bellens@frbe-kbsb-ksb.be)
 text_de: 'Dieser Artikel ist nicht auf Deutsch verfügbar'
@@ -99,5 +97,5 @@ text_en: |-
   Questions or comments can always be sent to the board, or directly to Steven Bellens (Rating officer KBSB):
   - [steven.bellens@frbe-kbsb-ksb.be](mailto:steven.bellens@frbe-kbsb-ksb.be)
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
-updated_at: 1693677060
+updated_at: 1693761224
 ---
