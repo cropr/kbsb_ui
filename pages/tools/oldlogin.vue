@@ -82,7 +82,7 @@ async function dologin() {
     <VSnackbar v-model="snackbar" timeout="6000">
       {{ errortext }}
       <template v-slot:actions>
-        <v-btn color="red-lighten-2" variant="text" @click="snackbar = false" icon="mdi-close" />
+        <v-btn color="green-lighten-2" variant="text" @click="snackbar = false" icon="mdi-close" />
       </template>
     </VSnackbar>     
   </VContainer>

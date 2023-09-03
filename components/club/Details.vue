@@ -6,7 +6,7 @@ import { storeToRefs } from 'pinia'
 import showdown from 'showdown'
 
 const { localePath } = useLocalePath()
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { $backend } = useNuxtApp()
 const props = defineProps(['club'])
 const clubdetails = ref(EMPTY_CLUB)
@@ -21,6 +21,7 @@ const mdConverter = new showdown.Converter()
 const ttitle = `title_${locale.value}`
 const tcontent = `content_${locale.value}`
 let copyclubdetails = null
+const emit = defineEmits(['displaySnackbar', 'updateClub'])
 
 function md(s) { 
   return  mdConverter.makeHtml(s)
@@ -28,67 +29,22 @@ function md(s) {
 
 function cancelClub() {
   statuscm.value = CLUB_STATUS.CONSULTING
-  get_clubdetails()
+  emit('updateClub')
 }
 
-async function get_clubdetails() {
-  if (!props.club.idclub) {
-    clubdetails.value = EMPTY_CLUB
-    return
-  }
-  try {
-    const reply = await $backend("club", "clb_get_club", {
-      idclub: props.club.idclub,
-      token: idtoken.value
-    })
-    readClubdetails(reply.data)
-  } catch (error) {
-    console.log('failed get  club details', error)
-    const reply = error.response
-    switch (reply.status) {
-      case 401:
-        gotoLogin()
-        break
-      case 403:
-        console.error('Permission denied', reply.data.detail)
-        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-        break
-      default:
-        console.error('Getting clubs failed', reply.data.detail)
-        // this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
-    }
-    return
-  }
-}
 
 function gotoLogin() {
   navigateTo(localePath('/tools/login?url=__clubs__manager'))
 }
 
 async function modifyClub() {
-  try {
-    const reply = await $backend("club", "verify_club_access", {
-      idclub: props.club.idclub,
-      role: "ClubAdmin",
-      token: idtoken.value,
-    })
-    statuscm.value = CLUB_STATUS.MODIFYING
-  } catch (error) {
-    const reply = error.response
-    switch (reply.status) {
-      case 401:
-        gotoLogin()
-        break
-      default:
-        console.error('Getting clubs failed', reply.data.detail)
-        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-    }
-  }
+  statuscm.value = CLUB_STATUS.MODIFYING
 }
 
-function readClubdetails(details) {
-  clubdetails.value = { ...EMPTY_CLUB, ...details }
-  copyclubdetails = JSON.parse(JSON.stringify(details))
+function readClubDetails() {
+  console.log('details.clubdetails', props.club)
+  clubdetails.value = { ...EMPTY_CLUB, ...props.club }
+  copyclubdetails = JSON.parse(JSON.stringify(props.club))
 }
 
 async function saveClub() {
@@ -106,29 +62,17 @@ async function saveClub() {
       token: idtoken.value,
     })
     statuscm.value = CLUB_STATUS.CONSULTING
-    // this.$root.$emit('snackbar', { text: this.$t('Club saved') })
+    emit('displaySnackbar', t('Club saved'))
+    emit('updateClub')
   } catch (error) {
-    const reply = error.response
-    switch (reply.status) {
-      case 401:
-        this.gotoLogin()
-        break
-      case 403:
-        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-        break
-      default:
-        console.error('Getting clubs failed', reply.data.detail)
-        // this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
-    }
+    if (error.code == 401) gotoLogin()
+    emit('displaySnackbar', t(error.message))
+    return
   }
 }
 
-function setupDetails(){
-  console.log("running setupDetails")
-  nextTick(() => get_clubdetails())
-}
 
-defineExpose({setupDetails})
+defineExpose({readClubDetails})
 
 
 </script>

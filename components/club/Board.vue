@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed } from 'vue'
 import { BOARDROLES, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
@@ -7,53 +7,24 @@ import { storeToRefs } from 'pinia'
 const { localePath } = useLocalePath()
 const { locale, t } = useI18n()
 const { $backend } = useNuxtApp()
-const props = defineProps({
-  club: Object,
-  clubmembers: Array,
-})
+const props = defineProps(["club","clubmembers"])
 const boardmembers = ref(EMPTY_BOARD)
-const boardroles =  ref(BOARDROLES)
 const clubdetails = ref(EMPTY_CLUB)
 const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
-const statusc = ref(CLUB_STATUS.CONSULTING)
-const status_consulting = computed(() => (statusc.value == CLUB_STATUS.CONSULTING))
-const status_modifying = computed(() => (statusc.value == CLUB_STATUS.MODIFYING))
+const statuscm = ref(CLUB_STATUS.CONSULTING)
+const status_consulting = computed(() => (statuscm.value == CLUB_STATUS.CONSULTING))
+const status_modifying = computed(() => (statuscm.value == CLUB_STATUS.MODIFYING))
 const t_vis_items = computed(()=>  visibility_items.map((x) =>({
   title: t(x.title),
   value: x.value
 })))
 let copyclubdetails = null
+const emit = defineEmits(['displaySnackbar', 'updateClub'])
 
 function cancelClub() {
-  statusc.value = CLUB_STATUS.CONSULTING
-  get_clubdetails()
-}
-
-async function get_clubdetails() {
-  if (!props.club.idclub) {
-    clubdetails.value = EMPTY_CLUB
-    return
-  }
-  try {
-    const reply = await $backend("club","clb_get_club" ,{
-      idclub: props.club.idclub,
-      token: idtoken.value
-    })
-    readClubdetails(reply.data)
-  } catch (error) {
-    switch (error.code) {
-      case 401:
-        gotoLogin()
-        break
-      case 403:
-        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-        break
-      default:
-        console.error('Getting clubs failed', error.message.detail)
-        // this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
-    }
-  }
+  statuscm.value = CLUB_STATUS.CONSULTING
+  emit('updateClub')
 }
 
 function gotoLogin() {
@@ -61,35 +32,22 @@ function gotoLogin() {
 }
 
 async function modifyClub() {
-  try {
-    const reply = await $backend("club", "verify_club_access", {
-      idclub: props.club.idclub,
-      role: "ClubAdmin",
-      token: idtoken.value,
-    })
-    statusc.value = CLUB_STATUS.MODIFYING
-  } catch (error) {
-    const reply = error.response
-    switch (reply.status) {
-      case 401:
-        gotoLogin()
-        break
-      default:
-        console.error('Getting clubs failed', reply.data.detail)
-        // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-    }
-  }
-  console.log('lclubmembers', lclubmembers.value)
+  statuscm.value = CLUB_STATUS.MODIFYING
 }
 
-function readClubdetails(details) {
-  clubdetails.value = { ...EMPTY_CLUB, ...details }
-  copyclubdetails = JSON.parse(JSON.stringify(details))
-  boardmembers.value = { ...EMPTY_BOARD, ...details.boardmembers }
+function readClubDetails() {
+  console.log('readClubDetails')
+  clubdetails.value = { ...EMPTY_CLUB, ...props.club }
+  copyclubdetails = JSON.parse(JSON.stringify(props.club))
+  boardmembers.value = { ...EMPTY_BOARD, ...props.club.boardmembers }
+}
+
+function readClubMembers() {
+  console.log('readClubMembers')
 }
 
 async function saveClub() {
-  // build a a diff between clubdetails ans its cooy
+  // build a a diff between clubdetails and its cooy
   let update = {}
   for (const [key, value] of Object.entries(clubdetails.value)) {
     if (value != copyclubdetails[key]) {
@@ -102,44 +60,26 @@ async function saveClub() {
       idclub: props.club.idclub,
       token: idtoken.value,
     })
-    statusc.value = CLUB_STATUS.CONSULTING
-    // this.$root.$emit('snackbar', { text: this.$t('Club saved') })
+    statuscm.value = CLUB_STATUS.CONSULTING
+    emit('displaySnackbar', t('Club saved'))
+    emit('updateClub')
   } catch (error) {
-    const reply = error.response
-    if (reply.status ) {
-      switch (reply.status) {
-        case 401:
-          gotoLogin()
-          break
-        case 403:
-          // this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-          break
-        default:
-          console.error('Getting clubs failed', reply.data.detail)
-          // this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
-      }
-    }
-    else {
-      console.error('Failed ', error)
-    }
+    if (error.code == 401) gotoLogin()
+    emit('displaySnackbar', t(error.message))
+    return
   }
-}
-
-function setupBoard(){
-  console.log('running setupBoard')
-  get_clubdetails()
 }
 
 function updateboard(f) {
   const bm = boardmembers.value[f]
   if (bm.idnumber) {
-    let cm = clubmembers.value.find(x => x.idnumber == bm.idnumber)
-    if (!bm.first_name) bm.first_name = cm.first_name
-    if (!bm.last_name) bm.last_name = cm.last_name
-    if (!bm.email) bm.email = cm.email
-    if (!bm.mobile) bm.mobile = cm.mobile
-    if (!bm.email_visibility) bm.email_visibility = "CLUB"
-    if (!bm.mobile_visibility) bm.mobile_visibility = "CLUB"
+    let cm = props.clubmembers.find(x => x.idnumber == bm.idnumber)
+    bm.first_name = cm.first_name
+    bm.last_name = cm.last_name
+    bm.email = cm.email
+    bm.mobile = cm.mobile
+    bm.email_visibility = "CLUB"
+    bm.mobile_visibility = "CLUB"
     clubdetails.value.boardmembers[f] = bm
   }
   else {
@@ -150,11 +90,10 @@ function updateboard(f) {
     bm.email_visibility = null
     bm.mobile_visibility = null
     delete clubdetails.value.boardmembers[f]
-  }
-
+ }
 }
 
-defineExpose({setupBoard})
+defineExpose({readClubDetails, readClubMembers})
 
 </script>
 
@@ -192,15 +131,15 @@ defineExpose({setupBoard})
                 <tr-fieldname :fieldname="f" />
               </v-card-title>
               <v-card-text>
-                <v-autocomplete v-model="boardmembers[f].idnumber" :items="clubmembers" item-title="merged"
+                <v-autocomplete v-model="boardmembers[f].idnumber" :items="props.clubmembers" item-title="merged"
                   item-value="idnumber" color="green" clearable  @update:model-value="updateboard(f)">
                 </v-autocomplete>
                 <v-text-field label="Email" v-model="boardmembers[f].email"></v-text-field>
                 <v-select v-model="boardmembers[f].email_visibility" :items="t_vis_items" color="green"
-                  @change="updateboard(f)" label="Email visibility" />
+                  label="Email visibility" />
                 <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
                 <v-select v-model="boardmembers[f].mobile_visibility" :items="t_vis_items" color="green"
-                  @change="updateboard(f)" label="Mobile visibility" />
+                  label="Mobile visibility" />
               </v-card-text>
             </v-card>
           </v-col>
