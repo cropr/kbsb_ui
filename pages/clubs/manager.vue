@@ -43,6 +43,7 @@ async function getClubs() {
     reply = await $backend("club", "anon_get_clubs", {})
   } catch (error) {
     if (error.code == 401) gotoLogin()
+    console.log('getClubs error')
     displaySnackbar(t(error.message))
     return
   }
@@ -81,6 +82,7 @@ async function getClubDetails() {
       })
     } catch (error) {
       if (error.code == 401) gotoLogin()
+      console.log('getClubDetails error')
       displaySnackbar(t(t(error.message)))
       return
     } finally {
@@ -103,11 +105,12 @@ async function getClubMembers() {
   let reply
   clubmembers.value = null
   try {
-    reply = await $backend("member", "get_clubmembers", {
+    reply = await $backend("member", "anon_getclubmembers", {
       idclub: idclub.value,
     })
   } catch (error) {    
     if (error.code == 401) gotoLogin()
+    console.log('getClubMembers error')
     displaySnackbar(t(error.message))
     return
   } finally {
@@ -135,9 +138,9 @@ function displaySnackbar(text, color) {
   snackbar.value = true
 }
 
-function selectClub(){
-  getClubDetails()
-  getClubMembers()
+async function selectClub(){
+  await getClubDetails()
+  await getClubMembers()
 }
 
 onMounted( () => {
