@@ -1,6 +1,7 @@
 import axios from "axios";
-import file from "@/api/file";
 import club from "@/api/club";
+import file from "@/api/file";
+import interclub from "@/api/interclub";
 import old from "@/api/old";
 
 axios.defaults.withCredentials = true;
@@ -48,6 +49,7 @@ axios.interceptors.response.use(
 const factories = {
   club,
   file,
+  interclub,
   old,
 };
 

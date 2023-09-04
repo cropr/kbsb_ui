@@ -15,12 +15,12 @@ const clubmembers = ref(null)
 const clubmembers_id = ref(0)
 const club = ref(EMPTY_CLUB) 
 const clubs = ref([])
+const icclub = ref(null)
+const icvenues = ref([])  // the venues data per club
+const venues = ref(null)  // the ref to the window tab
 const idclub = ref(null)
 const waitingdialog = ref(false)
 let dialogcounter = 0
-const board = ref(null)
-const detail = ref(null)
-const access = ref(null)
 const tab = ref(null)
 const errortext = ref(null)
 const snackbar = ref(null)
@@ -62,7 +62,7 @@ async function getClubDetails() {
     try {
       reply = await $backend("club", "verify_club_access", {
         idclub: idclub.value,
-        role: "ClubAdmin",
+        role: "InterclubAdmin",
         token: idtoken.value,
       })
     } catch (error) {
@@ -88,9 +88,7 @@ async function getClubDetails() {
     club.value = reply.data    
   }
   nextTick(() => {
-    detail.value.readClubDetails()
-    board.value.readClubDetails()
-    access.value.readClubDetails()
+
   })
 }
 
@@ -120,13 +118,38 @@ async function getClubMembers() {
   clubmembers.value = members.sort((a, b) =>
     (a.last_name > b.last_name ? 1 : -1))
   nextTick(() => {
-    board.value.readClubMembers()
-    access.value.readClubMembers()  
+
   })  
 }
 
+async function getInterclubVenues() {
+  console.log('running find_interclubvenues', icclub.value)
+  let reply
+  if (!idclub.value) {
+    icvenues.value = []
+    return
+  }
+  changeDialogCounter(1)
+  try {
+    reply = await $backend("interclub","find_interclubvenues", {
+        idclub: idclub.value
+    })
+  } catch (error) {
+    if (error.code == 401) gotoLogin()
+    displaySnackbar(t(error.message))
+    return
+  }
+  finally {
+    changeDialogCounter(-1)
+  }
+  icvenues.value = reply.data.venues
+  nextTick(() => {
+    venues.value.readInterclubVenues()
+  })   
+}
+
 async function gotoLogin() {
-  await navigateTo(localePath('/tools/oldlogin?url=__clubs__manager'))
+  await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
 }
 
 function displaySnackbar(text, color) {
@@ -137,17 +160,19 @@ function displaySnackbar(text, color) {
 function selectClub(){
   getClubDetails()
   getClubMembers()
+  getInterclubVenues()
 }
 
 onMounted( () => {
   checkAuth()
   getClubs()
 })
+
 </script>
 
 <template>
   <VContainer>
-    <h1>Club Manager</h1>
+    <h1>Interclubs Manager</h1>
     <v-dialog width="10em" v-model="waitingdialog">
       <v-card>
         <v-card-title>{{ $t('Loading...')}}</v-card-title>
@@ -170,22 +195,12 @@ onMounted( () => {
     </h3>
     <div class="elevation-2">
       <v-tabs v-model="tab" color="green">
-        <v-tab>{{ $t('Details') }}</v-tab>
-        <v-tab>{{ $t('Board members') }}</v-tab>
-        <v-tab>{{ $t('Access Rights') }}</v-tab>
+        <v-tab>{{ $t('Venue') }}</v-tab>
       </v-tabs>
       <v-window v-model="tab" >
         <v-window-item :eager="true">
-          <ClubDetails :club="club" ref="detail" @snackbar="displaySnackbar" 
-            @updateClub="getClubDetails" />
-        </v-window-item>
-        <v-window-item :eager="true">
-          <ClubBoard  :club="club" :clubmembers="clubmembers" ref="board" @snackbar="displaySnackbar"
-            @updateClub="getClubDetails" />
-        </v-window-item>
-        <v-window-item :eager="true">
-          <ClubAccess  :club="club" :clubmembers="clubmembers" ref="access" @snackbar="displaySnackbar"
-            @updateClub="getClubDetails" />
+          <InterclubsVenue :club="club" :icvenues="icvenues" ref="venues" @snackbar="displaySnackbar"
+            @updateVenues="getInterclubVenues"/>
         </v-window-item>
       </v-window>
     </div>

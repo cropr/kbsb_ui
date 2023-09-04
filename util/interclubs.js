@@ -28,7 +28,7 @@ export const INTERCLUBS_ROUNDS = {
   11: "2024-04-24",
 };
 
-export const empty_venue = {
+export const EMPTY_VENUE = {
   address: "",
   available: "all",
   notavailable: [],
