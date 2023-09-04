@@ -37,13 +37,10 @@ function changeDialogCounter(i) {
 }
 
 async function getClubs() {
+  let reply
   changeDialogCounter(1)
   try {
-    const reply = await $backend("club","anon_get_clubs", {})
-    clubs.value = reply.data.clubs
-    clubs.value.forEach(p => {
-      p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
-    })
+    reply = await $backend("club", "anon_get_clubs", {})
   } catch (error) {
     if (error.code == 401) gotoLogin()
     displaySnackbar(t(error.message))
@@ -52,6 +49,10 @@ async function getClubs() {
   finally {
     changeDialogCounter(-1)
   }
+  clubs.value = reply.data
+  clubs.value.forEach(p => {
+    p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
+  })
 }
 
 async function getClubDetails() {
@@ -102,7 +103,7 @@ async function getClubMembers() {
   let reply
   clubmembers.value = null
   try {
-    reply = await $backend("old", "get_members", {
+    reply = await $backend("member", "get_clubmembers", {
       idclub: idclub.value,
     })
   } catch (error) {    
@@ -113,7 +114,7 @@ async function getClubMembers() {
     changeDialogCounter(-1)
   }
   clubmembers_id.value = idclub.value
-  const members = reply.data.activemembers
+  const members = reply.data
   members.forEach(p => {
     p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
   })

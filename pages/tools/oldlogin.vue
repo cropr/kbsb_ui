@@ -19,27 +19,25 @@ const helpdialog = ref(false)
 const login = ref({})
 const snackbar = ref(null)
 const errortext = ref("")
-const url =  route.query.url
+const url = route.query.url
 const mdConverter = new showdown.Converter()
 function md(s) { return  mdConverter.makeHtml(s)}
 
 async function dologin() {
-  const returnUrl = this.url ? this.url.replaceAll("__", "/") : '/'
+  const returnUrl = url ? url.replaceAll("__", "/") : '/'
+  let reply
   try {
-    const reply = await $backend("old", "login", {
-      idnumber: this.login.idnumber,
-      password: this.login.password
+    reply = await $backend("member", "login", {
+      idnumber: login.value.idnumber,
+      password: login.value.password
     })
-    console.log('reply', reply)
-    idstore.updateToken(reply.data)
   } 
   catch(error) {
-    console.error('Login failed', error)
     errortext.value = t(error.message)
     snackbar.value = true
     return
   }
-  console.log('goint to ', returnUrl)
+  idstore.updateToken(reply.data)
   navigateTo(localePath(returnUrl))
 }
 

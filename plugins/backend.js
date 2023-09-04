@@ -2,7 +2,7 @@ import axios from "axios";
 import club from "@/api/club";
 import file from "@/api/file";
 import interclub from "@/api/interclub";
-import old from "@/api/old";
+import member from "@/api/member";
 
 axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
@@ -50,7 +50,7 @@ const factories = {
   club,
   file,
   interclub,
-  old,
+  member,
 };
 
 export default defineNuxtPlugin((nuxtApp) => {
