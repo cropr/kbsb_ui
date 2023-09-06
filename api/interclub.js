@@ -94,12 +94,12 @@ export default {
     });
     return resp;
   },
-  // clb_setICclub: async function (options) {
-  //   console.log("api clb_setICclub", options);
-  //   const { token, idclub, ...icc } = options;
-  //   const resp = await axios.put(`${prefix}/clb/icclub//${idclub}`, icc, {
-  //     headers: { Authorization: "Bearer " + token },
-  //   });
-  //   return resp;
-  // },
+  clb_setICclub: async function (options) {
+    console.log("api clb_setICclub", options);
+    const { token, idclub, ...icc } = options;
+    const resp = await axios.put(`${prefix}/clb/icclub//${idclub}`, icc, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    return resp;
+  },
 };

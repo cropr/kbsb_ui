@@ -2,7 +2,6 @@
 import { ref, onMounted, nextTick } from 'vue'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
-import { constrainedMemory } from 'process';
 
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
@@ -11,7 +10,7 @@ const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
 
 
-const clubmembers = ref({})     // the members of a club as in seignaletique indexed by idnumber
+const clubmembers = ref([])     // the members of a club as in signaletique
 const clubmembers_id = ref(0)
 const clubs = ref([])
 const icclub = ref({})          // the icclub data
@@ -58,7 +57,7 @@ async function getClubs() {
 
 async function getClubDetails() {
   let reply
-  club.value = EMPTY_CLUB
+  icclub.value = {}
   if (idclub.value) {
     changeDialogCounter(1)
     try {
@@ -91,7 +90,7 @@ async function getClubDetails() {
     icclub.value = reply.data    
   }
   nextTick(() => {
-
+    reficclub.value.readICclub()
   })
 }
 
@@ -99,9 +98,9 @@ async function getClubMembers() {
   let reply
   if (!idclub.value) return
   if (idclub.value == clubmembers_id.value) return  // it is already read in
-  changeDialogCounter(1)
   clubmembers.value = {}
   try {
+    changeDialogCounter(1)
     reply = await $backend("member", "anon_getclubmembers", {
       idclub: idclub.value,
     })
@@ -115,14 +114,14 @@ async function getClubMembers() {
   }
   const members = reply.data
   console.log('members', members)
-  // clubmembers_id.value = idclub.value
-  // members.forEach(p => {
-  //   p.fullname = `${p.last_name}, ${p.first_name}`
-  // })
-  // clubmembers.value = Object.fromEntries(members.map((x) => [x.idnumber, x]))
-  // nextTick(() => {
-  //   reficclub.value.readMembers()
-  // })  
+  clubmembers_id.value = idclub.value
+  members.forEach((p) => {
+    p.fullname = `${p.last_name}, ${p.first_name}`
+  })
+  clubmembers.value = members
+  nextTick(() => {
+    reficclub.value.readMembers()
+  })  
 }
 
 async function getICVenues() {
@@ -148,7 +147,7 @@ async function getICVenues() {
   }
   icvenues.value = reply.data.venues
   nextTick(() => {
-    venues.value.readInterclubVenues()
+    reficvenues.value.readInterclubVenues()
   })   
 }
 
@@ -195,19 +194,29 @@ onMounted( () => {
       </v-card-text>
     </v-card>
     <h3 class="mt-2">
-      {{ $t('Selected club') }}: {{ club.idclub }} {{ club.name_short }}
+      {{ $t('Selected club') }}: {{ icclub.idclub }} {{ icclub.name }}
     </h3>
     <div class="elevation-2">
       <v-tabs v-model="tab" color="green">
         <v-tab>{{ $t('Venue') }}</v-tab>
+        <v-tab>{{ $t('Player list') }}</v-tab>        
       </v-tabs>
       <v-window v-model="tab" >
         <v-window-item :eager="true">
           <InterclubsVenue  ref="reficvenues"
-            :club="icclub" 
+            :icclub="icclub" 
             :icvenues="icvenues" 
             @snackbar="displaySnackbar"
             @updateVenues="getICVenues" />
+        </v-window-item>
+        <v-window-item :eager="true">
+          <InterclubsIcClub ref="reficclub" 
+            :icclub="icclub" 
+            :members="clubmembers"
+            @snackbar="displaySnackbar"
+            @updateVenues="getICVenues"
+            @changeDialogCounter="changeDialogCounter"
+          />
         </v-window-item>
       </v-window>
     </div>

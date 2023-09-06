@@ -8,7 +8,7 @@ import { storeToRefs } from 'pinia'
 const { localePath } = useLocalePath()
 const { locale, t } = useI18n()
 const { $backend } = useNuxtApp()
-const props = defineProps(["club","icvenues"])
+const props = defineProps(["icclub","icvenues"])
 const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
 const rounds =  Object.entries(INTERCLUBS_ROUNDS).map(x => ({
@@ -64,7 +64,7 @@ async function saveVenues() {
     })
     reply = await $backend("interclub", "set_interclubvenues", {
       token: idtoken.value,
-      idclub: props.club.idclub,
+      idclub: props.icclub.idclub,
       venues: savedvenues,
     })
   } catch (error) {
@@ -82,8 +82,8 @@ defineExpose({readInterclubVenues})
 <template>
   <v-container>
     <h2>{{ $t('Interclub venues') }}</h2>
-    <p v-if="!club.idclub">{{ $t('Please select a club to view the interclub venues') }}</p>
-    <div v-if="club.idclub">
+    <p v-if="!icclub.idclub">{{ $t('Please select a club to view the interclub venues') }}</p>
+    <div v-if="icclub.idclub">
 
       <v-container v-show="status_consulting">
         <v-row v-show="!venues.length">
