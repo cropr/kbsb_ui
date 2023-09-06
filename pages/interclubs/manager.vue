@@ -1,8 +1,8 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
-import { EMPTY_CLUB } from '@/util/club'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
+import { constrainedMemory } from 'process';
 
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
@@ -11,13 +11,13 @@ const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
 
 
-const clubmembers = ref(null)
+const clubmembers = ref({})     // the members of a club as in seignaletique indexed by idnumber
 const clubmembers_id = ref(0)
-const club = ref(EMPTY_CLUB) 
 const clubs = ref([])
-const icclub = ref(null)
-const icvenues = ref([])  // the venues data per club
-const venues = ref(null)  // the ref to the window tab
+const icclub = ref({})          // the icclub data
+const reficclub = ref(null)     // the ref to the window tab
+const icvenues = ref([])        // the venues data
+const reficvenues = ref(null)   // the ref to the window tab
 const idclub = ref(null)
 const waitingdialog = ref(false)
 let dialogcounter = 0
@@ -26,6 +26,7 @@ const errortext = ref(null)
 const snackbar = ref(null)
 
 function checkAuth() {
+  console.log('checkauth idtoken', idtoken.value)
   if (!idtoken.value) {
     gotoLogin()
   }
@@ -37,13 +38,10 @@ function changeDialogCounter(i) {
 }
 
 async function getClubs() {
+  let reply
   changeDialogCounter(1)
   try {
-    const reply = await $backend("club","anon_get_clubs", {})
-    clubs.value = reply.data.clubs
-    clubs.value.forEach(p => {
-      p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
-    })
+    reply = await $backend("club","anon_get_clubs", {})
   } catch (error) {
     if (error.code == 401) gotoLogin()
     displaySnackbar(t(error.message))
@@ -52,6 +50,10 @@ async function getClubs() {
   finally {
     changeDialogCounter(-1)
   }
+  clubs.value = reply.data
+  clubs.value.forEach(p => {
+    p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
+  })
 }
 
 async function getClubDetails() {
@@ -74,18 +76,19 @@ async function getClubDetails() {
     }
     changeDialogCounter(1)
     try {
-      reply = await $backend("club","clb_get_club" ,{
+      reply = await $backend("interclub","clb_getICclub" ,{
         idclub: idclub.value,
         token: idtoken.value
       })
     } catch (error) {
+      console.log('NOK getClubDetails')  
       if (error.code == 401) gotoLogin()
       displaySnackbar(t(t(error.message)))
       return
     } finally {
       changeDialogCounter(-1)
     }
-    club.value = reply.data    
+    icclub.value = reply.data    
   }
   nextTick(() => {
 
@@ -93,37 +96,37 @@ async function getClubDetails() {
 }
 
 async function getClubMembers() {
-  // get club members for member database currently on old site
+  let reply
   if (!idclub.value) return
   if (idclub.value == clubmembers_id.value) return  // it is already read in
   changeDialogCounter(1)
-  let reply
-  clubmembers.value = null
+  clubmembers.value = {}
   try {
-    reply = await $backend("old", "get_members", {
+    reply = await $backend("member", "anon_getclubmembers", {
       idclub: idclub.value,
     })
-  } catch (error) {    
+  } catch (error) { 
+    console.log('NOK hetClubMembers')   
     if (error.code == 401) gotoLogin()
     displaySnackbar(t(error.message))
     return
   } finally {
     changeDialogCounter(-1)
   }
-  clubmembers_id.value = idclub.value
-  const members = reply.data.activemembers
-  members.forEach(p => {
-    p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
-  })
-  clubmembers.value = members.sort((a, b) =>
-    (a.last_name > b.last_name ? 1 : -1))
-  nextTick(() => {
-
-  })  
+  const members = reply.data
+  console.log('members', members)
+  // clubmembers_id.value = idclub.value
+  // members.forEach(p => {
+  //   p.fullname = `${p.last_name}, ${p.first_name}`
+  // })
+  // clubmembers.value = Object.fromEntries(members.map((x) => [x.idnumber, x]))
+  // nextTick(() => {
+  //   reficclub.value.readMembers()
+  // })  
 }
 
-async function getInterclubVenues() {
-  console.log('running find_interclubvenues', icclub.value)
+async function getICVenues() {
+  console.log('running anon_getICVenues', icclub.value)
   let reply
   if (!idclub.value) {
     icvenues.value = []
@@ -131,10 +134,11 @@ async function getInterclubVenues() {
   }
   changeDialogCounter(1)
   try {
-    reply = await $backend("interclub","find_interclubvenues", {
+    reply = await $backend("interclub","anon_getICVenues", {
         idclub: idclub.value
     })
   } catch (error) {
+    console.log('NOK getICVenues')       
     if (error.code == 401) gotoLogin()
     displaySnackbar(t(error.message))
     return
@@ -157,10 +161,10 @@ function displaySnackbar(text, color) {
   snackbar.value = true
 }
 
-function selectClub(){
-  getClubDetails()
-  getClubMembers()
-  getInterclubVenues()
+async function selectClub(){
+  await getClubDetails()
+  await getClubMembers()
+  await getICVenues()
 }
 
 onMounted( () => {
@@ -199,8 +203,11 @@ onMounted( () => {
       </v-tabs>
       <v-window v-model="tab" >
         <v-window-item :eager="true">
-          <InterclubsVenue :club="club" :icvenues="icvenues" ref="venues" @snackbar="displaySnackbar"
-            @updateVenues="getInterclubVenues"/>
+          <InterclubsVenue  ref="reficvenues"
+            :club="icclub" 
+            :icvenues="icvenues" 
+            @snackbar="displaySnackbar"
+            @updateVenues="getICVenues" />
         </v-window-item>
       </v-window>
     </div>

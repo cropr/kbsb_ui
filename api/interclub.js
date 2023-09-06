@@ -1,15 +1,18 @@
 import axios from "axios";
 
+const prefix = "/api/v1/interclubs";
+
 export default {
+  // enrollemnts
   find_interclubenrollment: async function (options) {
     const { idclub } = options;
-    const resp = await axios.get(`/api/v1/a/interclub/enrollment/${idclub}`);
+    const resp = await axios.get(`${prefix}/anon/enrollment//${idclub}`);
     return resp;
   },
   set_interclubenrollment: async function (options) {
     const { token, idclub, ...enrollment } = options;
     const resp = await axios.post(
-      `/api/v1/c/interclub/enrollment/${idclub}`,
+      `${prefix}/clb/enrollment/${idclub}`,
       enrollment,
       {
         headers: {
@@ -22,7 +25,7 @@ export default {
   mgmt_set_interclubenrollment: async function (options) {
     const { token, idclub, ...enrollment } = options;
     const resp = await axios.post(
-      `/api/v1/interclub/enrollment/${idclub}`,
+      `${prefix}/mgmt/enrollment/${idclub}`,
       enrollment,
       {
         headers: {
@@ -34,22 +37,24 @@ export default {
   },
   mgmt_csv_interclubenrollment: async function (options) {
     const { token } = options;
-    const resp = await axios.get(`/api/v1/csv/interclubenrollment`, {
+    const resp = await axios.get(`${prefix}/mgmt/command/exportenrollments`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     return resp;
   },
-  find_interclubvenues: async function (options) {
+
+  //venues
+  anon_getICVenues: async function (options) {
     const { token, idclub } = options;
-    const resp = await axios.get(`/api/v1/a/interclub/venues/${idclub}`);
+    const resp = await axios.get(`${prefix}/anon/venue/${idclub}`);
     return resp;
   },
   set_interclubvenues: async function (options) {
     const { token, idclub, venues } = options;
     const resp = await axios.post(
-      `/api/v1/c/interclub/venues/${idclub}`,
+      `${prefix}/clb/venue//${idclub}`,
       { venues },
       { headers: { Authorization: "Bearer " + token } }
     );
@@ -58,7 +63,7 @@ export default {
   mgmt_set_interclubvenues: async function (options) {
     const { token, idclub, venues } = options;
     const resp = await axios.post(
-      `/api/v1/interclub/venues/${idclub}`,
+      `${prefix}/mgmt/venue/${idclub}`,
       { venues },
       { headers: { Authorization: "Bearer " + token } }
     );
@@ -66,32 +71,35 @@ export default {
   },
   mgmt_csv_interclubvenues: async function (options) {
     const { token } = options;
-    const resp = await axios.get(`/api/v1/csv/interclubvenues`, {
+    const resp = await axios.get(`${prefix}/mgmt/command/exportvenues`, {
       headers: {
         Authorization: "Bearer " + token,
       },
     });
     return resp;
   },
-  get_interclubclub: async function (options) {
+
+  // icclub
+  anon_getICteams: async function (options) {
     const { idclub } = options;
-    const resp = await axios.get(`/api/v1/a/interclub/club/${idclub}`);
+    const resp = await axios.get(`${prefix}/anon/icteams/${idclub}`);
     return resp;
   },
-  mgmt_set_interclubclub: async function (options) {
-    console.log("api mgmt_set_interclubclub", options);
-    const { token, idclub, ...icc } = options;
-    const resp = await axios.put(`/api/v1/interclub/club/${idclub}`, icc, {
-      headers: { Authorization: "Bearer " + token },
+  clb_getICclub: async function (options) {
+    const { token, idclub } = options;
+    const resp = await axios.get(`${prefix}/clb/icclub/${idclub}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
     });
     return resp;
   },
-  clb_set_interclubclub: async function (options) {
-    console.log("api clb_set_interclubclub", options);
-    const { token, idclub, ...icc } = options;
-    const resp = await axios.put(`/api/v1/c/interclub/club/${idclub}`, icc, {
-      headers: { Authorization: "Bearer " + token },
-    });
-    return resp;
-  },
+  // clb_setICclub: async function (options) {
+  //   console.log("api clb_setICclub", options);
+  //   const { token, idclub, ...icc } = options;
+  //   const resp = await axios.put(`${prefix}/clb/icclub//${idclub}`, icc, {
+  //     headers: { Authorization: "Bearer " + token },
+  //   });
+  //   return resp;
+  // },
 };
