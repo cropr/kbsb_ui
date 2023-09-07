@@ -5,26 +5,24 @@ const localePath = useLocalePath()
 
 
 
-function gotorating(){
-  
+function gotorating() {
+
 }
 </script>
 
 <style scoped>
-
-
 .btn-language {
   min-width: 0 !important;
 }
 </style>
 
 <template>
-  <div >
+  <div>
 
     <div>
       <v-btn variant="text" class="btn-language" @click="setLocale('nl')">NL</v-btn>
       <v-btn variant="text" class="btn-language" @click="setLocale('fr')">FR</v-btn>
-      <v-btn variant="text" class="btn-language"  @click="setLocale('de')">DE</v-btn>
+      <v-btn variant="text" class="btn-language" @click="setLocale('de')">DE</v-btn>
       <v-btn variant="text" class="btn-language" @click="setLocale('en')">EN</v-btn>
     </div>
 
@@ -65,18 +63,18 @@ function gotorating(){
         <v-list-item :to="localePath('/clubs/info')" title="Club Info" />
         <v-list-item :to="localePath('/clubs/manager')" title="Club Manager" />
       </v-list-group>
-      
-      <!-- <v-list-group>
-        <template  v-slot:activator="{ props }">
+
+      <v-list-group>
+        <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$t('Youth')" />
         </template>
         <v-list-item :to="localePath('/youth/championships-youth')" :title="$t('BC Youth')" />
-        <v-list-item :to="localePath('/youth/international-youth')" :title="$t('International')" />
+        <!-- <v-list-item :to="localePath('/youth/international-youth')" :title="$t('International')" />
         <v-list-item :to="localePath('/youth/school-chess')" :title="$t('BC School chess')" />
-        <v-list-item :to="localePath('/youth/g-licence')" :title="$t('G License')" />
+        <v-list-item :to="localePath('/youth/g-licence')" :title="$t('G License')" /> -->
       </v-list-group>
 
-      <v-list-group>
+      <!-- <v-list-group>
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$t('Useful Information')" />
         </template>
