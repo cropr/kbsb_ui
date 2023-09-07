@@ -4,24 +4,23 @@ import showdown from 'showdown'
 const { locale } = useI18n()
 const ttitle = `title_${locale.value}`
 const tcontent = `content_${locale.value}`
-const {data}  = await useAsyncData('home', () => queryContent('/pages/').findOne())
+const { data } = await useAsyncData('home',
+  () => queryContent('/pages/').findOne())
 // const {data: articles} = await useAsyncData('articles', () => queryContent('/articles'))
 
 const mdConverter = new showdown.Converter()
-function md(s) { return  mdConverter.makeHtml(s)}
+function md(s) { return mdConverter.makeHtml(s) }
 
 </script>
 <template>
   <main>
     <VContainer>
       <h1>Home</h1>
-        <ContentRenderer :value="data"  >
-        <h1 v-html= "data[ttitle] ? data[ttitle] : data.title" />
-        <div v-html= "md(data[tcontent])" class="markdowncontent" />
+      <ContentRenderer :value="data">
+        <h1 v-html="data[ttitle] ? data[ttitle] : data.title" />
+        <div v-html="md(data[tcontent])" class="markdowncontent" />
       </ContentRenderer>
     </VContainer>
-
-
     <TheCarousel />
     <hr />
   </main>

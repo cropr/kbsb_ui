@@ -4,8 +4,8 @@ import showdown from 'showdown'
 const { locale } = useI18n()
 const ttitle = `title_${locale.value}`
 const tcontent = `content_${locale.value}`
-const { data } = await useAsyncData('commissions',
-  () => queryContent('/pages/commissions').findOne())
+const { data } = await useAsyncData('international-youth',
+  () => queryContent('/pages/international-youth').findOne())
 
 const mdConverter = new showdown.Converter()
 
@@ -20,4 +20,3 @@ function md(s) { return mdConverter.makeHtml(s) }
     </ContentRenderer>
   </v-container>
 </template>
-

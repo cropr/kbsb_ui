@@ -3,10 +3,8 @@ import { phpbaseurl } from '@/util/cms'
 const { locale, setLocale } = useI18n()
 const localePath = useLocalePath()
 
-
-
 function gotorating() {
-
+  return locale === 'nl' ? '/tools/ratingnl' : '/tools/ratingfr'
 }
 </script>
 
@@ -69,12 +67,12 @@ function gotorating() {
           <v-list-item v-bind="props" :title="$t('Youth')" />
         </template>
         <v-list-item :to="localePath('/youth/championships-youth')" :title="$t('BC Youth')" />
-        <!-- <v-list-item :to="localePath('/youth/international-youth')" :title="$t('International')" />
+        <v-list-item :to="localePath('/youth/international-youth')" :title="$t('International')" />
         <v-list-item :to="localePath('/youth/school-chess')" :title="$t('BC School chess')" />
-        <v-list-item :to="localePath('/youth/g-licence')" :title="$t('G License')" /> -->
+        <v-list-item :to="localePath('/youth/license-g')" :title="$t('G License')" />
       </v-list-group>
 
-      <!-- <v-list-group>
+      <v-list-group>
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$t('Useful Information')" />
         </template>
@@ -82,23 +80,22 @@ function gotorating() {
         <v-list-item :to="localePath('/info/email-addresses')" :title="$t('Email addresses')" />
         <v-list-item :to="localePath('/info/elo-processing')" :title="$t('ELO processing')" />
         <v-list-item :to="localePath('/info/gdpr')" :title="$t('GDPR')" />
-      </v-list-group> -->
+      </v-list-group>
 
       <v-list-group>
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$t('Tools')" />
         </template>
-        <!-- <v-list-item :to="gotorating" :title="$t('ELO tournaments')" />
-        <v-list-item title="Player Manager" 
-          :href="phpbaseurl + 'sites/manager/GestionCOMMON/GestionLogin.php'" /> -->
+        <v-list-item :to="gotorating" :title="$t('ELO tournaments')" />
+        <v-list-item title="Player Manager" :href="phpbaseurl + 'sites/manager/GestionCOMMON/GestionLogin.php'" />
         <v-list-item :to="localePath('/clubs/manager')" title="Club Manager" />
         <v-list-item :to="localePath('/interclubs/manager')" title="Interclub Manager" />
-        <!-- <v-list-item title="Elo" :href="phpbaseurl + 'sites/manager/GestionFICHES/FRBE_Fiche.php'" />
+        <v-list-item title="Elo" :href="phpbaseurl + 'sites/manager/GestionFICHES/FRBE_Fiche.php'" />
         <v-list-item :title="$t('Results SWAR')" :href="phpbaseurl + 'sites/manager/GestionSWAR/SwarResults.php'" />
-        <v-list-item title="Calc Norm" :href="phpbaseurl + 'sites/manager/CalcNorm/norm.php'" /> -->
+        <v-list-item title="Calc Norm" :href="phpbaseurl + 'sites/manager/CalcNorm/norm.php'" />
       </v-list-group>
 
-      <!-- <v-list-item :to="localePath('/info/partners')" title="Partners" /> -->
+      <v-list-item :to="localePath('/info/partners')" title="Partners" />
     </v-list>
 
   </div>
