@@ -1,12 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { VContainer } from 'vuetify/lib/components/index.mjs';
-const { locale, setLocale } = useI18n()
+const { locale, setLocale, t } = useI18n()
 const localePath = useLocalePath()
 
 const calitems = ref([])
 const { data: caldata } = await useAsyncData('goal',
-  () => queryContent('/calender').find())
+  () => queryContent('/calendar').find())
 
 function compareDates(a, b) {
   return a.date - b.date
@@ -19,14 +19,14 @@ const future_ci = computed(() => {
 
 function calenderItem(c) {
   const output = []
-  output.push(c.date.toLocaleDateString(this.$i18n.locale, { dateStyle: 'medium' }) + ':')
+  output.push(c.date.toLocaleDateString(locale, { dateStyle: 'medium' }) + ':')
   output.push(c.title)
   if (c.round) {
-    output.push(this.$t('Round'))
+    output.push(t('Round'))
     output.push(c.round)
   }
   if (c.status === 'postponed') {
-    output.push(this.$t('postponed'))
+    output.push(t('postponed'))
   }
   return output.join(' ')
 }
@@ -36,25 +36,32 @@ function calenderText(c) {
 }
 
 function parseCalendarItems(listci) {
+  console.log('listci', listci)
   listci.forEach((ci) => {
     if (ci.multiple) {
-      this.parseCalendarItems(ci.multiple)
+      parseCalendarItems(ci.multiple)
       return
     }
-    // console.log('ci', ci.title)
+    console.log('ci', ci.title)
     if (ci.date) {
       const item = { ...ci, date: new Date(ci.date) }
-      this.calitems.push(item)
+      calitems.value.push(item)
       return
     }
     if (ci.rounds) {
       Object.entries(ci.rounds).forEach(([rnr, date]) => {
         const { rounds, ...item } = { ...ci, date: new Date(date), round: rnr }
-        this.calitems.push(item)
+        calitems.value.push(item)
       })
     }
   })
 }
+
+onMounted(()=> {
+  parseCalendarItems(caldata.value)
+  calitems.value.sort(compareDates)
+})
+
 
 </script>
 
