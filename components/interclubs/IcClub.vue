@@ -68,6 +68,7 @@ function readMembers() {
 				idnumber: m.idnumber,
 				idcluborig: m.idclub,
 				idclubvisit: 0,
+				last_name: m.last_name,
 				natrating: m.natrating,
 				nature: "assigned",
 				titular: "",
@@ -112,6 +113,12 @@ function validatePlayerlist(){
 	validatedialog.value = true
 }
 
+function isDecrop(idnumber) {
+  console.log('isDecrop', idnumber)
+  const pl = playersindexed[idnumber]
+  return pl && pl.last_name == "Decrop"
+}
+
 defineExpose({ readICclub, readMembers })
 </script>
 <template>
@@ -120,12 +127,17 @@ defineExpose({ readICclub, readMembers })
 		<p v-if="!props.icclub.idclub">{{ $t('Please select a club to view the interclubs player list') }}</p>
 		<div v-if="props.icclub.enrolled">
 				{{ $t('This club is enrolled in Interclubs 2023-24') }}
-				<VDataTable :items="players" :headers="headers" 
+				<VDataTable :items="players" :headers="headers"
 					density="compact" 
 					:items-per-page="itemsPerPage"
 					:items-per-page-options="itemsPerPageOptions" 
 					:sort-by="[{key: 'assignedrating', order: 'desc'}]"
 				>
+          <template v-slot:item.fullname="{ item }">
+            <span :class="{paars: isDecrop(item.columns.idnumber)}">
+              {{ item.columns.fullname }} {{ isDecrop(item.columns.idnumber) }}
+            </span>
+          </template>
 					<template v-slot:item.action="{ item }">
 						<VBtn density="compact" icon="mdi-pencil" variant="text" @click="editPlayer(item.columns.idnumber)" color="green"/>
 					</template>
@@ -187,3 +199,9 @@ defineExpose({ readICclub, readMembers })
 		</VDialog>
 	</v-container>
 </template>
+
+<style scoped>
+.paars {
+  color: purple;
+}
+</style>
