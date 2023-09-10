@@ -8,8 +8,14 @@ axios.defaults.withCredentials = true;
 axios.defaults.baseURL = "http://localhost:8000";
 
 const error_messages = {
+  401: "Authentication required",
+  403: "Permission denied",
+  404: "Not found",
+  500: "General server error",
+  503: "Could not connect to database server",
   600: "Connectiom issue: server unreachable",
   700: "You triggered a bug.  Please inform the webmaster.",
+  Forbidden: "Permission denied",
   WrongUsernamePasswordCombination:
     "Wrong combination of username and password",
 };
@@ -25,10 +31,14 @@ axios.interceptors.response.use(
     if (error.response) {
       const detail = error.response.data.detail;
       console.warn("Axios", error.response.status, detail, error.request);
+      console.log("detail", detail);
+      console.log("status code", error.response.status);
       return Promise.reject({
         code: error.response.status,
         headers: error.response.headers,
-        message: detail ? error_messages[detail] : "Unknown error",
+        message: detail
+          ? error_messages[detail]
+          : error_messages[error.response.status],
       });
     }
     if (error.request) {

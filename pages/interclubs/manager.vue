@@ -67,6 +67,7 @@ async function getClubDetails() {
         token: idtoken.value,
       })
     } catch (error) {
+      console.log('NO Access', error)  
       if (error.code == 401) gotoLogin()
       displaySnackbar(t(error.message))
       return

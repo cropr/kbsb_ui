@@ -3,6 +3,7 @@ import {ref, computed, nextTick} from 'vue'
 import Playerlistorder from './Playerlistorder.vue';
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
+import { PLAYERSTATUS } from "@/util/interclubs"
 const props = defineProps(["icclub", "members"])
 const emit = defineEmits(['displaySnackbar', 'updateClub', 'changeDialogCounter'])
 const { locale, t } = useI18n()
@@ -42,10 +43,59 @@ const itemsPerPageOptions = [
 
 const titularchoices = [{title: "#NA", value:""}]
 
+
+function canEdit(idnumber){
+  return playersindexed[idnumber].nature in [
+    PLAYERSTATUS.assigned
+  ]
+}
+
+function canConfirmImport(idnumber){
+  return props.icclub.enrolled
+}
+
+function confirmImportPlayer(idnumber) {
+	playeredit.value = playersindexed[idnumber]
+	console.log('confirm import player', playeredit.value)
+}
+
 function editPlayer(idnumber) {
 	playeredit.value = playersindexed[idnumber]
 	playerdialog.value = true
 }
+
+
+
+function exportPlayer(idnumber) {
+	playeredit.value = playersindexed[idnumber]
+	console.log('export player', playeredit.value)
+}
+
+function fillinPlayerList() {
+  if (props.members) {
+    props.members.forEach((m) => {
+      if (!playersindexed[m.idnumber]) {
+        let newplayer = {
+          assignedrating:  Math.max(m.fiderating, m.natrating),
+          fiderating: m.fiderating,
+          fullname: `${m.last_name}, ${m.first_name}`,
+          first_name: m.first_name,
+          idnumber: m.idnumber,
+          idcluborig: m.idclub,
+          idclubvisit: 0,
+          last_name: m.last_name,
+          natrating: m.natrating,
+          nature: props.icclub.enrolled ? PLAYERSTATUS.assigned: PLAYERSTATUS.unassigned,
+          titular: "",
+          transfer: null,
+        }
+        players.value.push(newplayer)
+        playersindexed[m.idnumber] = newplayer
+      }
+	  })
+  }
+}
+
 
 function readICclub() {
 	console.log('reading icclub', props.icclub)
@@ -54,30 +104,12 @@ function readICclub() {
 	props.icclub.teams.forEach((t)=> {
 		titularchoices.push({title: t.name, value: t.name })
 	})
+  fillinPlayerList()
 }
 
 function readMembers() {
 	console.log('reading members', props.members)
-	props.members.forEach((m) => {
-		if (!playersindexed[m.idnumber]) {
-			let newplayer = {
-				assignedrating:  Math.max(m.fiderating, m.natrating),
-				fiderating: m.fiderating,
-				fullname: `${m.last_name}, ${m.first_name}`,
-				first_name: m.first_name,
-				idnumber: m.idnumber,
-				idcluborig: m.idclub,
-				idclubvisit: 0,
-				last_name: m.last_name,
-				natrating: m.natrating,
-				nature: "assigned",
-				titular: "",
-				transfer: null,
-			}
-			players.value.push(newplayer)
-			playersindexed[m.idnumber] = newplayer
-		}
-	})
+  fillinPlayerList()
 }
 
 async function savePlayerlist(){
@@ -114,7 +146,6 @@ function validatePlayerlist(){
 }
 
 function isDecrop(idnumber) {
-  console.log('isDecrop', idnumber)
   const pl = playersindexed[idnumber]
   return pl && pl.last_name == "Decrop"
 }
@@ -125,30 +156,41 @@ defineExpose({ readICclub, readMembers })
 	<v-container>
 		<h2>{{ $t('Player list') }}</h2>
 		<p v-if="!props.icclub.idclub">{{ $t('Please select a club to view the interclubs player list') }}</p>
-		<div v-if="props.icclub.enrolled">
-				{{ $t('This club is enrolled in Interclubs 2023-24') }}
-				<VDataTable :items="players" :headers="headers"
-					density="compact" 
-					:items-per-page="itemsPerPage"
-					:items-per-page-options="itemsPerPageOptions" 
-					:sort-by="[{key: 'assignedrating', order: 'desc'}]"
-				>
-          <template v-slot:item.fullname="{ item }">
-            <span :class="{paars: isDecrop(item.columns.idnumber)}">
-              {{ item.columns.fullname }} {{ isDecrop(item.columns.idnumber) }}
-            </span>
-          </template>
-					<template v-slot:item.action="{ item }">
-						<VBtn density="compact" icon="mdi-pencil" variant="text" @click="editPlayer(item.columns.idnumber)" color="green"/>
-					</template>
-				</VDataTable>
-		</div>
-		<div v-else>
-				Not enrolled
-		</div>
-		<div>
-			<VBtn @click="validatePlayerlist()">{{ $t('Save player list') }}</VBtn>
-		</div>
+		<div v-if="props.icclub.idclub">
+      <div v-if="props.icclub.enrolled">
+        {{ $t('This club is enrolled in Interclubs 2023-24') }}
+      </div>
+      <div v-else>
+        {{ $t('This club is enrolled in Interclubs 2023-24') }}
+        <VBtn @click="exportAll"  color="primary" class="ml-8">
+          {{ $t('Export all players') }}
+        </VBtn>
+      </div>
+      <VDataTable :items="players" :headers="headers"
+        density="compact" 
+        :items-per-page="itemsPerPage"
+        :items-per-page-options="itemsPerPageOptions" 
+        :sort-by="[{key: 'assignedrating', order: 'desc'}]"
+      >
+        <template v-slot:item.fullname="{ item }">
+          <span :class="{paars: isDecrop(item.columns.idnumber)}">
+            {{ item.columns.fullname }} {{ isDecrop(item.columns.idnumber) }}
+          </span>
+        </template>
+        <template v-slot:item.action="{ item }">
+          <VBtn density="compact" icon="mdi-pencil" variant="text" 
+            @click="editPlayer(item.columns.idnumber)" color="green"/>
+          <VBtn density="compact" icon="mdi-arrow-left" variant="text" 
+            @click="importPlayer(item.columns.idnumber)" color="purple"/>
+          <VBtn density="compact" icon="mdi-arrow-right" variant="text" 
+            @click="exportPlayer(item.columns.idnumber)" color="red"/>
+        </template>
+      </VDataTable>
+      <div>
+        <VBtn @click="validatePlayerlist()" color="primary">{{ $t('Save') }}</VBtn>
+
+      </div>
+    </div>
 		<VDialog v-model="playerdialog"  width="40em">
 			<VCard>
 				<VCardTitle>
