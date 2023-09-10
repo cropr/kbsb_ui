@@ -2,7 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { EMPTY_CLUB } from '@/util/club'
 
-const { locale } = useI18n()
+const { locale, t } = useI18n()
 const { $backend } = useNuxtApp()
 const boardmembers = ref({})
 const club = ref({...EMPTY_CLUB})
@@ -10,44 +10,81 @@ const clubs = ref([])
 
 const idclub = ref(null)
 
-async function get_clubs() {
+
+// wating dialog
+let dialogcounter = 0
+const waitingdialog = ref(false)
+function changeDialogCounter(i) {
+    dialogcounter += i
+    waitingdialog.value = (dialogcounter > 0)
+}
+
+// snackbar
+const errortext = ref(null)
+const snackbar = ref(null) 
+function displaySnackbar(text, color) {
+  errortext.value = text
+  snackbar.value = true
+}
+
+async function getClubs() {
+  let reply
+  changeDialogCounter(1)
   try {
-    const reply = await $backend("club", "anon_get_clubs", {})
-    console.log('reply', reply)
-    clubs.value = reply.data.clubs;
-    clubs.value.forEach((p) => {
-      p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`;
-    });
+    reply = await $backend("club","anon_get_clubs", {})
   } catch (error) {
-    const reply = error.response;
-    console.error("Getting clubs failed", reply);
-    // this.$root.$emit("snackbar", {
-    //   text: "Getting clubs failed",
-    // });
+    if (error.code == 401) gotoLogin()
+    displaySnackbar(t(error.message))
+    return
+  }
+  finally {
+    changeDialogCounter(-1)
+  }
+  clubs.value = reply.data
+  clubs.value.forEach(p => {
+    p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
+  })
+}
+
+
+async function getClubDetails() {
+  let reply
+  club.value = EMPTY_CLUB
+  if (idclub.value) {
+    changeDialogCounter(1)
+    try {
+      reply = await $backend("club","anon_get_club" ,{
+        idclub: idclub.value
+      })
+    } catch (error) {
+      displaySnackbar(t(t(error.message)))
+      return
+    } finally {
+      changeDialogCounter(-1)
+    }
+    club.value = reply.data    
   }
 }
 
 function selectclub() {
-  console.log('idclub selected', idclub) 
-  if (!idclub.value) {
-    club.value = {};
-  } else {
-    clubs.value.forEach((c) => {
-      console.log('club iter', c)
-      if (c.idclub == idclub.value) {
-        club.value = { ...EMPTY_CLUB, ...c };
-      }
-    });
-  }
+  getClubDetails()
 }
 
-onMounted(()=>(get_clubs()))
+onMounted(()=>(getClubs()))
 
 </script>
 
 <template>
   <v-container>
     <h1>{{ $t("Club details") }}</h1>
+    <v-dialog width="10em" v-model="waitingdialog">
+      <v-card>
+        <v-card-title>{{ $t('Loading...')}}</v-card-title>
+        <v-card-text>
+          <v-progress-circular indeterminate color="green" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
     <v-card class="mt-2">
       <v-card-text>
         <p v-if="!club.idclub">{{ $t("Select a club to view the club details") }}</p>
@@ -99,6 +136,12 @@ onMounted(()=>(get_clubs()))
         </v-col>
       </v-row>
     </div>
+    <VSnackbar v-model="snackbar" timeout="6000">
+      {{ errortext }}
+      <template v-slot:actions>
+        <v-btn color="green-lighten-2" variant="text" @click="snackbar = false" icon="mdi-close" />
+      </template>
+    </VSnackbar>   
   </v-container>
 </template>
 

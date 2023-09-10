@@ -86,7 +86,7 @@ function gotorating() {
         <template v-slot:activator="{ props }">
           <v-list-item v-bind="props" :title="$t('Tools')" />
         </template>
-        <v-list-item :to="gotorating" :title="$t('ELO tournaments')" />
+        <v-list-item :to="gotorating()" :title="$t('ELO tournaments')" />
         <v-list-item title="Player Manager" :href="phpbaseurl + 'sites/manager/GestionCOMMON/GestionLogin.php'" />
         <v-list-item :to="localePath('/clubs/manager')" title="Club Manager" />
         <v-list-item :to="localePath('/interclubs/manager')" title="Interclub Manager" />
