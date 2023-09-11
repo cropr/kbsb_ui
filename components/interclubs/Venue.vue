@@ -21,7 +21,6 @@ const venues = ref(props.icvenues)
 const emit = defineEmits(['displaySnackbar', 'updateVenues'])
 
 function  addEmptyVenue() {
-  console.log('addEmpty Venue')
   const last = venues.value[venues.value.length - 1]
   if (!last || last.address !== '') {
     venues.value.push({ ...EMPTY_VENUE })
@@ -54,7 +53,6 @@ function readInterclubVenues() {
 async function saveVenues() {
   let reply
   try {
-    console.log('Saving venues')
     let savedvenues = []
     venues.value.forEach(v => {
       if (v.address && v.address.length) {

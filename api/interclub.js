@@ -97,9 +97,20 @@ export default {
   clb_setICclub: async function (options) {
     console.log("api clb_setICclub", options);
     const { token, idclub, ...icc } = options;
-    const resp = await axios.put(`${prefix}/clb/icclub//${idclub}`, icc, {
+    const resp = await axios.put(`${prefix}/clb/icclub/${idclub}`, icc, {
       headers: { Authorization: "Bearer " + token },
     });
+    return resp;
+  },
+  clb_validateICplayers: async function (options) {
+    const { token, idclub, players } = options;
+    const resp = await axios.post(
+      `${prefix}/clb/icclub/${idclub}/validate`,
+      { players },
+      {
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
     return resp;
   },
 };

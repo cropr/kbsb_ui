@@ -25,7 +25,6 @@ const errortext = ref(null)
 const snackbar = ref(null)
 
 function checkAuth() {
-  console.log('checkauth idtoken', idtoken.value)
   if (!idtoken.value) {
     gotoLogin()
   }
@@ -67,7 +66,6 @@ async function getClubDetails() {
         token: idtoken.value,
       })
     } catch (error) {
-      console.log('NO Access', error)  
       if (error.code == 401) gotoLogin()
       displaySnackbar(t(error.message))
       return
@@ -81,18 +79,18 @@ async function getClubDetails() {
         token: idtoken.value
       })
     } catch (error) {
-      console.log('NOK getClubDetails')  
       if (error.code == 401) gotoLogin()
       displaySnackbar(t(t(error.message)))
       return
     } finally {
       changeDialogCounter(-1)
     }
-    icclub.value = reply.data    
+    icclub.value = reply.data
+    await getClubMembers()
+    nextTick(() => {
+      reficclub.value.readICclub()
+    })    
   }
-  nextTick(() => {
-    reficclub.value.readICclub()
-  })
 }
 
 async function getClubMembers() {
@@ -114,7 +112,6 @@ async function getClubMembers() {
     changeDialogCounter(-1)
   }
   const members = reply.data
-  console.log('members', members)
   clubmembers_id.value = idclub.value
   members.forEach((p) => {
     p.fullname = `${p.last_name}, ${p.first_name}`
@@ -126,7 +123,6 @@ async function getClubMembers() {
 }
 
 async function getICVenues() {
-  console.log('running anon_getICVenues', icclub.value)
   let reply
   if (!idclub.value) {
     icvenues.value = []
@@ -163,7 +159,6 @@ function displaySnackbar(text, color) {
 
 async function selectClub(){
   await getClubDetails()
-  await getClubMembers()
   await getICVenues()
 }
 
@@ -214,8 +209,7 @@ onMounted( () => {
           <InterclubsIcClub ref="reficclub" 
             :icclub="icclub" 
             :members="clubmembers"
-            @snackbar="displaySnackbar"
-            @updateVenues="getICVenues"
+            @displaySnackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
           />
         </v-window-item>

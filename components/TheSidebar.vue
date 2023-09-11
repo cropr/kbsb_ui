@@ -74,7 +74,7 @@ function gotorating() {
 
       <v-list-group>
         <template v-slot:activator="{ props }">
-          <v-list-item v-bind="props" :title="$t('Useful Information')" />
+          <v-list-item v-bind="props" :title="$t('Useful information')" />
         </template>
         <v-list-item :to="localePath('/info/calendar')" :title="$t('Calendar')" />
         <v-list-item :to="localePath('/info/email-addresses')" :title="$t('Email addresses')" />
