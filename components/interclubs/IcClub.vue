@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import Playerlistorder from './Playerlistorder.vue';
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
 import { PLAYERSTATUS } from "@/util/interclubs"

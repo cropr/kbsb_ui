@@ -17,14 +17,11 @@ const drawer = ref(false)
       </v-app-bar>
       <VMain>
         <slot />
+        <TheCarousel /> 
+        <hr />                 
       </VMain>
-      <!-- <TheFooter />     -->
+      <TheFooter />    
     </VApp>
   </div>
 </template>
 
-<style>
-.footer a {
-  color: white;
-}
-</style>

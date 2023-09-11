@@ -5,7 +5,7 @@ const { locale, setLocale, t } = useI18n()
 const localePath = useLocalePath()
 
 const calitems = ref([])
-const { data: caldata } = await useAsyncData('goal',
+const { data: caldata } = await useAsyncData('calendar',
   () => queryContent('/calendar').find())
 
 function compareDates(a, b) {
@@ -66,7 +66,7 @@ onMounted(()=> {
 </script>
 
 <template>
-  <VContainer>
+  <VContainer class="markdowncontent">
     <h1>{{ $t('Calendar') }}</h1>
     <ul>
       <li v-for="c, ix in future_ci" :key="ix" class="calenderitem">
