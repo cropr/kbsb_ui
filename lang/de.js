@@ -255,6 +255,7 @@ export default {
 "This club is not enrolled in the interclubs.": `Der Verein ist nicht für Interclubs registriert`,
 "This is done by adapting the rating of the players.": `Dies geschieht durch die Anpassung des Elos der Spieler.`,
 "Thursday": `Mittwoch`,
+"Titular": `Titular`,
 "Titulars must be highest rated players": `Die Titularen müssen den höchsten ELO haben`,
 "Too many titulars": `Zu viele Titularen`,
 "Tools": `Werkzeuge`,

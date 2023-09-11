@@ -85,6 +85,11 @@ export default {
     const resp = await axios.get(`${prefix}/anon/icteams/${idclub}`);
     return resp;
   },
+  anon_getICclub: async function (options) {
+    const { idclub } = options;
+    const resp = await axios.get(`${prefix}/anon/icclub/${idclub}`);
+    return resp;
+  },
   clb_getICclub: async function (options) {
     const { token, idclub } = options;
     const resp = await axios.get(`${prefix}/clb/icclub/${idclub}`, {

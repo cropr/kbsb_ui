@@ -255,6 +255,7 @@ export default {
 "This club is not enrolled in the interclubs.": `This club is not enrolled in the interclubs.`,
 "This is done by adapting the rating of the players.": `This is done by adapting the rating of the players.`,
 "Thursday": `Thursday`,
+"Titular": `Titular`,
 "Titulars must be highest rated players": `Titulars must be highest rated players`,
 "Too many titulars": `Too many titulars`,
 "Tools": `Tools`,

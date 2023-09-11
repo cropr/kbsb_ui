@@ -31,13 +31,13 @@ const validationerrors = ref([])
 // data table definiton
 const headers = [
   { title: "N", key: "index"},
-	{ title: 'Name', key: 'fullname' },
-	{ title: "ID number", key: 'idnumber', sortable: false },
+	{ title: t('Name'), key: 'fullname' },
+	{ title: t("ID number"), key: 'idnumber', sortable: false },
 	{ title: "ELO", key: "assignedrating" },
 	{ title: "Club", key: "idcluborig" },
-	{ title: "Titular", key: "titular" },
-	{ title: "Status", key: "nature"},
-	{ title: "Action", key:"action" },
+	{ title: t("Titular"), key: "titular" },
+	{ title: t("Status"), key: "nature"},
+	{ title: t("Action"), key:"action" },
 ]
 const itemsPerPage = 50
 const itemsPerPageOptions = [

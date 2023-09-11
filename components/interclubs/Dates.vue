@@ -14,7 +14,7 @@ function md(s) { return  mdConverter.makeHtml(s)}
 <template>
   <v-container>
     <ContentRenderer :value="data"  >
-      <h1 v-html= "data[ttitle] ? data[ttitle] : data.title" />
+      <h2 v-html= "data[ttitle] ? data[ttitle] : data.title" />
       <div v-html= "md(data[tcontent])" class="markdowncontent" />
     </ContentRenderer>
   </v-container>
