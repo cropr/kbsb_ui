@@ -1,11 +1,10 @@
-<script set>
+<script setup>
 import { ref, computed, onMounted } from 'vue'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person";
 import { storeToRefs } from "pinia";
 
 const config = useRuntimeConfig()
-const mgmtstore = useMgmtTokenStore()
 const personstore = usePersonStore()
 const { person } = storeToRefs(personstore)
 
@@ -84,8 +83,8 @@ onMounted(()=> {
 
 
 <template>
-  <v-container>
-    <h1>Overview Management FRBE KBSB KSB</h1>
+  <v-container class="markdowncontent">
+    <h1>Overview</h1>
     <p>Here you can add, modify or delete the content of pages and news articles</p>
     <p>
       For the upload of reports of meetings and other files, we still use the old
