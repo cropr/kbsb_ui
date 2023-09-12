@@ -20,7 +20,7 @@ const players = ref([])
 const playeredit = ref({})
 const editdialog = ref(false)
 const exportalldialog = ref(false)
-const exportallvisit = ref(false)
+const exportallvisit = ref(0)
 const exportdialog = ref(false)
 
 // validation
@@ -63,18 +63,15 @@ function doEditPlayer(){
 
 function doExportAll(){
   players.value.forEach((m)=> {
-    m.nature = PLAYERSTATUS.requestedout
+    m.nature = PLAYERSTATUS.confirmedout
+    m.idclubvisit = parseInt(exportallvisit.value) + 0
   })
   exportalldialog.value = false
 }
 
 function doExportPlayer(){
-  console.log('doExportPlayer')
   playeredit.value.nature = PLAYERSTATUS.confirmedout
-  let idclubvisit = parseInt(playeredit.value.idclubvisit) + 0
-  console.log("idclubvisit", idclubvisit)
-  playeredit.value.idclubvisit = idclubvisit
-  console.log('playeredit', playeredit.value)
+  playeredit.value.idclubvisit = parseInt(playeredit.value.idclubvisit) + 0
   playerEdit2Player()
   exportdialog.value = false
 }
@@ -340,7 +337,7 @@ defineExpose({ readICclub, readMembers })
 				</VCardTitle>
 				<VCardText>
           <p>{{ $t('Exporting all players to another club')}}</p>
-          <VTextField :label="$t('Club number')" :v-model="playeredit.idclubvisit" />
+          <VTextField :label="$t('Club number')" v-model="exportallvisit" />
 				</VCardText>
 				<VCardActions>
 					<VSpacer />
@@ -385,10 +382,10 @@ defineExpose({ readICclub, readMembers })
 <style scoped>
 .imported {
   color: purple;
-  font-weight: bold;
+  font-weight: 500;
 }
 .exported {
-  color: lightgray;
+  color: rgb(186, 185, 185);
 }
 
 </style>
