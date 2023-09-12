@@ -1,8 +1,88 @@
+<script setup>
+import {ref, computed, nextTick} from 'vue'
+import { EMPTY_CLUB } from '@/util/club'
+import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, EMPTY_VENUE } from '@/util/interclubs.js'
+import { useIdtokenStore}  from '@/store/idtoken'
+import { storeToRefs } from 'pinia'
+
+const { localePath } = useLocalePath()
+const { locale, t } = useI18n()
+const { $backend } = useNuxtApp()
+const props = defineProps(["icclub","icvenues"])
+const idstore = useIdtokenStore()
+const { token: idtoken } = storeToRefs(idstore)
+const rounds =  Object.entries(INTERCLUBS_ROUNDS).map(x => ({
+   value: x[1], title: `R${x[0]}: ${x[1]}` 
+}))
+const statuscm = ref(INTERCLUBS_STATUS.CONSULTING)
+const status_consulting = computed(() => (statuscm.value == INTERCLUBS_STATUS.CONSULTING))
+const status_modifying = computed(() => (statuscm.value == INTERCLUBS_STATUS.MODIFYING))
+const venues = ref(props.icvenues)
+const emit = defineEmits(['displaySnackbar', 'updateVenues'])
+
+function  addEmptyVenue() {
+  const last = venues.value[venues.value.length - 1]
+  if (!last || last.address !== '') {
+    venues.value.push({ ...EMPTY_VENUE })
+  }
+}
+
+function cancelVenues() {
+  statuscm.value = INTERCLUBS_STATUS.CONSULTING
+  emit('updateVenues')
+}
+
+function deleteVenue(ix) {
+  venues.value,splice(ix, 1)
+  addEmptyVenue()
+}
+
+function modifyVenues() {
+  statuscm.value = INTERCLUBS_STATUS.MODIFYING
+  addEmptyVenue()
+}
+
+function readInterclubVenues() {
+  venues.value = []
+  props.icvenues.forEach((v) => {
+    v.available = v.notavailable.length ? "selected" : "all"
+    venues.value.push(v)
+  })
+}
+
+async function saveVenues() {
+  let reply
+  try {
+    let savedvenues = []
+    venues.value.forEach(v => {
+      if (v.address && v.address.length) {
+        let { available, ...others } = v
+        savedvenues.push(others)
+      }
+    })
+    reply = await $backend("interclub", "set_interclubvenues", {
+      token: idtoken.value,
+      idclub: props.icclub.idclub,
+      venues: savedvenues,
+    })
+  } catch (error) {
+    if (error.code == 401) gotoLogin()
+    emit('displaySnackbar', t(error.message))
+    return
+  }
+  statuscm.value = INTERCLUBS_STATUS.CONSULTING
+  emit('displaySnackbar', t('Interclub venue saved'))
+  emit('updateVenues')
+}
+
+defineExpose({readInterclubVenues})
+</script>
 <template>
   <v-container>
     <h2>{{ $t('Interclub venues') }}</h2>
-    <p v-if="!club.idclub">{{ $t('Please select a club to view the interclub venues') }}</p>
-    <div v-if="club.idclub">
+    <p v-if="!icclub.idclub">{{ $t('Please select a club to view the interclub venues') }}</p>
+    <div v-if="icclub.idclub">
+
       <v-container v-show="status_consulting">
         <v-row v-show="!venues.length">
           <v-col cols="12" sm="6" md="4" xl="3">
@@ -41,6 +121,7 @@
           </v-btn>
         </v-row>
       </v-container>
+
       <v-container v-show="status_modifying">
         <v-row >
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix">
@@ -82,150 +163,7 @@
           </v-btn>
         </v-row>
       </v-container>
+
     </div>
   </v-container>
 </template>
-<script>
-import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, empty_venue } from '@/util/interclubs.js'
-
-export default {
-
-  name: 'Venue',
-
-  data() {
-    return {
-      status: INTERCLUBS_STATUS.CONSULTING,
-      rounds: Object.entries(INTERCLUBS_ROUNDS).map(x => ({ value: x[1], text: `R${x[0]}: ${x[1]}` })),
-      venues: [],
-    }
-  },
-
-  props: {
-    bus: Object,
-    club: Object,
-  },
-
-  computed: {
-    logintoken() { return this.$store.state.oldlogin.value },
-    status_consulting() { return this.status == INTERCLUBS_STATUS.CONSULTING },
-    status_modifying() { return this.status == INTERCLUBS_STATUS.MODIFYING },
-  },
-
-  methods: {
-
-    addEmptyVenue() {
-      console.log('addEmpty Venue')
-      const last = this.venues[this.venues.length - 1]
-      if (!last || last.address !== '') {
-        this.venues.push({ ...empty_venue })
-      }
-    },
-
-    cancelVenues() {
-      this.status = INTERCLUBS_STATUS.CONSULTING
-      this.find_interclubvenues()
-    },
-
-    deleteVenue(ix) {
-      this.venues.splice(ix, 1)
-      this.addEmptyVenue()
-    },
-
-
-    async find_interclubvenues() {
-      console.log('running find_interclubvenues', this.club)
-      if (!this.club.id) {
-        this.venues = []
-        return
-      }
-      try {
-        const reply = await this.$api.interclub.find_interclubvenues({
-          idclub: this.club.idclub
-        })
-        console.log('get venues', reply.data)
-        this.readVenues(reply.data ? reply.data.venues : [])
-      } catch (error) {
-        const reply = error.response
-        console.error('Getting interclub venues failed', reply.data.detail)
-        this.$root.$emit('snackbar', { text: this.$t('Getting interclub venues failed') })
-      }
-    },
-
-    async modifyVenues() {
-      try {
-        const reply = await this.$api.club.verify_club_access({
-          token: this.logintoken,
-          idclub: this.club.idclub,
-          role: "InterclubAdmin"
-        })
-        this.status = INTERCLUBS_STATUS.MODIFYING
-        this.addEmptyVenue()
-      } catch (error) {
-        console.log('error', error)
-        const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break;
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t("Permission denied") })
-            break;
-          default:
-            console.error('Getting accessrules club failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Getting accessrules club failed') })
-        }
-      }
-    },
-
-    readVenues(venues) {
-      this.venues = []
-      venues.forEach((v) => {
-        v.available = v.notavailable.length ? "selected" : "all"
-        this.venues.push(v)
-      })
-    },
-
-    async saveVenues() {
-      try {
-        console.log('Saving venues')
-        let savedvenues = []
-        this.venues.forEach(v => {
-          if (v.address && v.address.length) {
-            let { available, ...others } = v
-            savedvenues.push(others)
-          }
-        })
-        console.log('savedvenues', savedvenues)
-        const reply = await this.$api.interclub.set_interclubvenues({
-          token: this.logintoken,
-          idclub: this.club.idclub,
-          venues: savedvenues,
-        })
-        this.status = INTERCLUBS_STATUS.CONSULTING
-        this.find_interclubvenues()
-      } catch (error) {
-        const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', {
-              text: this.$t("You don't have the access rights to perform this action")
-            })
-            break
-          default:
-            console.error('Saving interclub venues failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Saving interclub venues failed') })
-        }
-      }
-    },
-
-    async setupVenues(){
-      await this.find_interclubvenues()
-    },
-
-  }
-
-}
-</script>

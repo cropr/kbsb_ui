@@ -102,7 +102,6 @@
   </v-container>
 </template>
 <script>
-import Vue from 'vue'
 import { visibility_items, CLUB_STATUS, ROLES } from '@/util/club'
 
 

@@ -28,7 +28,16 @@ export const INTERCLUBS_ROUNDS = {
   11: "2024-04-24",
 };
 
-export const empty_venue = {
+export const PLAYERSTATUS = {
+  assigned: "assigned",
+  unassigned: "unassigned",
+  requestedout: "requestedout",
+  requestedin: "requestedin",
+  comfirmedin: "confirnedin",
+  confirmedout: "confirmedout",
+  locked: "locked",
+};
+export const EMPTY_VENUE = {
   address: "",
   available: "all",
   notavailable: [],

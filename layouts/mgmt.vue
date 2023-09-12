@@ -18,7 +18,6 @@
           </v-list-item-title>
         </v-list-item>
       </v-list>
-      </v-toolbar>
       <v-list dark dense class="deep-purple">
         <v-list-item to="/mgmt/overview">
           <v-list-item-icon>
@@ -71,7 +70,6 @@
         </v-btn>
       </template>
     </v-snackbar>
-    </v-navigation-drawer>
   </v-app>
 </template>
 <script>

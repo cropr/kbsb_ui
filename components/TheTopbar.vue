@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar v-cloak dark app class="green darken-2" landing="landing" :drawer="drawer" 
+  <v-app-bar v-cloak dark app color="green-darken-2" landing="landing" :drawer="drawer" 
         clipped-left>
     <v-app-bar-nav-icon @click.stop="toggleDrawer" />
     <v-toolbar-items>
@@ -47,3 +47,4 @@ export default {
   }
 }
 </script>
+˜
