@@ -1,8 +1,8 @@
-// stores/idtoken.js
+// stores/mgmttoken.js
 import { defineStore } from "pinia";
 import { ref } from "vue";
 
-export const useIdtokenStore = defineStore("idtoken", () => {
+export const useMgmtTokenStore = defineStore("mgmttoken", () => {
   const token = ref(null);
   function updateToken(newtoken) {
     token.value = newtoken;

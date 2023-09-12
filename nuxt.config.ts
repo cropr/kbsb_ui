@@ -48,6 +48,8 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       apiurl: process.env.API_URL || "http://localhost:8000/",
+      statamicurl: process.env.STATAMIC_URL || "http://localhost:8000/",
+      repo_branch: "master"
     }
   }  
 })

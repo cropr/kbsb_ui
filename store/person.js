@@ -1,13 +1,14 @@
-export const state = () => ({
-  credential: "",
-  user: "",
-  email: "",
-});
+import { defineStore } from "pinia";
+import { ref } from "vue";
 
-export const mutations = {
-  updateUser(state, o) {
-    state.credential = o.credential;
-    state.user = o.user;
-    state.email = o.email;
-  },
-};
+export const usePerosnStore = defineStore("pertson", () => {
+  const person = ref({
+    credentials: "",
+    user: "",
+    email: "",
+  });
+  function updatePerson(p) {
+    person.value = p;
+  }
+  return { person, updatePerson };
+});
