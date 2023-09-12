@@ -1,0 +1,54 @@
+runtime: python310
+
+env_variables:
+  API_URL: https://website-kbsb-test.ew.r.appspot.com/
+
+handlers:
+
+  # standard file types
+  - url: /(.*\.html)
+    mime_type: text/html
+    static_files: dist/\1
+    upload: dist/(.*\.html)
+
+  - url: /(.*\.js)
+    mime_type: text/javascript
+    static_files: dist/\1
+    upload: dist/(.*\.js)
+
+  - url: /(.*\.css)
+    mime_type: text/css
+    static_files: dist/\1
+    upload: dist/(.*\.js)
+  
+  - url: /(.*\.txt)
+    mime_type: text/plain
+    static_files: dist/\1
+    upload: dist/(.*\.txt)
+
+  # image files
+  - url: /(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+    static_files: dist/\1
+    upload: dist/(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+
+  # pdf files
+  - url: /(.*\.pdf)
+    static_files: dist/\1
+    upload: dist/(.*\.pdf)
+
+  # home 
+  - url: /
+    secure: always
+    static_files: dist/index.html
+    upload: dist/index.html
+
+  # index files
+  - url: /(.+)/
+    static_files: dist/\1/index.html
+    upload: dist/(.+)/index.html
+
+  # redirect to 'url + /' url.
+  - url: /(.+)
+    static_files: dist/redirector.html
+    upload: dist/redirector.html
+

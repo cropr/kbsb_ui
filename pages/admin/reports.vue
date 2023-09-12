@@ -1,6 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 
+const runtimeConfig = useRuntimeConfig()
 const { locale } = useI18n()
 const { $backend } = useNuxtApp()
 
@@ -36,7 +37,7 @@ const filteredfiles = computed(()=> {
 })
 
 function urlfile(url){
-  return "http://localhost:8000/api/v1/report/anon/filecontent/" + url
+  return `${runtimeConfig.public.apiurl}api/v1/report/anon/filecontent/${url}`
 }
 
 async function getReports () {

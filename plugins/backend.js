@@ -4,8 +4,10 @@ import file from "@/api/file";
 import interclub from "@/api/interclub";
 import member from "@/api/member";
 
+const runtimeConfig = useRuntimeConfig();
+
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = "http://localhost:8000";
+axios.defaults.baseURL = runtimeConfig.public.apiurl;
 
 const error_messages = {
   401: "Authentication required",

@@ -39,10 +39,10 @@ export default defineNuxtConfig({
       crawlLinks: false,
       failOnError: false, 
     },
-  },  
-  // vite: {
-  //   define: {
-  //     'process.env.DEBUG': false,
-  //   },
-  // },
+  },
+  runtimeConfig: {
+    public: {
+      apiurl: process.env.API_URL || "http://localhost:8000/",
+    }
+  }  
 })
