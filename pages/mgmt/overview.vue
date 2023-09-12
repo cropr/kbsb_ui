@@ -11,7 +11,7 @@ const { person } = storeToRefs(personstore)
 let checkinlaunched = false
 let checkinsuccess = false
 
-definePageMeta({
+definePageMeta({124
   layout: "mgmt",
 })
 
