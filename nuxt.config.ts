@@ -34,6 +34,12 @@ export default defineNuxtConfig({
     vueI18n: './i18n.config.ts',
   },  
   modules: ['@nuxt/content', '@nuxtjs/i18n', '@pinia/nuxt'],
+  nitro: {
+    prerender: {
+      crawlLinks: false,
+      failOnError: false, 
+    },
+  },  
   // vite: {
   //   define: {
   //     'process.env.DEBUG': false,

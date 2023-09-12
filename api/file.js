@@ -1,10 +1,10 @@
 import axios from "axios";
 
+const prefix = "/api/v1/report";
 export default {
   anon_get_files: async function (options) {
-    const { reports, ...options1 } = options;
-    console.log("inside anon_get_files", reports, options1);
-    return await axios.get("/api/v1/a/files", {
+    const { reports } = options;
+    return await axios.get(`${prefix}/anon/file`, {
       params: { reports },
     });
   },

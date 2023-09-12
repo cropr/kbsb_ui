@@ -36,17 +36,15 @@ const filteredfiles = computed(()=> {
 })
 
 function urlfile(url){
-  return '/api/v1/filecontent/' + url
+  return "http://localhost:8000/api/v1/report/anon/filecontent/" + url
 }
 
 async function getReports () {
   try {
     const resp = await $backend("file","anon_get_files", { reports: 1 })
-    console.log('reports returned', resp.data)
     files.value = resp.data.files
   } catch (error) {
     console.error('getting getFiles', error)
-    // this.$root.$emit('snackbar', { text: 'Getting files failed', reason: error })
   }
 }
 

@@ -36,7 +36,7 @@ const headers = [
 	{ title: "Club", key: "idcluborig" },
 	{ title: t("Titular"), key: "titular" },
 	{ title: t("Status"), key: "nature"},
-	{ title: t("Action"), key:"action" },
+	{ title: t("Actions"), key:"action" },
 ]
 const itemsPerPage = 50
 const itemsPerPageOptions = [

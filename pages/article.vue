@@ -3,11 +3,11 @@ import showdown from 'showdown'
 
 const { locale } = useI18n()
 const route = useRoute()
-console.log('route', route)
+const slug = route.query.slug || ""
 const ttitle = `title_${locale.value}`
 const tintro = `intro_${locale.value}`
 const ttext = `text_${locale.value}`
-const { data: article } = await useAsyncData(`article_${route.query.slug}`, 
+const { data: article } = await useAsyncData(`article_${slug}`, 
   () => queryContent(`/articles/${route.query.slug}`).findOne())
 
 
@@ -19,7 +19,7 @@ function md(s) { return mdConverter.makeHtml(s) }
 
 <template>
   <v-container>
-    <ContentRenderer :value="article">
+    <ContentRenderer v-if="slug" :value="article">
       <h1 v-html="article[ttitle] ? article[ttitle] : article.title" />
       <div v-html="article[tintro]" class="my-2"/>
       <hr />
