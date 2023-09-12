@@ -13,6 +13,11 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
+  content: {
+    api: {
+      baseURL: '/capi'
+    }
+  },
   css: [
     'vuetify/lib/styles/main.sass', 
     '@mdi/font/css/materialdesignicons.min.css'

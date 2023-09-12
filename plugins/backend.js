@@ -4,10 +4,7 @@ import file from "@/api/file";
 import interclub from "@/api/interclub";
 import member from "@/api/member";
 
-const runtimeConfig = useRuntimeConfig();
-
 axios.defaults.withCredentials = true;
-axios.defaults.baseURL = runtimeConfig.public.apiurl;
 
 const error_messages = {
   401: "Authentication required",
@@ -66,6 +63,8 @@ const factories = {
 };
 
 export default defineNuxtPlugin((nuxtApp) => {
+  const runtimeConfig = useRuntimeConfig();
+  axios.defaults.baseURL = runtimeConfig.public.apiurl;
   return {
     provide: {
       backend: async function (fact, method, options) {

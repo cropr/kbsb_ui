@@ -5,50 +5,86 @@ env_variables:
 
 handlers:
 
+# root 
+- url: /
+  static_files: .output/public/index.html
+  upload: .output/public/index.html
+
+
+# # url  /capi
+# - url: /capi
+#   static_dir: .output/public/capi
+
+# url ending with /
+- url: /(.+)/
+  static_files: .output/public/\1/index.html
+  upload: .output/public/(.+)/index.html
+
+
+# url with no dot
+- url: /([^.]*)$
+  static_files: .output/public/\1/index.html
+  upload: .output/public/[^.]*/index.html
+
+# the rest
+- url: /(.*)
+  static_files: .output/public/\1
+  upload: .output/public/(.*)
+
+
+
   # standard file types
-  - url: /(.*\.html)
-    mime_type: text/html
-    static_files: dist/\1
-    upload: dist/(.*\.html)
+  # - url: /(.*\.html)
+  #   mime_type: text/html
+  #   static_files: .output/public/\1
+  #   upload: .output/public/(.*\.html)
 
-  - url: /(.*\.js)
-    mime_type: text/javascript
-    static_files: dist/\1
-    upload: dist/(.*\.js)
+  # - url: /(.*\.js)
+  #   mime_type: text/javascript
+  #   static_files: .output/public/\1
+  #   upload: .output/public/(.*\.js)
 
-  - url: /(.*\.css)
-    mime_type: text/css
-    static_files: dist/\1
-    upload: dist/(.*\.js)
+  # - url: /(.*\.css)
+  #   mime_type: text/css
+  #   static_files: .output/public/\1
+  #   upload: .output/public/(.*\.css)
   
-  - url: /(.*\.txt)
-    mime_type: text/plain
-    static_files: dist/\1
-    upload: dist/(.*\.txt)
+  # - url: /(.*\.txt)
+  #   mime_type: text/plain
+  #   static_files: .output/public/\1
+  #   upload: .output/public/(.*\.txt)
 
-  # image files
-  - url: /(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
-    static_files: dist/\1
-    upload: dist/(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+  # # json files
+  # - url: /(.*\.json)
+  #   static_files: .output/public/\1
+  #   upload: .output/public/(.*\.json)
 
-  # pdf files
-  - url: /(.*\.pdf)
-    static_files: dist/\1
-    upload: dist/(.*\.pdf)
+  # # font files
+  # - url: /(.*\.(ttf|woff|eot|woff2))
+  #   static_files: .output/public/\1
+  #   upload: .output/public/(.*\.(ttf|woff|eot|woff2))
 
-  # home 
-  - url: /
-    secure: always
-    static_files: dist/index.html
-    upload: dist/index.html
+  # # image files
+  # - url: /(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+  #   static_files: .output/public/\1
+  #   upload: .output/public/(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+
+  # # pdf files
+  # - url: /(.*\.pdf)
+  #   static_files: .output/public/\1
+  #   upload: .output/public/(.*\.pdf)
+
+  # # home 
+  # - url: /
+  #   secure: always
+  #   static_files: .output/public/index.html
+  #   upload: .output/public/index.html
 
   # index files
-  - url: /(.+)/
-    static_files: dist/\1/index.html
-    upload: dist/(.+)/index.html
 
-  # redirect to 'url + /' url.
-  - url: /(.+)
-    static_files: dist/redirector.html
-    upload: dist/redirector.html
+
+  # # redirect to 'url + /' url.
+  # - url: /(.+)
+  #   static_files: .output/public/redirector.html
+  #   upload: .output/public/redirector.html
 
