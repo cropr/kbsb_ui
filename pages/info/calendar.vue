@@ -36,13 +36,11 @@ function calenderText(c) {
 }
 
 function parseCalendarItems(listci) {
-  console.log('listci', listci)
   listci.forEach((ci) => {
     if (ci.multiple) {
       parseCalendarItems(ci.multiple)
       return
     }
-    console.log('ci', ci.title)
     if (ci.date) {
       const item = { ...ci, date: new Date(ci.date) }
       calitems.value.push(item)

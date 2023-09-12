@@ -6,6 +6,10 @@ const localePath = useLocalePath()
 function gotorating() {
   return locale === 'nl' ? '/tools/ratingnl' : '/tools/ratingfr'
 }
+
+function gotoOldsite(url){
+  window.open(phpbaseurl + url, "oldsite")
+}
 </script>
 
 <style scoped>
@@ -87,12 +91,12 @@ function gotorating() {
           <v-list-item v-bind="props" :title="$t('Tools')" />
         </template>
         <v-list-item :to="gotorating()" :title="$t('ELO tournaments')" />
-        <v-list-item title="Player Manager" :href="phpbaseurl + 'sites/manager/GestionCOMMON/GestionLogin.php'" />
+        <v-list-item title="Player Manager" @click="gotoOldsite('sites/manager/GestionCOMMON/GestionLogin.php')" />
         <v-list-item :to="localePath('/clubs/manager')" title="Club Manager" />
         <v-list-item :to="localePath('/interclubs/manager')" title="Interclub Manager" />
-        <v-list-item title="Elo" :href="phpbaseurl + 'sites/manager/GestionFICHES/FRBE_Fiche.php'" />
-        <v-list-item :title="$t('Results SWAR')" :href="phpbaseurl + 'sites/manager/GestionSWAR/SwarResults.php'" />
-        <v-list-item title="Calc Norm" :href="phpbaseurl + 'sites/manager/CalcNorm/norm.php'" />
+        <v-list-item title="Elo"  @click="gotoOldsite('sites/manager/GestionFICHES/FRBE_Fiche.php')" />
+        <v-list-item :title="$t('Results SWAR')"  @click="gotoOldsite('sites/manager/GestionSWAR/SwarResults.php')" />
+        <v-list-item title="Calc Norm"  @click="gotoOldsite('sites/manager/CalcNorm/norm.php')" />
       </v-list-group>
 
       <v-list-item :to="localePath('/info/partners')" title="Partners" />

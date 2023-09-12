@@ -10,8 +10,7 @@ content_fr: 'Voir [le site web de Bycco](https://www.bycco.be)'
 title_de: 'Belgischen Jugendschachmeisterschaften 2023'
 content_de: 'Siehe [der Webseite von Bycco](https://www.bycco.be)'
 title_en: 'Belgian Youth Chess Championships 2023'
-content_english: 'See [the website of Bycco](https://www.bycco.be)'
+content_en: 'See [the website of Bycco](https://www.bycco.be)'
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a
 updated_at: 1689350674
-content_en: 'This page is not available in English'
 ---
