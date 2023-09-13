@@ -11,9 +11,9 @@ handlers:
   upload: .output/public/index.html
 
 
-# # url  /capi
-# - url: /capi
-#   static_dir: .output/public/capi
+# url  /capi
+- url: /capi
+  static_dir: .output/public/capi
 
 # url ending with /
 - url: /(.+)/
