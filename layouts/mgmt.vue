@@ -11,12 +11,12 @@ const localePath = useLocalePath();
         <VToolbarTitle>Menu</VToolbarTitle>
       </VToolbar>
       <VList class="bg-deep-purple-lighten-1 text-white">
-        <VListItem to="/mgmt/overview" title="Overview" />
-        <VListItem to="/mgmt/content" title="Site Content" />
-        <VListItem to="/mgmt/clubs" title="Clubs" />
-        <VListItem to="/mgmt/filelist" title="Files (Reports)" />
-        <VListItem to="/mgmt/interclubs" title="Interclubs" />
-        <VListItem to="/mgmt/logout" title="Logout" />
+        <VListItem :to="localePath('/mgmt/overview')" title="Overview" />
+        <VListItem :to="localePath('/mgmt/content')" title="Site Content" />
+        <VListItem :to="localePath('/mgmt/clubs')" title="Clubs" />
+        <VListItem :to="localePath('/mgmt/filelist')" title="Files (Reports)" />
+        <VListItem :to="localePath('/mgmt/interclubs')" title="Interclubs" />
+        <VListItem :to="localePath('/mgmt/logout')" title="Logout" />
       </VList>
     </VNavigationDrawer>
     <VAppBar class="bg-deep-purple-darken-1 text-white">

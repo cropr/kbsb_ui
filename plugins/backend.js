@@ -1,4 +1,5 @@
 import axios from "axios";
+import accounts from "@/api/accounts"
 import club from "@/api/club";
 import file from "@/api/file";
 import interclub from "@/api/interclub";
@@ -56,6 +57,7 @@ axios.interceptors.response.use(
 );
 
 const factories = {
+  accounts,
   club,
   file,
   interclub,

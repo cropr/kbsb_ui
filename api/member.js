@@ -13,4 +13,7 @@ export default {
     const { idnumber } = options;
     return await axios.get(`${prefix}/anon/member/${idnumber}`);
   },
+  mgmtlogin: async function(options) {
+    return await axios.get(`${prefix}/mgmt/login`, options);
+  },
 };

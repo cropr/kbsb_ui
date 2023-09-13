@@ -23,6 +23,7 @@ useHead({
   ]
 })
 
+
 function checkAuth () {
   if (person.value.credentials.length === 0) {
     navigateTo('/mgmt')
@@ -94,7 +95,7 @@ onMounted(()=> {
       Documentation about this website can be found at 
       <a href="https://sites.google.com/frbe-kbsb-ksb.be/internal/home">Internal site</a>
     </p>
-    <P>Modifying the website is done in 3 steps:</P>
+    <p>Modifying the website is done in 3 steps:</p>
     <ul>
       <li>Managing of the <NuxtLink to="/mgmt/content">Content</NuxtLink> (news articles and pages)</li>
       <li>Admin part of <NuxtLink to="/mgmt/clubs">Clubs Manager</NuxtLink></li>
