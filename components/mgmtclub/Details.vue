@@ -33,16 +33,11 @@ function cancelClub() {
 }
 
 
-function gotoLogin() {
-  navigateTo(localePath('/tools/login?url=__clubs__manager'))
-}
-
 async function modifyClub() {
   statuscm.value = CLUB_STATUS.MODIFYING
 }
 
 function readClubDetails() {
-  console.log('details.clubdetails', props.club)
   clubdetails.value = { ...EMPTY_CLUB, ...props.club }
   copyclubdetails = JSON.parse(JSON.stringify(props.club))
 }

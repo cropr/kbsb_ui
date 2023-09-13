@@ -71,6 +71,9 @@ export default defineNuxtPlugin((nuxtApp) => {
     provide: {
       backend: async function (fact, method, options) {
         const f = factories[fact][method];
+        if (!f) {
+          console.log('method not existing', fact, method)
+        }
         return await f(options);
       },
     },

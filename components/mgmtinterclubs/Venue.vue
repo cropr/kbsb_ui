@@ -1,0 +1,167 @@
+<script setup>
+import {ref, computed, nextTick} from 'vue'
+import { EMPTY_CLUB } from '@/util/club'
+import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, EMPTY_VENUE } from '@/util/interclubs.js'
+import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { storeToRefs } from 'pinia'
+
+const mgmtstore = useMgmtTokenStore()
+const {token: mgmttoken} = storeToRefs(mgmtstore) 
+const { localePath } = useLocalePath()
+const { $backend } = useNuxtApp()
+const props = defineProps(["icclub","icvenues"])
+const rounds =  Object.entries(INTERCLUBS_ROUNDS).map(x => ({
+   value: x[1], title: `R${x[0]}: ${x[1]}` 
+}))
+const statuscm = ref(INTERCLUBS_STATUS.CONSULTING)
+const status_consulting = computed(() => (statuscm.value == INTERCLUBS_STATUS.CONSULTING))
+const status_modifying = computed(() => (statuscm.value == INTERCLUBS_STATUS.MODIFYING))
+const venues = ref(props.icvenues)
+const emit = defineEmits(['displaySnackbar', 'updateVenues'])
+
+function  addEmptyVenue() {
+  const last = venues.value[venues.value.length - 1]
+  if (!last || last.address !== '') {
+    venues.value.push({ ...EMPTY_VENUE })
+  }
+}
+
+function cancelVenues() {
+  statuscm.value = INTERCLUBS_STATUS.CONSULTING
+  emit('updateVenues')
+}
+
+function deleteVenue(ix) {
+  venues.value,splice(ix, 1)
+  addEmptyVenue()
+}
+
+function modifyVenues() {
+  statuscm.value = INTERCLUBS_STATUS.MODIFYING
+  addEmptyVenue()
+}
+
+function readInterclubVenues() {
+  venues.value = []
+  props.icvenues.forEach((v) => {
+    v.available = v.notavailable.length ? "selected" : "all"
+    venues.value.push(v)
+  })
+}
+
+async function saveVenues() {
+  let reply
+  try {
+    let savedvenues = []
+    venues.value.forEach(v => {
+      if (v.address && v.address.length) {
+        let { available, ...others } = v
+        savedvenues.push(others)
+      }
+    })
+    reply = await $backend("interclub", "mgmt_set_interclubvenues", {
+      token: mgmttoken.value,
+      idclub: props.icclub.idclub,
+      venues: savedvenues,
+    })
+  } catch (error) {
+    emit('displaySnackbar', error.message)
+    return
+  }
+  statuscm.value = INTERCLUBS_STATUS.CONSULTING
+  emit('displaySnackbar', 'Interclub venue saved')
+  emit('updateVenues')
+}
+
+defineExpose({readInterclubVenues})
+</script>
+<template>
+  <v-container>
+    <h2>Interclub venues</h2>
+    <p v-if="!icclub.idclub">Please select a club to view the interclub venues</p>
+    <div v-if="icclub.idclub">
+
+      <v-container v-show="status_consulting">
+        <v-row v-show="!venues.length">
+          <v-col cols="12" sm="6" md="4" xl="3">
+            <v-card class="elevation-5">
+              <v-card-title class="card-title">
+                Venues
+              </v-card-title>
+              <v-card-text>
+                No interclub venue is defined
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix" >
+            <v-card class="elevation-5">
+              <v-card-title>
+                Venue: {{ ix + 1 }}
+              </v-card-title>
+              <v-card-text>
+                <div><b>Address:</b> <br />
+                  <span v-html="v.address.split('\n').join('<br />')"></span>
+                </div>
+                <div><b>Capacity (boards):</b> {{ v.capacity }}</div>
+                <div><b>Not available:</b> {{ v.notavailable.join(', ') }}</div>
+                <p>Optional</p>
+                <div><b>Email address venue:</b> {{ v.email }}</div>
+                <div><b>Telephone number venue:</b> {{ v.phone }}</div>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-btn @click="modifyVenues">
+            Edit
+          </v-btn>
+        </v-row>
+      </v-container>
+
+      <v-container v-show="status_modifying">
+        <v-row >
+          <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix">
+            <v-card class="elevation-5">
+              <v-card-title>
+                Venue: {{ ix + 1 }}
+              </v-card-title>
+              <v-card-text>
+                <v-textarea v-model="v.address" label="Address" rows="3" @input="addEmptyVenue"
+                  outlined />
+                <v-text-field v-model="v.capacity" label="Capacity (boards)" type="number"/>
+                <h4>Availability</h4>
+                <v-radio-group v-model="v.available">
+                  <v-radio value="all" label="All rounds" />
+                  <v-radio value="selected"
+                    label="The venue is not available on following rounds" />
+                </v-radio-group>
+                <v-select multiple v-show="v.available != 'all'" :items="rounds" chips
+                  v-model="v.notavailable"
+                  label="Select the rounds the venue is not available" />
+                <p class="fieldname">Optionally</p>
+                <v-text-field v-model="v.email" label="Email address venue" />
+                <v-text-field v-model="v.phone" label="Telephone number venue" />
+              </v-card-text>
+              <v-card-actions>
+                <v-btn fab small @click="deleteVenue(ix)" v-show="ix < venues.length - 1">
+                  <v-icon>mdi-delete</v-icon>
+                </v-btn>
+              </v-card-actions>
+            </v-card>   
+          </v-col>
+        </v-row>
+        <v-row>
+          <v-btn @click="saveVenues">
+            Save Venues
+          </v-btn>
+          <v-btn @click="cancelVenues">
+            Cancel
+          </v-btn>
+        </v-row>
+      </v-container>
+
+    </div>
+  </v-container>
+</template>

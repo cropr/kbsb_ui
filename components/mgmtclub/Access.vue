@@ -76,7 +76,6 @@ async function modifyAccess() {
 }
 
 function readClubDetails() {
-  console.log('reading club rights') 
   clubdetails.value = { ...EMPTY_CLUB, ...props.club }
   copyclubdetails = JSON.parse(JSON.stringify(props.club))  
   clubdetails.value.clubroles.forEach((c) => {
@@ -84,11 +83,9 @@ function readClubDetails() {
     if (c.nature == "InterclubAdmin") interclubadminl = c.memberlist
     if (c.nature == "InterclubCaptain") interclubcaptainl = c.memberlist
   })  
-  console.log('clubadmin', clubadmin.value)  
 }
 
 function readClubMembers(){
-  console.log('reading club members', clubadminl )
   clubadmin.value = Object.fromEntries(clubadminl.map(
     (x) => {
       const cm = props.clubmembers.find(m => m.idnumber == x)
@@ -114,7 +111,6 @@ function readClubMembers(){
 
 async function saveAccess() {
   // build a a diff between clubdetails and its cooy
-  console.log('saving')
   clubdetails.value.clubroles.forEach((c) =>{
     if (c.nature == "ClubAdmin") c.memberlist = Object.keys(clubadmin.value)
     if (c.nature == "InterclubAdmin") c.memberlist = Object.keys(interclubadmin.value)

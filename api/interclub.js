@@ -99,6 +99,15 @@ export default {
     });
     return resp;
   },
+  mgmt_getICclub: async function (options) {
+    const { token, idclub } = options;
+    const resp = await axios.get(`${prefix}/mgmt/icclub/${idclub}`, {
+      headers: {
+        Authorization: "Bearer " + token,
+      },
+    });
+    return resp;
+  },
   clb_setICclub: async function (options) {
     console.log("api clb_setICclub", options);
     const { token, idclub, ...icc } = options;
@@ -107,6 +116,14 @@ export default {
     });
     return resp;
   },
+  mgmt_setICclub: async function (options) {
+    console.log("api clb_setICclub", options);
+    const { token, idclub, ...icc } = options;
+    const resp = await axios.put(`${prefix}/mgmt/icclub/${idclub}`, icc, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    return resp;
+  },  
   clb_validateICplayers: async function (options) {
     const { token, idclub, players } = options;
     const resp = await axios.post(
@@ -118,4 +135,15 @@ export default {
     );
     return resp;
   },
+  mgmt_validateICplayers: async function (options) {
+    const { token, idclub, players } = options;
+    const resp = await axios.post(
+      `${prefix}/mgmt/icclub/${idclub}/validate`,
+      { players },
+      {
+        headers: { Authorization: "Bearer " + token },
+      }
+    );
+    return resp;
+  },  
 };

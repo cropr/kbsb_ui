@@ -5,11 +5,11 @@ import { storeToRefs } from 'pinia'
 
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
-const { $backend } = useNuxtApp()
 const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
 
 
+const { $backend } = useNuxtApp()
 const clubmembers = ref([])     // the members of a club as in signaletique
 const clubmembers_id = ref(0)
 const clubs = ref([])
@@ -33,6 +33,11 @@ function checkAuth() {
 function changeDialogCounter(i) {
     dialogcounter += i
     waitingdialog.value = (dialogcounter > 0)
+}
+
+function displaySnackbar(text, color) {
+  errortext.value = text
+  snackbar.value = true
 }
 
 async function getClubs() {
@@ -103,9 +108,7 @@ async function getClubMembers() {
     reply = await $backend("member", "anon_getclubmembers", {
       idclub: idclub.value,
     })
-  } catch (error) { 
-    console.log('NOK hetClubMembers')   
-    if (error.code == 401) gotoLogin()
+  } catch (error) {   
     displaySnackbar(t(error.message))
     return
   } finally {
@@ -133,9 +136,7 @@ async function getICVenues() {
     reply = await $backend("interclub","anon_getICVenues", {
         idclub: idclub.value
     })
-  } catch (error) {
-    console.log('NOK getICVenues')       
-    if (error.code == 401) gotoLogin()
+  } catch (error) {      
     displaySnackbar(t(error.message))
     return
   }
@@ -152,10 +153,6 @@ async function gotoLogin() {
   await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
 }
 
-function displaySnackbar(text, color) {
-  errortext.value = text
-  snackbar.value = true
-}
 
 async function selectClub(){
   await getClubDetails()

@@ -1,6 +1,6 @@
-<script setup>
+const { localePath } = useLocalePath()<script setup>
 import { ref, onMounted, nextTick } from 'vue'
-import { EMPTY_CLUB } from '@/util/club'
+import  { EMPTY_CLUB } from '@/util/club'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'
@@ -9,7 +9,8 @@ const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
 const personstore = usePersonStore();
 const { person } = storeToRefs(personstore)
-const localePath = useLocalePath()
+const { localePath } = useLocalePath()
+
 const { $backend } = useNuxtApp()
 const clubmembers = ref(null)
 const clubmembers_id = ref(0)
@@ -54,13 +55,11 @@ async function checkAuth() {
   console.log('checking if auth is already set', mgmttoken.value)
   if (mgmttoken.value) return 
   if (person.value.credentials.length === 0) {
-    console.log('credentials not valid')
-    navigateTo('/mgmt')
+    navigateTo(localePath('/mgmt'))
     return
   }
   if (!person.value.email.endsWith('@frbe-kbsb-ksb.be')) {
-    console.log('email not valid')
-    // navigateTo('/mgmt')
+    navigateTo(localePath('/mgmt'))
     return
   }
   let reply
@@ -75,13 +74,13 @@ async function checkAuth() {
     })
   }
   catch (error) {
-    console.log('login not valid')
-    // navigateTo('/mgmt')
+    navigateTo(localePath('/mgmt'))
   }
   finally {
     changeDialogCounter(-1)
   }
   mgmtstore.updateToken(reply.data)
+  console.log('mgmttoken', mgmttoken.value)
 }
 
 function changeDialogCounter(i) {
@@ -185,10 +184,6 @@ async function getClubMembers() {
   })  
 }
 
-async function gotoLogin() {
-  await navigateTo(localePath('/tools/oldlogin?url=__clubs__manager'))
-}
-
 async function selectClub(){
   await getClubDetails()
   await getClubMembers()
@@ -199,72 +194,55 @@ onMounted( () => {
   getClubs()
 })
 </script>
-
 <template>
   <VContainer>
-    <h1>Club Manager</h1>
+    <h1>Management Clubs</h1>
     <v-dialog width="10em" v-model="waitingdialog">
+        <v-card>
+          <v-card-title>Loading...</v-card-title>
+          <v-card-text>
+            <v-progress-circular indeterminate color="green" />
+          </v-card-text>
+        </v-card>
+      </v-dialog>
       <v-card>
-        <v-card-title>{{ $t('Loading...')}}</v-card-title>
         <v-card-text>
-          <v-progress-circular indeterminate color="green" />
+          Select the club: start typing number or name
+          <VAutocomplete v-model="idclub" :items="clubs" 
+            item-title="merged" item-value="idclub" color="green"
+            label="Club" clearable @update:model-value="selectClub" >
+          </VAutocomplete>
         </v-card-text>
       </v-card>
-    </v-dialog>
-    <v-card>
-      <v-card-text>
-        <v-row>
-          <!-- <v-col cols="4">
-            <v-btn @click="notyet">Create new club</v-btn><br />
-            <v-btn @click="notyet" class="mt-2">Make a mailing</v-btn>
-          </v-col> -->
-          <v-col cols="8">
-            <v-btn @click="download">Export list of clubs</v-btn>
-            <v-select label="Format" v-model="exportformat" :items="exportformats">
-            </v-select>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
-    <v-card>
-      <v-card-text>
-        {{ $t('Select the club') }} ({{ $t('Start typing number or name') }})
-        <VAutocomplete v-model="idclub" :items="clubs" 
-          item-title="merged" item-value="idclub" color="green"
-          label="Club" clearable @update:model-value="selectClub" >
-        </VAutocomplete>
-      </v-card-text>
-    </v-card>
-    <h3 class="mt-2">
-      {{ $t('Selected club') }}: {{ club.idclub }} {{ club.name_short }}
-    </h3>
-    <div class="elevation-2">
-      <v-tabs v-model="tab" color="green">
-        <v-tab>{{ $t('Details') }}</v-tab>
-        <v-tab>{{ $t('Board members') }}</v-tab>
-        <v-tab>{{ $t('Access Rights') }}</v-tab>
-      </v-tabs>
-      <v-window v-model="tab" >
-        <v-window-item :eager="true">
-          <MgmtclubDetails :club="club" ref="detail" @snackbar="displaySnackbar" 
-            @updateClub="getClubDetails" />
-        </v-window-item>
-        <v-window-item :eager="true">
-          <MgmtclubBoard  :club="club" :clubmembers="clubmembers" ref="board" @snackbar="displaySnackbar"
-            @updateClub="getClubDetails" />
-        </v-window-item>
-        <v-window-item :eager="true">
-          <MgmtclubAccess  :club="club" :clubmembers="clubmembers" ref="access" @snackbar="displaySnackbar"
-            @updateClub="getClubDetails" />
-        </v-window-item>
-      </v-window>
-    </div>
-    <VSnackbar v-model="snackbar" timeout="6000">
-      {{ errortext }}
-      <template v-slot:actions>
-        <v-btn color="green-lighten-2" variant="text" @click="snackbar = false" icon="mdi-close" />
-      </template>
-    </VSnackbar>     
-  </VContainer>
-
+      <h3 class="mt-2">
+        Selected club: {{ club.idclub }} {{ club.name_short }}
+      </h3>
+      <div class="elevation-2">
+        <v-tabs v-model="tab" color="green">
+          <v-tab>Details</v-tab>
+          <v-tab>Board members</v-tab>
+          <v-tab>Access Rights</v-tab>
+        </v-tabs>
+        <v-window v-model="tab" >
+          <v-window-item :eager="true">
+            <MgmtclubDetails :club="club" ref="detail" @snackbar="displaySnackbar" 
+              @updateClub="getClubDetails" />
+          </v-window-item>
+          <v-window-item :eager="true">
+            <MgmtclubBoard  :club="club" :clubmembers="clubmembers" ref="board" @snackbar="displaySnackbar"
+              @updateClub="getClubDetails" />
+          </v-window-item>
+          <v-window-item :eager="true">
+            <MgmtclubAccess  :club="club" :clubmembers="clubmembers" ref="access" @snackbar="displaySnackbar"
+              @updateClub="getClubDetails" />
+          </v-window-item>
+        </v-window>
+      </div>
+      <VSnackbar v-model="snackbar" timeout="6000">
+        {{ errortext }}
+        <template v-slot:actions>
+          <v-btn color="green-lighten-2" variant="text" @click="snackbar = false" icon="mdi-close" />
+        </template>
+      </VSnackbar>     
+  </VContainer>  
 </template>

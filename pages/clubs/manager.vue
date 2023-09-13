@@ -43,7 +43,6 @@ async function getClubs() {
     reply = await $backend("club", "anon_get_clubs", {})
   } catch (error) {
     if (error.code == 401) gotoLogin()
-    console.log('getClubs error')
     displaySnackbar(t(error.message))
     return
   }
@@ -82,7 +81,6 @@ async function getClubDetails() {
       })
     } catch (error) {
       if (error.code == 401) gotoLogin()
-      console.log('getClubDetails error')
       displaySnackbar(t(t(error.message)))
       return
     } finally {
@@ -110,7 +108,6 @@ async function getClubMembers() {
     })
   } catch (error) {    
     if (error.code == 401) gotoLogin()
-    console.log('getClubMembers error')
     displaySnackbar(t(error.message))
     return
   } finally {
