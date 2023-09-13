@@ -4,10 +4,14 @@ import { EMPTY_CLUB } from '@/util/club'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { storeToRefs } from 'pinia'
 
+definePageMeta({  
+  layout: "mgmt",
+})
+
 const localePath = useLocalePath()
 const { $backend } = useNuxtApp()
-const mgmtstore = useMgmtTokenStore()
-const { token: mgmttoken } = storeToRefs(mgmtstore)
+const personstore = usePersonStore()
+const { person } = storeToRefs(personstore)
 
 
 const clubmembers = ref(null)
@@ -24,9 +28,29 @@ const tab = ref(null)
 const errortext = ref(null)
 const snackbar = ref(null)
 
-function checkAuth() {
-  if (!idtoken.value) {
-    gotoLogin()
+async function checkAuth() {
+  console.log('checking if auth is already set')
+  if (!mgmttokentoken) {
+    if (person.valye.credentials.length === 0) {
+      navigateTo('/mgmt')
+    }
+    if (!person.value.email.endsWith('@frbe-kbsb-ksb.be')) {
+      navigateTo('/mgmt')
+    }
+    // now login using the Google auth token
+    await this.$api.root.login({
+      logintype: 'google',
+      token: this.person.credentials
+    }).then(
+      (resp) => {
+        this.$store.commit('newlogin/update', resp.data)
+      },
+      (error) => {
+        const resp = error.response
+        console.log('failed login', resp.data.detail)
+        this.$router.push('/mgmt')
+      }
+    )
   }
 }
 

@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person";
 import { storeToRefs } from "pinia";
 
@@ -11,7 +10,7 @@ const { person } = storeToRefs(personstore)
 let checkinlaunched = false
 let checkinsuccess = false
 
-definePageMeta({124
+definePageMeta({  
   layout: "mgmt",
 })
 
@@ -25,7 +24,7 @@ useHead({
 })
 
 function checkAuth () {
-  if (person.value.credential.length === 0) {
+  if (person.value.credentials.length === 0) {
     navigateTo('/mgmt')
   }
   if (!person.value.email.endsWith('@frbe-kbsb-ksb.be')) {
