@@ -29,6 +29,8 @@ const headers = [
 	{ title: "Name", key: 'fullname' },
 	{ title: "ID number", key: 'idnumber', sortable: false },
 	{ title: "ELO", key: "assignedrating" },
+	{ title: "F-ELO", key: "fiderating" },
+	{ title: "B-ELO", key: "natrating" },  
 	{ title: "Club", key: "idcluborig" },
 	{ title: "Titular", key: "titular" },
 	{ title: "Status", key: "nature"},
