@@ -80,6 +80,7 @@ function readClubDetails() {
   clubdetails.value = { ...EMPTY_CLUB, ...props.club }
   copyclubdetails = JSON.parse(JSON.stringify(props.club))  
   clubdetails.value.clubroles.forEach((c) => {
+    console.log('loop c', c.nature, c.memberlist)
     if (c.nature == "ClubAdmin") clubadminl = c.memberlist
     if (c.nature == "InterclubAdmin") interclubadminl = c.memberlist
     if (c.nature == "InterclubCaptain") interclubcaptainl = c.memberlist
@@ -92,22 +93,40 @@ function readClubMembers(){
   clubadmin.value = Object.fromEntries(clubadminl.map(
     (x) => {
       const cm = props.clubmembers.find(m => m.idnumber == x)
-      cm.merged = cm ? `${x} ${cm.first_name} ${cm.last_name}` : ""
-      return [x, cm.merged]
+      if (!cm) {
+        console.log('Did not find', x)
+        return []
+      }
+      else {
+        cm.merged = cm ? `${x} ${cm.first_name} ${cm.last_name}` : ""
+        return [x, cm.merged]      
+      }
     }
   ))
   interclubadmin.value = Object.fromEntries(interclubadminl.map(
     (x) => {
       const cm = props.clubmembers.find(m => m.idnumber == x)
-      cm.merged = cm ? `${x} ${cm.first_name} ${cm.last_name}` : ""
-      return [x, cm.merged]
+      if (!cm) {
+        console.log('Did not find', x)
+        return []
+      }
+      else {
+        cm.merged = cm ? `${x} ${cm.first_name} ${cm.last_name}` : ""
+        return [x, cm.merged]      
+      }      
     }
   )) 
   interclubcaptain.value = Object.fromEntries(interclubcaptainl.map(
     (x) => {
       const cm = props.clubmembers.find(m => m.idnumber == x)
-      cm.merged = cm ?`${x} ${cm.first_name} ${cm.last_name}` : ""
-      return [x, cm.merged]
+      if (!cm) {
+        console.log('Did not find', x)
+        return []
+      }
+      else {
+        cm.merged = cm ? `${x} ${cm.first_name} ${cm.last_name}` : ""
+        return [x, cm.merged]      
+      }
     }
   ))
 }
