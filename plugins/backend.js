@@ -1,6 +1,7 @@
 import axios from "axios";
-import accounts from "@/api/accounts"
+import accounts from "@/api/accounts";
 import club from "@/api/club";
+import content from "@/api/content";
 import file from "@/api/file";
 import interclub from "@/api/interclub";
 import member from "@/api/member";
@@ -59,6 +60,7 @@ axios.interceptors.response.use(
 const factories = {
   accounts,
   club,
+  content,
   file,
   interclub,
   member,
@@ -72,7 +74,7 @@ export default defineNuxtPlugin((nuxtApp) => {
       backend: async function (fact, method, options) {
         const f = factories[fact][method];
         if (!f) {
-          console.log('method not existing', fact, method)
+          console.log("method not existing", fact, method);
         }
         return await f(options);
       },

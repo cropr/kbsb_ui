@@ -3,7 +3,7 @@ import showdown from 'showdown'
 const localePath = useLocalePath()
 
 const { locale, t } = useI18n()
-
+const { $backend } = useNuxtApp()
 const ttitle = `title_${locale.value}`
 const tcontent = `content_${locale.value}`
 const { data } = await useAsyncData('home',
@@ -11,10 +11,25 @@ const { data } = await useAsyncData('home',
 const calitems = ref([])  
 const { data: caldata } = await useAsyncData('calendar',
   () => queryContent('/calendar').find())
-const { data: articles } = await useAsyncData('articles',
-  () => queryContent('/articles').find())
+const articles = ref([])
 const articles3 = ref([])
 const articlesRest = ref([])
+
+// wating dialog
+let dialogcounter = 0
+const waitingdialog = ref(false)
+function changeDialogCounter(i) {
+    dialogcounter += i
+    waitingdialog.value = (dialogcounter > 0)
+}
+
+// snackbar
+const errortext = ref(null)
+const snackbar = ref(null) 
+function displaySnackbar(text, color) {
+  errortext.value = text
+  snackbar.value = true
+}
 
 const mdConverter = new showdown.Converter()
 function md(s) { return mdConverter.makeHtml(s) }
@@ -71,24 +86,40 @@ function parseCalendarItems(listci) {
   })
 }
 
+async function getArticles(){
+  console.log('running getArticles')
+  let reply
+  changeDialogCounter(1)
+  try {
+    reply = await $backend("content","anon_get_articles", {})
+  } catch (error) {
+    displaySnackbar(t(error.message))
+    return
+  }
+  finally {
+    changeDialogCounter(-1)
+  }
+  articles.value = reply.data
+  readArticles()
+}
+
 function readArticles () {
   const now = new Date()
   const activearticles = []
   articles.value.forEach((a, index) => {
     const activedate = new Date(a.active_since)
-    const expirydate = new Date(activedate)
+    const expirydate = new Date(a.active_since)
     expirydate.setDate(expirydate.getDate() + Number(a.active_days))
+    console.log('expiry', expirydate, a)
     if (activedate < now && expirydate > now) {
       const titlei18n = a[`title_${locale.value}`]
       const introi18n = a[`intro_${locale.value}`]
-      let slug =  a._path.split('/').slice(-1)[0]
-      console.log('slug', slug)
       activearticles.push({
         activedate,
         expirydate,
         title: titlei18n && titlei18n.length ? titlei18n : a.title,
         intro: introi18n && introi18n.length ? introi18n : a.intro,
-        slug: slug
+        slug: a.slug
       })
     }
   })
@@ -105,7 +136,7 @@ function readArticles () {
 onMounted(()=> {
   parseCalendarItems(caldata.value)
   calitems.value.sort(compareDates)
-  readArticles()
+  getArticles()
 })
 
 </script>
@@ -189,9 +220,23 @@ onMounted(()=> {
         </v-col>
       </v-row>     
     </VContainer>
-
     <hr />
+    <v-dialog width="10em" v-model="waitingdialog">
+      <v-card>
+        <v-card-title>{{ $t('Loading...')}}</v-card-title>
+        <v-card-text>
+          <v-progress-circular indeterminate color="green" />
+        </v-card-text>
+      </v-card>
+    </v-dialog>
+    <VSnackbar v-model="snackbar" timeout="6000">
+      {{ errortext }}
+      <template v-slot:actions>
+        <v-btn color="green-lighten-2" variant="text" @click="snackbar = false" icon="mdi-close" />
+      </template>
+    </VSnackbar>         
   </main>
+
 </template>
 
 <style>
