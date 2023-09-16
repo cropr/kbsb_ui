@@ -4,11 +4,11 @@ import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'
 
+const { localePath } = useLocalePath()
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
 const personstore = usePersonStore();
 const { person } = storeToRefs(personstore)
-const { localePath } = useLocalePath()
 
 const { $backend } = useNuxtApp()
 const clubmembers = ref([])     // the members of a club as in signaletique
@@ -85,7 +85,7 @@ async function getClubs() {
     reply = await $backend("club", "anon_get_clubs", {})
   } catch (error) {
     console.log('getClubs error')
-    displaySnackbar(t(error.message))
+    displaySnackbar(error.message)
     return
   }
   finally {
