@@ -42,7 +42,13 @@ function setupGoogle () {
     prompt_parent_id: 'parent_id'
   })
   console.log("initialize:", reply)
-  const prompt = google.accounts.id.prompt()
+  const prompt = google.accounts.id.prompt((notif) =>{
+    console.log('notif', notif)
+    if (notif.isNotDisplayed() || notif.isSkippedMoment()) {
+        document.cookie =  `g_state=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+        google.accounts.id.prompt()
+    }
+  })
   console.log("prompt", prompt)
   console.log('Setup google sign in completed')
 }

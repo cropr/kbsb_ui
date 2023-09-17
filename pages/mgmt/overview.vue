@@ -3,6 +3,8 @@ import { ref, computed, onMounted } from 'vue'
 import { usePersonStore } from "@/store/person";
 import { storeToRefs } from "pinia";
 
+const localePath = useLocalePath()
+
 const config = useRuntimeConfig()
 const personstore = usePersonStore()
 const { person } = storeToRefs(personstore)
@@ -85,27 +87,16 @@ onMounted(()=> {
 <template>
   <v-container class="markdowncontent">
     <h1>Overview</h1>
-    <p>Here you can add, modify or delete the content of pages and news articles</p>
     <p>
-      For the upload of reports of meetings and other files, we still use the old
-      interface at
-      <a href="/mgmt/filelist">Files (Reports)</a>
-    </p>
-    <p>
-      Documentation about this website can be found at 
+      Documentation about the management of the website can be found at 
       <a href="https://sites.google.com/frbe-kbsb-ksb.be/internal/home">Internal site</a>
     </p>
-    <p>Modifying the website is done in 3 steps:</p>
     <ul>
-      <li>Managing of the <NuxtLink to="/mgmt/content">Content</NuxtLink> (news articles and pages)</li>
-      <li>Admin part of <NuxtLink to="/mgmt/clubs">Clubs Manager</NuxtLink></li>
-      <li>Admin part of <NuxtLink to="/mgmt/interclubs">Interclubs Manager</NuxtLink></li>
-      <li>Managing of <NuxtLink to="/mgmt/filelist">Files</NuxtLink> (reports and other assets)</li>
+      <li>Managing of the <NuxtLink :to="localePath('/mgmt/content')">Content</NuxtLink> (news articles and pages)</li>
+      <li>Admin part of <NuxtLink :to="localePath('/mgmt/clubs')">Clubs Manager</NuxtLink></li>
+      <li>Admin part of <NuxtLink :to="localePath('/mgmt/interclubs')">Interclubs Manager</NuxtLink></li>
+      <li>Managing of <NuxtLink :to="localePath('/mgmt/filelist')">Files</NuxtLink> (reports and other assets)</li>
     </ul>
-    <p>
-      Documentaion about the management of the website can be found at 
-      <a href="https://sites.google.com/frbe-kbsb-ksb.be/internal/home">Internal site</a>
-    </p>
   </v-container>
 </template>
 

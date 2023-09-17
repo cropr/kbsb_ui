@@ -115,6 +115,11 @@ function minelo(p) {
   return Math.max (minrating, 1000)
 }
 
+const limitdate = new Date(2023,8,17)    // 18 sept 2023
+
+const expired = ref((new Date()).getTime() > limitdate.getTime())
+
+
 function openEditPlayer(idnumber) {
 	playeredit.value = { ... playersindexed[idnumber]}
 	editdialog.value = true
@@ -284,7 +289,7 @@ defineExpose({ readICclub, readMembers })
         </template>
       </VDataTable>
       <div>
-        <VBtn @click="validatePlayerlist()" color="primary">{{ $t('Save') }}</VBtn>
+        <VBtn @click="validatePlayerlist()" color="primary" :disabled="expired">{{ $t('Save') }}</VBtn>
       </div>
     </div>
 		<VDialog v-model="editdialog"  width="20em">
