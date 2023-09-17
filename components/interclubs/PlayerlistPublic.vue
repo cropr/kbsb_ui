@@ -1,15 +1,29 @@
 <script setup>
 import {ref, computed, nextTick} from 'vue'
 
+// waiting
+const waitingdialog = ref(false)
+let dialogcounter = 0
+function changeDialogCounter(i) {
+    dialogcounter += i
+    waitingdialog.value = (dialogcounter > 0)
+}
+
+//snackbar
+const errortext = ref(null)
+const snackbar = ref(null)
+function displaySnackbar(text, color) {
+  errortext.value = text
+  snackbar.value = true
+}
+
 const { t } = useI18n()
 const { $backend } = useNuxtApp()
-
 const idclub = ref(null)
 const clubs = ref([])
 const icclub = ref([])
 const players = ref([])
-const waitingdialog = ref(false)
-let dialogcounter = 0
+
 
 const headers = [
   { title: "N", key: "index"},
@@ -26,16 +40,10 @@ const itemsPerPageOptions = [
   {value: -1, title: 'All'}
 ]
 
-function changeDialogCounter(i) {
-    dialogcounter += i
-    waitingdialog.value = (dialogcounter > 0)
-}
 
 
-function displaySnackbar(text, color) {
-  errortext.value = text
-  snackbar.value = true
-}
+
+
 
 function filterPlayers(){
   if (!icclub.value.enrolled) {

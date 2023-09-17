@@ -90,6 +90,10 @@ export default {
     const resp = await axios.get(`${prefix}/anon/icclub/${idclub}`);
     return resp;
   },
+  anon_getICclubs: async function () {
+    const resp = await axios.get(`${prefix}/anon/icclub`);
+    return resp;
+  },
   clb_getICclub: async function (options) {
     const { token, idclub } = options;
     const resp = await axios.get(`${prefix}/clb/icclub/${idclub}`, {
@@ -123,7 +127,7 @@ export default {
       headers: { Authorization: "Bearer " + token },
     });
     return resp;
-  },  
+  },
   clb_validateICplayers: async function (options) {
     const { token, idclub, players } = options;
     const resp = await axios.post(
@@ -145,5 +149,14 @@ export default {
       }
     );
     return resp;
-  },  
+  },
+
+  // results and pairings
+  anon_getICseries: async function (options) {
+    const { idclub, round } = options;
+    const resp = await axios.get(`${prefix}/anon/icseries`, {
+      params: { idclub, round },
+    });
+    return resp;
+  },
 };

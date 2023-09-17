@@ -28,6 +28,14 @@ export const INTERCLUBS_ROUNDS = {
   11: "2024-04-24",
 };
 
+export const PLAYERS_DIVISION = {
+  1: 8,
+  2: 8,
+  3: 6,
+  4: 4,
+  5: 4,
+};
+
 export const PLAYERSTATUS = {
   assigned: "assigned",
   unassigned: "unassigned",
