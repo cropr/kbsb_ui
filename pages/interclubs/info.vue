@@ -19,7 +19,7 @@ const tab = ref(null)
         <InterclubsPlayerlistPublic />
       </v-window-item>      
       <v-window-item :eager="true">
-        <InterclubsResults />
+        <InterclubsResultsPublic />
       </v-window-item>      
       <v-window-item :eager="true">
         <InterclubsVenuePublic />

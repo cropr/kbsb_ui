@@ -32,6 +32,7 @@ const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
 async function getSeries(){
   let reply
   changeDialogCounter(1)
+  console.log('getSeries', round.value, idclub.value)
   try {
     reply = await $backend("interclub","anon_getICseries", {
       round: round.value,
@@ -98,7 +99,7 @@ onMounted(()=>{
         </VAutocomplete>        
       </v-col>
       <v-col cols="8" sm="5">
-        <VSelect v-model="round" :items="ic_rounds">
+        <VSelect v-model="round" :items="ic_rounds" :label="t('Round')">
         </VSelect>
       </v-col>
       <v-col cols="4" sm="2">
