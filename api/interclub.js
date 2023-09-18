@@ -54,7 +54,7 @@ export default {
   set_interclubvenues: async function (options) {
     const { token, idclub, venues } = options;
     const resp = await axios.post(
-      `${prefix}/clb/venue//${idclub}`,
+      `${prefix}/clb/venue/${idclub}`,
       { venues },
       { headers: { Authorization: "Bearer " + token } }
     );

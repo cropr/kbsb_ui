@@ -3,15 +3,21 @@ import { ref } from 'vue'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
 import { PLAYERSTATUS } from "@/util/interclubs"
-const props = defineProps(["icclub", "members"])
-const idclub = ref(0) 
-const enrolled = ref(null)
 
+
+// commumication with manager
 const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
-const { t } = useI18n()
-const { $backend } = useNuxtApp()
+const props = defineProps(["icclub", "members"])
+defineExpose({ readICclub, readMembers })
+
+// idtoken
 const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
+
+const idclub = ref(0) 
+const enrolled = ref(null)
+const { t } = useI18n()
+const { $backend } = useNuxtApp()
 
 
 // playerlist
@@ -22,6 +28,10 @@ const editdialog = ref(false)
 const exportalldialog = ref(false)
 const exportallvisit = ref(0)
 const exportdialog = ref(false)
+const accessdenied = ref(true)
+const titularchoices = [{title: t("No titular"), value:""}]
+const limitdate = new Date("2023-09-18") // 18 sept at 0h00   
+const expired = ref((new Date()).getTime() > limitdate.getTime())
 
 // validation
 const validationdialog = ref(false)
@@ -46,9 +56,6 @@ const itemsPerPageOptions = [
   {value: 150, title: '150'},
   {value: -1, title: 'All'}
 ]
-
-
-const titularchoices = [{title: t("No titular"), value:""}]
 
 
 // methods alphabetically
@@ -115,11 +122,6 @@ function minelo(p) {
   return Math.max (minrating, 1000)
 }
 
-const limitdate = new Date(2023,8,17)    // 18 sept 2023
-
-const expired = ref((new Date()).getTime() > limitdate.getTime())
-
-
 function openEditPlayer(idnumber) {
 	playeredit.value = { ... playersindexed[idnumber]}
 	editdialog.value = true
@@ -142,7 +144,26 @@ function playerEdit2Player(){
   playersindexed[playeredit.value.idnumber] = players.value[aix]
 }
 
-function readICclub() {
+async function readICclub() {
+  let reply
+  idclub.value = props.icclub.idclub
+  if (!idclub.value) return
+  emit('changeDialogCounter', 1)
+  try {
+    reply = await $backend("club", "verify_club_access", {
+      idclub: idclub.value,
+      role: "InterclubAdmin",
+      token: idtoken.value,
+    })
+    accessdenied.value = false
+  } catch (error) {
+    if (error.code == 401) {
+      accessdenied.value = true
+    } 
+    return
+  } finally {
+    emit('changeDialogCounter',-1)
+  }
   idclub.value = props.icclub.idclub
   enrolled.value = props.icclub.enrolled
 	players.value = [...props.icclub.players]
@@ -227,13 +248,20 @@ async function validatePlayerlist(){
 
  
 
-defineExpose({ readICclub, readMembers })
+
 </script>
 <template>
 	<v-container>
 		<h2>{{ $t('Player list') }}</h2>
-		<p v-if="!idclub">{{ $t('Please select a club to view the interclubs player list') }}</p>
-		<div v-if="idclub">
+    <div v-if="!idclub">
+      <v-alert  type="warning" variant="outlined" closable 
+        :text="t('Please select a club to view the interclubs player list')"/>
+    </div>
+		<div v-if="idclub && accessdenied">
+      <v-alert type="error" variant="outlined" closable 
+        :text="t('Permission denied')" />
+    </div>    
+		<div v-if="icclub.idclub && !accessdenied">
       <div v-if="enrolled">
         {{ $t('This club is enrolled in Interclubs 2023-24') }}
       </div>

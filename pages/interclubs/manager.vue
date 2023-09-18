@@ -65,20 +65,6 @@ async function getClubDetails() {
   if (idclub.value) {
     changeDialogCounter(1)
     try {
-      reply = await $backend("club", "verify_club_access", {
-        idclub: idclub.value,
-        role: "InterclubAdmin",
-        token: idtoken.value,
-      })
-    } catch (error) {
-      if (error.code == 401) gotoLogin()
-      displaySnackbar(t(error.message))
-      return
-    } finally {
-      changeDialogCounter(-1)
-    }
-    changeDialogCounter(1)
-    try {
       reply = await $backend("interclub","clb_getICclub" ,{
         idclub: idclub.value,
         token: idtoken.value
@@ -93,6 +79,8 @@ async function getClubDetails() {
     icclub.value = reply.data
     await getClubMembers()
     nextTick(() => {
+      reficclub.value.readICclub()
+      reficvenues.value.getICVenues()
       reficclub.value.readICclub()
     })    
   }
@@ -125,29 +113,7 @@ async function getClubMembers() {
   })  
 }
 
-async function getICVenues() {
-  let reply
-  if (!idclub.value) {
-    icvenues.value = []
-    return
-  }
-  changeDialogCounter(1)
-  try {
-    reply = await $backend("interclub","anon_getICVenues", {
-        idclub: idclub.value
-    })
-  } catch (error) {      
-    displaySnackbar(t(error.message))
-    return
-  }
-  finally {
-    changeDialogCounter(-1)
-  }
-  icvenues.value = reply.data.venues
-  nextTick(() => {
-    reficvenues.value.readInterclubVenues()
-  })   
-}
+
 
 async function gotoLogin() {
   await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
@@ -155,8 +121,17 @@ async function gotoLogin() {
 
 
 async function selectClub(){
-  await getClubDetails()
-  await getICVenues()
+  console.log('selected', idclub.value)
+  if (idclub.value) {
+    await getClubDetails()
+  }
+  else {
+    icclub.value = {}
+    nextTick(() => {
+      reficclub.value.readICclub()
+      reficvenues.value.getICVenues()      
+    })  
+  }
 }
 
 onMounted( () => {
@@ -193,14 +168,15 @@ onMounted( () => {
       <v-tabs v-model="tab" color="green">
         <v-tab>{{ $t('Venue') }}</v-tab>
         <v-tab>{{ $t('Player list') }}</v-tab>        
+        <v-tab>{{ $t('Planning') }}</v-tab>        
       </v-tabs>
       <v-window v-model="tab" >
         <v-window-item :eager="true">
-          <InterclubsVenue  ref="reficvenues"
+          <InterclubsIcVenue  ref="reficvenues"
             :icclub="icclub" 
-            :icvenues="icvenues" 
             @snackbar="displaySnackbar"
-            @updateVenues="getICVenues" />
+            @changeDialogCounter="changeDialogCounter"
+            />
         </v-window-item>
         <v-window-item :eager="true">
           <InterclubsIcClub ref="reficclub" 
@@ -210,6 +186,13 @@ onMounted( () => {
             @changeDialogCounter="changeDialogCounter"
           />
         </v-window-item>
+        <v-window-item :eager="true">
+          <InterclubsIcPlanning ref="reficplanning"
+            :icclub="icclub" 
+            @displaySnackbar="displaySnackbar"
+            @changeDialogCounter="changeDialogCounter"
+          />
+        </v-window-item>        
       </v-window>
     </div>
     <VSnackbar v-model="snackbar" timeout="6000">
