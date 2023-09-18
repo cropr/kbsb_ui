@@ -145,6 +145,7 @@ defineExpose({readInterclubVenues})
                 <p class="fieldname">{{ $t('Optionally') }}</p>
                 <v-text-field v-model="v.email" :label="$t('Email address venue')" />
                 <v-text-field v-model="v.phone" :label="$t('Telephone number venue')" />
+                <v-textarea v-model="v.remarks" :label="$t('Remarks')" />
               </v-card-text>
               <v-card-actions>
                 <v-btn fab small @click="deleteVenue(ix)" v-show="ix < venues.length - 1">
