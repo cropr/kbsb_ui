@@ -10,13 +10,13 @@ const { token: idtoken } = storeToRefs(idstore)
 
 
 const { $backend } = useNuxtApp()
-const clubmembers = ref([])     // the members of a club as in signaletique
+const clubmembers = ref([])          // the members of a club as in signaletique
 const clubmembers_id = ref(0)
 const clubs = ref([])
-const icclub = ref({})          // the icclub data
-const reficclub = ref(null)     // the ref to the window tab
-const icvenues = ref([])        // the venues data
-const reficvenues = ref(null)   // the ref to the window tab
+const icclub = ref({})          
+const reficclub = ref(null)     
+const reficvenues = ref(null)   
+const reficplanning = ref(null)
 const idclub = ref(null)
 const waitingdialog = ref(false)
 let dialogcounter = 0
@@ -78,10 +78,11 @@ async function getClubDetails() {
     }
     icclub.value = reply.data
     await getClubMembers()
+    console.log('icclub: ', icclub.value.idclub)
     nextTick(() => {
       reficclub.value.readICclub()
       reficvenues.value.getICVenues()
-      reficclub.value.readICclub()
+      reficplanning.value.readICclub()
     })    
   }
 }
@@ -129,7 +130,8 @@ async function selectClub(){
     icclub.value = {}
     nextTick(() => {
       reficclub.value.readICclub()
-      reficvenues.value.getICVenues()      
+      reficvenues.value.getICVenues() 
+      reficplanning.value.readICclub()     
     })  
   }
 }

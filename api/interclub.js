@@ -150,12 +150,34 @@ export default {
     );
     return resp;
   },
+  mgmt_getXlsAllplayerlists: async function (options) {
+    const { token } = options;
+    const resp = await axios.get(`${prefix}/mgmt/command/xls/allplayerlist`, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    return resp;
+  },
 
   // results and pairings
   anon_getICseries: async function (options) {
     const { idclub, round } = options;
     const resp = await axios.get(`${prefix}/anon/icseries`, {
       params: { idclub, round },
+    });
+    return resp;
+  },
+  clb_getICseries: async function (options) {
+    const { token, idclub, round } = options;
+    const resp = await axios.get(`${prefix}/clb/icseries`, {
+      headers: { Authorization: "Bearer " + token },
+      params: { idclub, round },
+    });
+    return resp;
+  },
+  clb_saveICplanning: async function (options) {
+    const { token, ...option } = options;
+    const resp = await axios.put(`${prefix}/clb/icplanning`, options, {
+      headers: { Authorization: "Bearer " + token },
     });
     return resp;
   },

@@ -9,7 +9,7 @@ const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
 const personstore = usePersonStore();
 const { person } = storeToRefs(personstore)
-const { localePath } = useLocalePath()
+const localePath = useLocalePath()
 
 const { $backend } = useNuxtApp()
 const clubmembers = ref(null)

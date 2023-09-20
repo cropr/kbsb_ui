@@ -1,80 +1,25 @@
+<script setup>
+import { nextTick } from "vue";
+import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { storeToRefs } from 'pinia'
+
+const mgmtstore = useMgmtTokenStore()
+const {token: mgmttoken} = storeToRefs(mgmtstore)
+const runtimeConfig = useRuntimeConfig(); 
+
+
+function d() {
+  console.log('token', mgmttoken.value)
+  const url = `${runtimeConfig.public.apiurl}api/v1/interclubs/mgmt/command/xls/allplayerlist?token=${mgmttoken.value}`
+  window.location.href = url
+}
+
+
+</script>
 <template>
   <v-container>
-    <h3>CSV Downloads</h3>
-    <v-btn @click="downloadEnrollments">Download enrollments</v-btn>
-    <v-btn @click="downloadVenues">Download venues</v-btn>
+    <h3>Excel Downloads</h3>
+    <v-btn @click="d">Download all playerlist</v-btn>
   </v-container>
 </template>
-<script>
 
-function atou(b64) {
-  return decodeURIComponent(escape(atob(b64)));
-}
-
-function utoa(data) {
-  return btoa(unescape(encodeURIComponent(data)));
-}
-
-export default {
-
-  name: 'Downloads',
-
-
-  computed: {
-    logintoken() { return this.$store.state.newlogin.value },
-  },
-
-  methods: {
-
-    async downloadEnrollments() {
-      try {
-        const reply = await this.$api.interclub.mgmt_csv_interclubenrollment({
-          token: this.logintoken
-        })
-        console.log('reply', reply)
-        const link = document.createElement('a')
-        link.download = 'enrollments.csv'
-        link.href = 'data:text/csv;base64,' + btoa(reply.data)
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        this.$root.$emit('snackbar', {
-          text: 'Downloading CSV enrollments successful',
-          color: 'black'
-        })
-      } catch (error) {
-        const reply = error.response
-        console.error('Downloading enrollment', reply.data.detail)
-        this.$root.$emit('snackbar', { text: 'Downloading CSV enrollments failed' })
-      }
-    },
-
-    async downloadVenues() {
-      try {
-        console.log('downloading venues')
-        const reply = await this.$api.interclub.mgmt_csv_interclubvenues({
-          token: this.logintoken
-        })
-        console.log('reply', reply)
-        const link = document.createElement('a')
-        link.download = 'venues.csv'
-        link.href = 'data:text/csv;base64,' + utoa(reply.data)
-        document.body.appendChild(link)
-        link.click()
-        document.body.removeChild(link)
-        this.$root.$emit('snackbar', {
-          text: 'Downloading CSV venues successful',
-          color: 'black'
-        })
-      } catch (error) {
-        const reply = error.response
-        console.error('Downloading venues', reply.data.detail)
-        this.$root.$emit('snackbar', { text: 'Downloading CSV venues failed' })
-      }
-    },
-
-  },
-
-
-}
-</script>

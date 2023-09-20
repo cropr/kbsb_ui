@@ -213,7 +213,8 @@ onMounted( () => {
     <div class="elevation-2">
       <v-tabs v-model="tab" color="green">
         <v-tab>Venue</v-tab>
-        <v-tab>Player list</v-tab>   
+        <v-tab>Player list</v-tab>
+        <v-tab>Downloads</v-tab>   
       </v-tabs>
       <v-window v-model="tab" >
         <v-window-item :eager="true">
@@ -230,6 +231,9 @@ onMounted( () => {
             @displaySnackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
           />
+        </v-window-item>
+        <v-window-item :eager="true">
+          <MgmtinterclubsDownloads />
         </v-window-item>
       </v-window>
     </div>

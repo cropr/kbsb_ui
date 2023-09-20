@@ -86,7 +86,6 @@ function doExportPlayer(){
 }
 
 function fillinPlayerList() {
-  console.log('fillingIn playerlist', props.members)
   if (props.members) {
     props.members.forEach((m) => {
       if (!playersindexed[m.idnumber]) {
@@ -147,7 +146,10 @@ function playerEdit2Player(){
 async function readICclub() {
   let reply
   idclub.value = props.icclub.idclub
-  if (!idclub.value) return
+  if (!idclub.value) {
+    accessdenied.value = true
+    return
+  }
   emit('changeDialogCounter', 1)
   try {
     reply = await $backend("club", "verify_club_access", {
@@ -252,74 +254,73 @@ async function validatePlayerlist(){
 </script>
 <template>
 	<v-container>
-		<h2>{{ $t('Player list') }}</h2>
     <div v-if="!idclub">
       <v-alert  type="warning" variant="outlined" closable 
         :text="t('Please select a club to view the interclubs player list')"/>
     </div>
-		<div v-if="idclub && accessdenied">
-      <v-alert type="error" variant="outlined" closable 
-        :text="t('Permission denied')" />
-    </div>    
-		<div v-if="icclub.idclub && !accessdenied">
-      <div v-if="enrolled">
-        {{ $t('This club is enrolled in Interclubs 2023-24') }}
-      </div>
-      <div v-else>
-        {{ $t('This club is not enrolled in Interclubs 2023-24') }}
-        <VBtn @click="openExportAll"  color="primary" class="ml-8">
-          {{ $t('Export all players') }}
-        </VBtn>
-      </div>
-      <VDataTable :items="players" :headers="headers"
-        density="compact" 
-        :items-per-page="itemsPerPage"
-        :items-per-page-options="itemsPerPageOptions" 
-        :sort-by="[{key: 'assignedrating', order: 'desc'}]"
-      >
-        <template v-slot:item.index="{ item, index }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ index + 1 }}
-          </span>
-        </template>
-        <template v-slot:item.fullname="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.fullname }}
-          </span>
-        </template>
-        <template v-slot:item.idnumber="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.idnumber }}
-          </span>
-        </template>
-        <template v-slot:item.assignedrating="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.assignedrating }}
-          </span>
-        </template>
-        <template v-slot:item.idclub="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.idclub }}
-          </span>
-        </template>
-        <template v-slot:item.nature="{ item }">
-          <span v-show="item.columns.nature == 'confirmedout'">
-            <VIcon>mdi-arrow-right-bold</VIcon>{{ status(item.columns.idnumber) }}
-          </span>
-        </template>                         
-        <template v-slot:item.action="{ item }">
-          <VBtn density="compact" color="green" icon="mdi-pencil" variant="text"
-            v-show="canEdit(item.columns.idnumber)" 
-            @click="openEditPlayer(item.columns.idnumber)" 
-          />
-          <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text" 
-            @click="openExportPlayer(item.columns.idnumber)" />
-        </template>
-      </VDataTable>
-      <div>
-        <VBtn @click="validatePlayerlist()" color="primary" :disabled="expired">{{ $t('Save') }}</VBtn>
-      </div>
+    <div v-if="idclub">
+  		<div v-if="accessdenied">
+        <v-alert type="error" variant="outlined" closable 
+          :text="t('Permission denied')" />
+      </div>    
+      <div v-if="!accessdenied">
+        <div v-if="!enrolled">
+          {{ $t('This club is not enrolled in Interclubs 2023-24') }}
+          <VBtn @click="openExportAll"  color="primary" class="ml-8">
+            {{ $t('Export all players') }}
+          </VBtn>
+        </div>
+        <VDataTable :items="players" :headers="headers"
+          density="compact" 
+          :items-per-page="itemsPerPage"
+          :items-per-page-options="itemsPerPageOptions" 
+          :sort-by="[{key: 'assignedrating', order: 'desc'}]"
+        >
+          <template v-slot:item.index="{ item, index }">
+            <span :class="rowstyle(item.columns.idnumber)">
+              {{ index + 1 }}
+            </span>
+          </template>
+          <template v-slot:item.fullname="{ item }">
+            <span :class="rowstyle(item.columns.idnumber)">
+              {{ item.columns.fullname }}
+            </span>
+          </template>
+          <template v-slot:item.idnumber="{ item }">
+            <span :class="rowstyle(item.columns.idnumber)">
+              {{ item.columns.idnumber }}
+            </span>
+          </template>
+          <template v-slot:item.assignedrating="{ item }">
+            <span :class="rowstyle(item.columns.idnumber)">
+              {{ item.columns.assignedrating }}
+            </span>
+          </template>
+          <template v-slot:item.idclub="{ item }">
+            <span :class="rowstyle(item.columns.idnumber)">
+              {{ item.columns.idclub }}
+            </span>
+          </template>
+          <template v-slot:item.nature="{ item }">
+            <span v-show="item.columns.nature == 'confirmedout'">
+              <VIcon>mdi-arrow-right-bold</VIcon>{{ status(item.columns.idnumber) }}
+            </span>
+          </template>                         
+          <template v-slot:item.action="{ item }">
+            <VBtn density="compact" color="green" icon="mdi-pencil" variant="text"
+              v-show="canEdit(item.columns.idnumber)" 
+              @click="openEditPlayer(item.columns.idnumber)" 
+            />
+            <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text" 
+              @click="openExportPlayer(item.columns.idnumber)" />
+          </template>
+        </VDataTable>
+        <div>
+          <VBtn @click="validatePlayerlist()" color="primary" :disabled="expired">{{ $t('Save') }}</VBtn>
+        </div>
+      </div>    
     </div>
+
 		<VDialog v-model="editdialog"  width="20em">
 			<VCard>
 				<VCardTitle>

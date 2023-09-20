@@ -1,5 +1,5 @@
 <script setup>
-import {ref, computed, nextTick} from 'vue'
+import { ref } from 'vue'
 import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION} from '@/util/interclubs'
 
 // waiting
@@ -23,7 +23,7 @@ const { $backend } = useNuxtApp()
 const idclub = ref(null)
 const icclubs = ref([])
 const icseries = ref([])
-const round = ref(1)
+const round = ref("1")
 const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
   return {value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}`}
 })
@@ -69,9 +69,7 @@ async function getClubs() {
 function clubLabel(pairingnr, s) {
   let name = ""
   s.teams.forEach((t)=>{
-    console.log('t', t, pairingnr)
     if (t.pairingnumber == pairingnr) {
-      console.log('found', t)
       name = t.name
       return
     }
@@ -114,16 +112,24 @@ onMounted(()=>{
       <v-card-text>
         <v-row v-for="enc in s.rounds[0].encounters">
           <v-col cols="5">
-            {{ clubLabel(enc.pairingnr_home, s) }}
+            {{ enc.icclub_home}}: {{ clubLabel(enc.pairingnr_home, s) }}
           </v-col>
           <v-col cols="5">
-            {{ clubLabel(enc.pairingnr_visit, s) }}
+            {{ enc.icclub_visit}}: {{ clubLabel(enc.pairingnr_visit, s) }}
           </v-col>
           <v-col cols="2">
             {{ enc.matchpoint_home }} - {{ enc.matchpoint_visit }} 
           </v-col>
         </v-row>
       </v-card-text>
-    </v-card> 
+    </v-card>
+    <v-dialog width="10em" v-model="waitingdialog">
+      <v-card>
+        <v-card-title>{{ $t('Loading...')}}</v-card-title>
+        <v-card-text>
+          <v-progress-circular indeterminate color="green" />
+        </v-card-text>
+      </v-card>
+    </v-dialog> 
   </v-container>
 </template>

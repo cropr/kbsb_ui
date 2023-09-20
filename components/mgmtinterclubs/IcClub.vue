@@ -75,7 +75,6 @@ function doExportPlayer(){
 }
 
 function fillinPlayerList() {
-  console.log('fillingIn playerlist', props.members)
   if (props.members) {
     props.members.forEach((m) => {
       if (!playersindexed[m.idnumber]) {
@@ -138,6 +137,7 @@ function readICclub() {
   enrolled.value = props.icclub.enrolled
 	players.value = [...props.icclub.players]
 	playersindexed = Object.fromEntries(players.value.map((x)=> [x.idnumber, x]))
+  titularchoices.splice(1,titularchoices.length-1)
 	props.icclub.teams.forEach((t)=> {
 		titularchoices.push({title: t.name, value: t.name })
 	})
@@ -167,7 +167,7 @@ async function savePlayerlist(){
 			players: players.value,
 		})
   } catch (error) {
-    emit('displaySnackbar', t(error.message))
+    emit('displaySnackbar', error.message)
     return
   }
   finally {
@@ -197,7 +197,7 @@ async function validatePlayerlist(){
 			players: players.value,
 		})
   } catch (error) {
-    emit('displaySnackbar', t(error.message))
+    emit('displaySnackbar', error.message)
     return
   }
   finally {
@@ -220,16 +220,16 @@ defineExpose({ readICclub, readMembers })
 </script>
 <template>
 	<v-container>
-		<h2>{{ $t('Player list') }}</h2>
-		<p v-if="!idclub">{{ $t('Please select a club to view the interclubs player list') }}</p>
+		<h2>Player list</h2>
+		<p v-if="!idclub">Please select a club to view the interclubs player list</p>
 		<div v-if="idclub">
       <div v-if="enrolled">
-        {{ $t('This club is enrolled in Interclubs 2023-24') }}
+        This club is enrolled in Interclubs 2023-24
       </div>
       <div v-else>
-        {{ $t('This club is not enrolled in Interclubs 2023-24') }}
+        This club is not enrolled in Interclubs 2023-24
         <VBtn @click="openExportAll"  color="primary" class="ml-8">
-          {{ $t('Export all players') }}
+          Export all players
         </VBtn>
       </div>
       <VDataTable :items="players" :headers="headers"
@@ -278,13 +278,13 @@ defineExpose({ readICclub, readMembers })
         </template>
       </VDataTable>
       <div>
-        <VBtn @click="validatePlayerlist()" color="primary">{{ $t('Save') }}</VBtn>
+        <VBtn @click="validatePlayerlist()" color="primary">Save</VBtn>
       </div>
     </div>
 		<VDialog v-model="editdialog"  width="20em">
 			<VCard>
 				<VCardTitle>
-					{{ $t('Edit') }}: {{ playeredit.fullname }}
+					Edit: {{ playeredit.fullname }}
 					<VDivider />
 				</VCardTitle>
 				<VCardText>
@@ -302,64 +302,64 @@ defineExpose({ readICclub, readMembers })
 				</VCardText>
 				<VCardActions>
 					<VSpacer />
-					<VBtn @click="doEditPlayer">{{ $t('OK') }}</VBtn>
-					<VBtn @click="editdialog  = false">{{ $t('Cancel') }}</VBtn>
+					<VBtn @click="doEditPlayer">OK</VBtn>
+					<VBtn @click="editdialog  = false">Cancel</VBtn>
 				</VCardActions>
 			</VCard> 
 		</VDialog>
     <VDialog v-model="exportdialog"  width="30em">
 			<VCard>
 				<VCardTitle>
-					{{ $t('Export') }}: {{ playeredit.fullname }}
+					Export: {{ playeredit.fullname }}
 					<VDivider />
 				</VCardTitle>
 				<VCardText>
-          <p>{{ $t('Exporting a player to another club')}}</p>
-          <VTextField :label="$t('Club number')" v-model="playeredit.idclubvisit" />
+          <p>Exporting a player to another club</p>
+          <VTextField label="Club number" v-model="playeredit.idclubvisit" />
 				</VCardText>
 				<VCardActions>
 					<VSpacer />
-					<VBtn @click="doExportPlayer">{{ $t('OK') }}</VBtn>
-					<!-- <VBtn @click="undoExportPlayer">{{ $t('Undo export') }}</VBtn> -->
-          <VBtn @click="exportdialog = false">{{ $t('Cancel') }}</VBtn>
+					<VBtn @click="doExportPlayer">OK</VBtn>
+					<!-- <VBtn @click="undoExportPlayer">Undo export</VBtn> -->
+          <VBtn @click="exportdialog = false">Cancel</VBtn>
 				</VCardActions>
 			</VCard> 
 		</VDialog>
     <VDialog v-model="exportalldialog"  width="30em">
 			<VCard>
 				<VCardTitle>
-					{{ $t('Export all players') }}
+					Export all players
 					<VDivider />
 				</VCardTitle>
 				<VCardText>
-          <p>{{ $t('Exporting all players to another club')}}</p>
-          <VTextField :label="$t('Club number')" v-model="exportallvisit" />
+          <p>Exporting all players to another club</p>
+          <VTextField label="Club number" v-model="exportallvisit" />
 				</VCardText>
 				<VCardActions>
 					<VSpacer />
-					<VBtn @click="doExportAll">{{ $t('OK') }}</VBtn>
-					<VBtn @click="exportalldialog = false">{{ $t('Cancel') }}</VBtn>
+					<VBtn @click="doExportAll">OK</VBtn>
+					<VBtn @click="exportalldialog = false">Cancel</VBtn>
 				</VCardActions>
 			</VCard> 
 		</VDialog>    
 		<VDialog v-model="validationdialog"  width="30em">
 			<VCard>
 				<VCardTitle>
-					{{ $t('Validation of player list.')}}
+					Validation of player list.
 					<VDivider />
 				</VCardTitle>
 				<VCardText class="markdowncontent">
-					<div>{{ $t("The player list contains validation errors") }}</div>
+					<div>The player list contains validation errors</div>
           <ul>
             <li v-for="(err, ix) in validationerrors" :key="ix">
               <span v-show="err.errortype == 'ELO'">
-                {{  t('Player') }} {{ err.detail  }}: {{  t(err.message) }}
+                Player {{ err.detail  }}: {{  err.message }}
               </span>
               <span v-show="err.errortype == 'TitularOrder'">
-                {{  t(err.message) }}
+                {{  err.message }}
               </span>
               <span v-show="err.errortype == 'TitularCount'">
-                {{ err.detail  }}: {{  t(err.message) }}
+                {{ err.detail  }}: {{  err.message }}
               </span>            
             </li>
           </ul>
@@ -367,8 +367,8 @@ defineExpose({ readICclub, readMembers })
 				</VCardText>
 				<VCardActions>
 					<VSpacer />
-					<VBtn @click="savePlayerlist()">{{ $t('Save anyhow') }}</VBtn>
-					<VBtn @click="validationdialog = false">{{ $t('Cancel') }}</VBtn>
+					<VBtn @click="savePlayerlist()">Save anyhow</VBtn>
+					<VBtn @click="validationdialog = false">Cancel</VBtn>
 				</VCardActions>
 			</VCard> 
 		</VDialog>    
