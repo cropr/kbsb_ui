@@ -174,9 +174,24 @@ export default {
     });
     return resp;
   },
+  mgmt_getICseries: async function (options) {
+    const { token, idclub, round } = options;
+    const resp = await axios.get(`${prefix}/mgmt/icseries`, {
+      headers: { Authorization: "Bearer " + token },
+      params: { idclub, round },
+    });
+    return resp;
+  },
   clb_saveICplanning: async function (options) {
     const { token, ...option } = options;
     const resp = await axios.put(`${prefix}/clb/icplanning`, options, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    return resp;
+  },
+  mgmt_saveICresults: async function (options) {
+    const { token, ...option } = options;
+    const resp = await axios.put(`${prefix}/mgmt/icresults`, options, {
       headers: { Authorization: "Bearer " + token },
     });
     return resp;

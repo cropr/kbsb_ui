@@ -1,7 +1,11 @@
 <script setup>
-import { nextTick } from "vue";
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { storeToRefs } from 'pinia'
+
+// communication with manager
+const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
+const props = defineProps(["icclub", "round"])
+defineExpose({ setup })
 
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore)
@@ -14,6 +18,9 @@ function d() {
   window.location.href = url
 }
 
+function setup(){
+  console.log('setup downloads')
+}
 
 </script>
 <template>

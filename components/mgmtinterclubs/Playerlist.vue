@@ -4,13 +4,22 @@ import { storeToRefs } from 'pinia'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { PLAYERSTATUS } from "@/util/interclubs"
 
+// communication with manager
+const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
+defineExpose({ setup })
+
+// idtoken
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
-const props = defineProps(["icclub", "members"])
+
+const { $backend } = useNuxtApp()
+
+// datamodel
+const clubmembers = ref([])
+const clubmembers_id = ref(null)
+const icclub = ref({})
 const idclub = ref(0) 
 const enrolled = ref(null)
-const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
-const { $backend } = useNuxtApp()
 let playersindexed = {}
 const players = ref([])
 const playeredit = ref({})
@@ -18,6 +27,7 @@ const editdialog = ref(false)
 const exportalldialog = ref(false)
 const exportallvisit = ref(0)
 const exportdialog = ref(false)
+const titularchoices = [{title: "No titular", value:""}]
 
 // validation
 const validationdialog = ref(false)
@@ -42,10 +52,6 @@ const itemsPerPageOptions = [
   {value: 150, title: '150'},
   {value: -1, title: 'All'}
 ]
-
-
-const titularchoices = [{title: "No titular", value:""}]
-
 
 // methods alphabetically
 
@@ -75,28 +81,26 @@ function doExportPlayer(){
 }
 
 function fillinPlayerList() {
-  if (props.members) {
-    props.members.forEach((m) => {
-      if (!playersindexed[m.idnumber]) {
-        let newplayer = {
-          assignedrating:  Math.max(m.fiderating, m.natrating),
-          fiderating: m.fiderating,
-          fullname: `${m.last_name}, ${m.first_name}`,
-          first_name: m.first_name,
-          idnumber: m.idnumber,
-          idcluborig: m.idclub,
-          idclubvisit: 0,
-          last_name: m.last_name,
-          natrating: m.natrating,
-          nature: enrolled.value ? PLAYERSTATUS.assigned: PLAYERSTATUS.unassigned,
-          titular: "",
-          transfer: null,
-        }
-        players.value.push(newplayer)
-        playersindexed[m.idnumber] = newplayer
+  clubmembers.value.forEach((m) => {
+    if (!playersindexed[m.idnumber]) {
+      let newplayer = {
+        assignedrating:  Math.max(m.fiderating, m.natrating),
+        fiderating: m.fiderating,
+        fullname: `${m.last_name}, ${m.first_name}`,
+        first_name: m.first_name,
+        idnumber: m.idnumber,
+        idcluborig: m.idclub,
+        idclubvisit: 0,
+        last_name: m.last_name,
+        natrating: m.natrating,
+        nature: enrolled.value ? PLAYERSTATUS.assigned: PLAYERSTATUS.unassigned,
+        titular: "",
+        transfer: null,
       }
-	  })
-  }
+      players.value.push(newplayer)
+      playersindexed[m.idnumber] = newplayer
+    }
+  })
   players.value.forEach((p) => {
     if (!p.fullname) {
       p.fullname = `${p.last_name}, ${p.first_name}`
@@ -104,6 +108,36 @@ function fillinPlayerList() {
   })
 }
 
+async function getClubMembers() {
+  // get club members for member database currently on old site
+  if (!idclub.value) {
+    clubmembers.value = []
+    return
+  }
+  if (idclub.value == clubmembers_id.value) return  // it is already read in
+  emit('changeDialogCounter',1)
+  let reply
+  clubmembers.value = []
+  try {
+    reply = await $backend("member", "anon_getclubmembers", {
+      idclub: idclub.value,
+    })
+  } catch (error) {    
+    console.log('getClubMembers error')
+    displaySnackbar(t(error.message))
+    return
+  } finally {
+    emit('changeDialogCounter', -1)
+  }
+  clubmembers_id.value = idclub.value
+  const members = reply.data
+  members.forEach(p => {
+    p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
+  })
+  clubmembers.value = members.sort((a, b) =>
+    (a.last_name > b.last_name ? 1 : -1))
+  fillinPlayerList()  
+}
 
 function minelo(p) {
   let minrating = p.fiderating ? Math.min(p.fiderating, p.natrating) - 100 : p.natrating - 100
@@ -133,18 +167,16 @@ function playerEdit2Player(){
 }
 
 function readICclub() {
-  idclub.value = props.icclub.idclub
-  enrolled.value = props.icclub.enrolled
-	players.value = [...props.icclub.players]
+  idclub.value = icclub.value.idclub
+  enrolled.value = icclub.value.enrolled
+	players.value = icclub.value.players ? [...icclub.value.players] : []
 	playersindexed = Object.fromEntries(players.value.map((x)=> [x.idnumber, x]))
   titularchoices.splice(1,titularchoices.length-1)
-	props.icclub.teams.forEach((t)=> {
-		titularchoices.push({title: t.name, value: t.name })
-	})
-  fillinPlayerList()
-}
-
-function readMembers() {
+  if (icclub.value.teams) {
+    icclub.value.teams.forEach((t)=> {
+      titularchoices.push({title: t.name, value: t.name })
+    })
+  }
   fillinPlayerList()
 }
 
@@ -175,13 +207,19 @@ async function savePlayerlist(){
   }
   validationdialog.value = false
 	emit('displaySnackbar', 'Playerlist saved')
-	// emit('updateICclub')
 }
 
 function status(idnumber) {
   const pl = playersindexed[idnumber]
   return pl ? pl.idclubvisit : ""
 }
+
+function setup(clb, mbrs){
+  console.log('setup playerlist', clb)
+  icclub.value = clb
+  readICclub()
+  getClubMembers()
+} 
 
 async function validatePlayerlist(){
   if (!enrolled.value) {
@@ -214,9 +252,6 @@ async function validatePlayerlist(){
    
 }
 
- 
-
-defineExpose({ readICclub, readMembers })
 </script>
 <template>
 	<v-container>

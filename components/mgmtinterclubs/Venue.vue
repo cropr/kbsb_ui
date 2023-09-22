@@ -9,7 +9,11 @@ const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
 const { localePath } = useLocalePath()
 const { $backend } = useNuxtApp()
-const props = defineProps(["icclub","icvenues"])
+
+// communication with managaer
+const props = defineProps(["icclub"])
+defineExpose({setup})
+
 const rounds =  Object.entries(INTERCLUBS_ROUNDS).map(x => ({
    value: x[1], title: `R${x[0]}: ${x[1]}` 
 }))
@@ -36,10 +40,37 @@ function deleteVenue(ix) {
   addEmptyVenue()
 }
 
+async function getICVenues() {
+  let reply
+  if (!idclub.value) {
+    icvenues.value = []
+    return
+  }
+  emit('changeDialogCounter',1)
+  try {
+    reply = await $backend("interclub","anon_getICVenues", {
+        idclub: idclub.value
+    })
+  } catch (error) {
+    console.log('NOK getICVenues')       
+    displaySnackbar(t(error.message))
+    return
+  }
+  finally {
+    enit('changeDialogCounter', -1)
+  }
+  icvenues.value = reply.data.venues
+  nextTick(() => {
+    refvenues.value.readInterclubVenues()
+  })   
+}
+
 function modifyVenues() {
   statuscm.value = INTERCLUBS_STATUS.MODIFYING
   addEmptyVenue()
 }
+
+
 
 function readInterclubVenues() {
   venues.value = []
@@ -70,10 +101,12 @@ async function saveVenues() {
   }
   statuscm.value = INTERCLUBS_STATUS.CONSULTING
   emit('displaySnackbar', 'Interclub venue saved')
-  emit('updateVenues')
 }
 
-defineExpose({readInterclubVenues})
+function setup(){
+  console.log('setup venue')
+}
+
 </script>
 <template>
   <v-container>

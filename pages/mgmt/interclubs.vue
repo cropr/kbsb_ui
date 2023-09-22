@@ -3,32 +3,81 @@ import { ref, onMounted, nextTick } from 'vue'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'
+import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
 
-const localePath = useLocalePath()
+// idtoken
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
 const personstore = usePersonStore();
 const { person } = storeToRefs(personstore)
 
-const { $backend } = useNuxtApp()
+// communication with tabbed children
+const tab = ref(null)
+const refclub = ref(null) 
+const refdownloads = ref(null)
+const refplayerlist = ref(null)
+const refresults = ref(null) 
+const refvenues = ref(null) 
+function changeTab(){
+  console.log('changeTab', tab.value)
+  switch (tab.value) {
+    case 'club':
+      refclub.value.setup()
+      break
+    case 'downloads':
+      refdownloads.value.setup()
+      break
+    case 'playerlist':
+      console.log('firing playerlist', icclub.value)
+      refplayerlist.value.setup(icclub.value)
+      break
+    case 'results':
+      refresults.value.setup(icclub.value, round.value)
+      break
+    case 'venues':
+      refvenues.value.setup()
+      break    
+  }
+}
+
+// datamodel
 const clubmembers = ref([])     // the members of a club as in signaletique
 const clubmembers_id = ref(0)
 const clubs = ref([])
 const icclub = ref({})          // the icclub data
-const reficclub = ref(null)     // the ref to the window tab
 const icvenues = ref([])        // the venues data
-const reficvenues = ref(null)   // the ref to the window tab
 const idclub = ref(null)
+const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
+  return {value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}`}
+})
+const round = ref("1")
+
+// waiting dialog
 const waitingdialog = ref(false)
 let dialogcounter = 0
-const tab = ref(null)
+function changeDialogCounter(i) {
+    dialogcounter += i
+    waitingdialog.value = (dialogcounter > 0)
+}
+
+// snackbar
 const errortext = ref(null)
 const snackbar = ref(null)
+function displaySnackbar(text, color) {
+  errortext.value = text
+  snackbar.value = true
+}
 
+
+// others
+const localePath = useLocalePath()
+const { $backend } = useNuxtApp()
+
+
+// layout + header
 definePageMeta({
   layout: 'mgmt'
 })
-
 useHead({
   script: [
     { src: 'https://accounts.google.com/gsi/client', defer: true }
@@ -36,6 +85,7 @@ useHead({
   title: 'Management Clubs',    
 })
 
+// methods alphabetically
 
 async function checkAuth() {
   if (mgmttoken.value) return 
@@ -68,15 +118,6 @@ async function checkAuth() {
   mgmtstore.updateToken(reply.data)
 }
 
-function changeDialogCounter(i) {
-    dialogcounter += i
-    waitingdialog.value = (dialogcounter > 0)
-}
-
-function displaySnackbar(text, color) {
-  errortext.value = text
-  snackbar.value = true
-}
 
 async function getClubs() {
   let reply
@@ -113,72 +154,19 @@ async function getClubDetails() {
     } finally {
       changeDialogCounter(-1)
     }
+    console.log('gotClubDetails', reply.data)
     icclub.value = reply.data
-    await getClubMembers()
-    nextTick(() => {
-      reficclub.value.readICclub()
-    })    
+    changeTab()
   }
+  else {
+    changeTab()
+  }
+
 }
 
-async function getClubMembers() {
-  // get club members for member database currently on old site
-  if (!idclub.value) return
-  if (idclub.value == clubmembers_id.value) return  // it is already read in
-  changeDialogCounter(1)
-  let reply
-  clubmembers.value = null
-  try {
-    reply = await $backend("member", "anon_getclubmembers", {
-      idclub: idclub.value,
-    })
-  } catch (error) {    
-    console.log('getClubMembers error')
-    displaySnackbar(t(error.message))
-    return
-  } finally {
-    changeDialogCounter(-1)
-  }
-  clubmembers_id.value = idclub.value
-  const members = reply.data
-  members.forEach(p => {
-    p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
-  })
-  clubmembers.value = members.sort((a, b) =>
-    (a.last_name > b.last_name ? 1 : -1))
-  nextTick(() => {
-    reficclub.value.readMembers()
-  })   
-}
 
-async function getICVenues() {
-  let reply
-  if (!idclub.value) {
-    icvenues.value = []
-    return
-  }
-  changeDialogCounter(1)
-  try {
-    reply = await $backend("interclub","anon_getICVenues", {
-        idclub: idclub.value
-    })
-  } catch (error) {
-    console.log('NOK getICVenues')       
-    displaySnackbar(t(error.message))
-    return
-  }
-  finally {
-    changeDialogCounter(-1)
-  }
-  icvenues.value = reply.data.venues
-  nextTick(() => {
-    reficvenues.value.readInterclubVenues()
-  })   
-}
-
-async function selectClub(){
-  await getClubDetails()
-  await getICVenues()
+function selectClub(){
+  getClubDetails()
 }
 
 onMounted( () => {
@@ -192,7 +180,7 @@ onMounted( () => {
     <h1>Interclubs Manager</h1>
     <v-dialog width="10em" v-model="waitingdialog">
       <v-card>
-        <v-card-title>'Loading...</v-card-title>
+        <v-card-title>Loading...</v-card-title>
         <v-card-text>
           <v-progress-circular indeterminate color="green" />
         </v-card-text>
@@ -200,40 +188,65 @@ onMounted( () => {
     </v-dialog>
     <v-card>
       <v-card-text>
-        Select the club: start typing number or name
-        <VAutocomplete v-model="idclub" :items="clubs" 
+        <v-row>
+        <v-col cols="12" sm="6">
+          <VAutocomplete v-model="idclub" :items="clubs" 
           item-title="merged" item-value="idclub" color="green"
           label="Club" clearable @update:model-value="selectClub" >
         </VAutocomplete>
+        </v-col>
+        <v-col cols="12" sm="6">
+          <VSelect v-model="round" :items="ic_rounds" label="Round" 
+            @update:model-value="changeTab">
+          </VSelect>
+        </v-col>
+      </v-row>
+
       </v-card-text>
     </v-card>
     <h3 class="mt-2">
       Selected club: {{ icclub.idclub }} {{ icclub.name }}
     </h3>
     <div class="elevation-2">
-      <v-tabs v-model="tab" color="green">
-        <v-tab>Venue</v-tab>
-        <v-tab>Player list</v-tab>
-        <v-tab>Downloads</v-tab>   
+      <v-tabs v-model="tab" color="purple" @update:modelValue="changeTab" >
+        <!-- <v-tab value="venues">Venues</v-tab>
+        <v-tab value="enrollments">Enrollment</v-tab> -->
+        <v-tab value="playerlist">Player lists</v-tab>
+        <v-tab value="results">Results</v-tab>        
+        <v-tab value="downloads">Downloads</v-tab>   
       </v-tabs>
-      <v-window v-model="tab" >
-        <v-window-item :eager="true">
-          <MgmtinterclubsVenue  ref="reficvenues"
+      <v-window v-model="tab" @update:modelValue="changeTab">
+        <!-- <v-window-item value="venues" :eager="true">
+          <MgmtinterclubsVenue  ref="refvenues"
             :icclub="icclub" 
-            :icvenues="icvenues" 
-            @snackbar="displaySnackbar"
-            @updateVenues="getICVenues" />
+            @displaySnackbar="displaySnackbar"
+            @changeDialogCounter="changeDialogCounter" 
+          />
         </v-window-item>
-        <v-window-item :eager="true">
-          <MgmtinterclubsIcClub ref="reficclub" 
+        <v-window-item value="enrollment" :eager="true">
+          <MgmtinterclubsEnrollment ref="refenrollment"
             :icclub="icclub" 
-            :members="clubmembers"
+            @displaySnackbar="displaySnackbar"
+            @changeDialogCounter="changeDialogCounter" 
+          />
+        </v-window-item> -->
+        <v-window-item value="playerlist" :eager="true">
+          <MgmtinterclubsPlayerlist ref="refplayerlist"
             @displaySnackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
           />
         </v-window-item>
-        <v-window-item :eager="true">
-          <MgmtinterclubsDownloads />
+        <v-window-item value="results" :eager="true">
+          <MgmtinterclubsResults ref="refresults"
+            @displaySnackbar="displaySnackbar"
+            @changeDialogCounter="changeDialogCounter"          
+          />
+        </v-window-item>
+        <v-window-item value="downloads" :eager="true">
+          <MgmtinterclubsDownloads ref="refdownloads"
+            :icclub="icclub" 
+            :round="round"          
+          />
         </v-window-item>
       </v-window>
     </div>

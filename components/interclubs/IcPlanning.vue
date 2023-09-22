@@ -228,30 +228,6 @@ async function savePlanning(){
 async function validatePlanning(){
   let reply
   savePlanning()
-  // try {
-  //   emit('changeDialogCounter', 1)
-	// 	reply = await $backend("interclub","clb_validateICplanning", {
-	// 		token: idtoken.value,
-	// 		idclub: idclub.value,
-	// 		players: players.value,
-	// 	})
-  // } catch (error) {
-  //   if (error.code == 401) gotoLogin()
-  //   emit('displaySnackbar', t(error.message))
-  //   return
-  // }
-  // finally {
-  //   emit('changeDialogCounter',-1)
-  // }
-  // console.log('reply.data', reply.data)
-  // validationerrors.value = reply.data
-  // if (validationerrors.value.length) {
-  //   validationdialog.value = true
-  // }
-  // else {
-  //   savePlanning()
-  // }
-   
 }
 
  
