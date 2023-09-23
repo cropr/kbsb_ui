@@ -31,8 +31,7 @@ const resultchoices = ["1-0","½-½","0-1","1-0 FF", "0-1 FF", "0-0 FF",""]
 
 // methods alphabetically
 
-function changeResult(tr){
-  console.log('changing result', tr)
+function calc_points(tr){
   let bphome = 0
   let bpvisit = 0
   let mphome = 0
@@ -82,7 +81,6 @@ function clubLabel(pairingnr, teams) {
 function fillPlayerlist(iccb){
   if (!iccb && !iccb.idclub) return
   let players = iccb.players.filter((p) => p.nature != "confirmedout")
-  console.log('filling playerlist_buffer', iccb.idclub, players[0])
   playerlist_buffer.value[iccb.idclub] = players
   players.forEach((p) => {
     p.full = `${p.idnumber} ${p.last_name}, ${p.first_name}`
@@ -92,7 +90,6 @@ function fillPlayerlist(iccb){
 
 async function getICclub(clb_id) {
   if (playerlist_buffer.value[clb_id]) {
-    console.log('skipping', clb_id)
     return
   }
   let reply
@@ -109,7 +106,6 @@ async function getICclub(clb_id) {
     emit('changeDialogCounter', -1)
   }
   let cl = reply.data
-  console.log('got icclub', cl.idclub, cl.players[0])
   fillPlayerlist(cl)
 }
 
@@ -151,13 +147,14 @@ async function readICSeries(){
           getICclub(enc.icclub_visit)
           let tr = {
             division: division,
-            index: index,
+            games: enc.games,
             icclub_home: enc.icclub_home,
             icclub_visit:  enc.icclub_visit,
+            index: index,
             name_home: clubLabel(enc.pairingnr_home, s.teams),
             name_visit: clubLabel(enc.pairingnr_visit, s.teams),
             nrgames: PLAYERS_DIVISION[division],
-            games: enc.games,
+            round: round.value
           }
           for (let i = tr.games.length; i < tr.nrgames; i++) {
             tr.games[i] = {
@@ -170,6 +167,7 @@ async function readICSeries(){
             if (g.idnumber_home == 0) g.idnumber_home = null
             if (g.idnumber_visit == 0) g.idnumber_visit = null
           })
+          calc_points(tr)
           tra.push(tr)
         }
       }
@@ -186,7 +184,6 @@ async function saveResults(){
     emit('changeDialogCounter', 1)
 		reply = await $backend("interclub","mgmt_saveICresults", {
 			token: mgmttoken.value,
-			idclub: idclub.value,
 			results: teamresults.value
 		})
   } catch (error) {
@@ -221,6 +218,9 @@ function setup(clb, rnd){
 </script>
 
 <template>
+  <v-container v-if="!idclub">
+    No club selected.
+  </v-container>
 	<v-container v-if="idclub">
     <VBtn color="purple" @click="saveResults">Save results</VBtn>
     <v-card v-for="tr in teamresults" class="my-2">
@@ -240,7 +240,7 @@ function setup(clb, rnd){
             </v-col>
             <v-col cols="2">
               <VSelect v-model="g.result" :items="resultchoices" 
-                density="compact"  :hide-details="true" @update:model-value="changeResult(tr)"/>
+                density="compact"  :hide-details="true" @update:model-value="calc_points(tr)"/>
             </v-col>
             <v-col col="5">
               <VAutocomplete v-model="g.idnumber_visit" density="compact" 

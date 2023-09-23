@@ -28,14 +28,13 @@ function changeTab(){
       refdownloads.value.setup()
       break
     case 'playerlist':
-      console.log('firing playerlist', icclub.value)
       refplayerlist.value.setup(icclub.value)
       break
     case 'results':
       refresults.value.setup(icclub.value, round.value)
       break
     case 'venues':
-      refvenues.value.setup()
+      refvenues.value.setup(icclub.value)
       break    
   }
 }
@@ -209,39 +208,38 @@ onMounted( () => {
     </h3>
     <div class="elevation-2">
       <v-tabs v-model="tab" color="purple" @update:modelValue="changeTab" >
-        <!-- <v-tab value="venues">Venues</v-tab>
-        <v-tab value="enrollments">Enrollment</v-tab> -->
-        <v-tab value="playerlist">Player lists</v-tab>
         <v-tab value="results">Results</v-tab>        
+        <v-tab value="venues">Venues</v-tab>
+        <v-tab value="playerlist">Player lists</v-tab>
+        <!-- <v-tab value="enrollments">Enrollment</v-tab> -->
         <v-tab value="downloads">Downloads</v-tab>   
       </v-tabs>
       <v-window v-model="tab" @update:modelValue="changeTab">
-        <!-- <v-window-item value="venues" :eager="true">
-          <MgmtinterclubsVenue  ref="refvenues"
-            :icclub="icclub" 
+        <v-window-item value="results" :eager="true">
+          <MgmtinterclubsResults ref="refresults"
+            @displaySnackbar="displaySnackbar"
+            @changeDialogCounter="changeDialogCounter"          
+          />
+        </v-window-item>      
+        <v-window-item value="venues" :eager="true">
+          <MgmtinterclubsVenue  ref="refvenues" 
             @displaySnackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter" 
           />
         </v-window-item>
-        <v-window-item value="enrollment" :eager="true">
-          <MgmtinterclubsEnrollment ref="refenrollment"
-            :icclub="icclub" 
-            @displaySnackbar="displaySnackbar"
-            @changeDialogCounter="changeDialogCounter" 
-          />
-        </v-window-item> -->
         <v-window-item value="playerlist" :eager="true">
           <MgmtinterclubsPlayerlist ref="refplayerlist"
             @displaySnackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
           />
         </v-window-item>
-        <v-window-item value="results" :eager="true">
-          <MgmtinterclubsResults ref="refresults"
+        <!-- <v-window-item value="enrollment" :eager="true">
+          <MgmtinterclubsEnrollment ref="refenrollment"
+            :icclub="icclub" 
             @displaySnackbar="displaySnackbar"
-            @changeDialogCounter="changeDialogCounter"          
+            @changeDialogCounter="changeDialogCounter" 
           />
-        </v-window-item>
+        </v-window-item>         -->
         <v-window-item value="downloads" :eager="true">
           <MgmtinterclubsDownloads ref="refdownloads"
             :icclub="icclub" 

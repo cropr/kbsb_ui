@@ -1,28 +1,30 @@
 <script setup>
-import {ref, computed, nextTick} from 'vue'
-import { EMPTY_CLUB } from '@/util/club'
-import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, EMPTY_VENUE } from '@/util/interclubs.js'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { ref, nextTick } from 'vue'
 import { storeToRefs } from 'pinia'
+import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, EMPTY_VENUE } from '@/util/interclubs'
 
+// communication with manager
+const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
+defineExpose({ setup })
+
+// idtoken
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
-const { localePath } = useLocalePath()
 const { $backend } = useNuxtApp()
 
-// communication with managaer
-const props = defineProps(["icclub"])
-defineExpose({setup})
-
+// datamodel
+const idclub = ref(0) 
 const rounds =  Object.entries(INTERCLUBS_ROUNDS).map(x => ({
    value: x[1], title: `R${x[0]}: ${x[1]}` 
 }))
 const statuscm = ref(INTERCLUBS_STATUS.CONSULTING)
 const status_consulting = computed(() => (statuscm.value == INTERCLUBS_STATUS.CONSULTING))
 const status_modifying = computed(() => (statuscm.value == INTERCLUBS_STATUS.MODIFYING))
-const venues = ref(props.icvenues)
-const emit = defineEmits(['displaySnackbar', 'updateVenues'])
+const venues = ref([])
 
+
+// methods 
 function  addEmptyVenue() {
   const last = venues.value[venues.value.length - 1]
   if (!last || last.address !== '') {
@@ -32,18 +34,17 @@ function  addEmptyVenue() {
 
 function cancelVenues() {
   statuscm.value = INTERCLUBS_STATUS.CONSULTING
-  emit('updateVenues')
 }
 
 function deleteVenue(ix) {
-  venues.value,splice(ix, 1)
+  venues.value.splice(ix, 1)
   addEmptyVenue()
 }
 
 async function getICVenues() {
   let reply
   if (!idclub.value) {
-    icvenues.value = []
+    venues.value = []
     return
   }
   emit('changeDialogCounter',1)
@@ -57,27 +58,18 @@ async function getICVenues() {
     return
   }
   finally {
-    enit('changeDialogCounter', -1)
+    emit('changeDialogCounter', -1)
   }
-  icvenues.value = reply.data.venues
-  nextTick(() => {
-    refvenues.value.readInterclubVenues()
-  })   
-}
-
-function modifyVenues() {
-  statuscm.value = INTERCLUBS_STATUS.MODIFYING
-  addEmptyVenue()
-}
-
-
-
-function readInterclubVenues() {
-  venues.value = []
-  props.icvenues.forEach((v) => {
+  venues.value = reply.data.venues
+  venues.value.forEach((v) => {
     v.available = v.notavailable.length ? "selected" : "all"
     venues.value.push(v)
-  })
+  })  
+}
+
+function modifyICvenues() {
+  statuscm.value = INTERCLUBS_STATUS.MODIFYING
+  addEmptyVenue()
 }
 
 async function saveVenues() {
@@ -92,7 +84,7 @@ async function saveVenues() {
     })
     reply = await $backend("interclub", "mgmt_set_interclubvenues", {
       token: mgmttoken.value,
-      idclub: props.icclub.idclub,
+      idclub: idclub.value,
       venues: savedvenues,
     })
   } catch (error) {
@@ -103,18 +95,20 @@ async function saveVenues() {
   emit('displaySnackbar', 'Interclub venue saved')
 }
 
-function setup(){
-  console.log('setup venue')
+function setup(clb){
+  console.log('setup venues', clb)
+  idclub.value = clb.idclub
+  getICVenues()
 }
 
 </script>
 <template>
-  <v-container>
+  <v-container v-if="!idclub">
+    No club selected.
+  </v-container>
+  <v-container  v-if="idclub">
     <h2>Interclub venues</h2>
-    <p v-if="!icclub.idclub">Please select a club to view the interclub venues</p>
-    <div v-if="icclub.idclub">
-
-      <v-container v-show="status_consulting">
+    <v-container v-show="status_consulting">
         <v-row v-show="!venues.length">
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
@@ -147,7 +141,7 @@ function setup(){
           </v-col>
         </v-row>
         <v-row>
-          <v-btn @click="modifyVenues">
+          <v-btn @click="modifyICvenues">
             Edit
           </v-btn>
         </v-row>
@@ -193,8 +187,6 @@ function setup(){
             Cancel
           </v-btn>
         </v-row>
-      </v-container>
-
-    </div>
+      </v-container>    
   </v-container>
 </template>
