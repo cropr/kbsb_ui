@@ -1,41 +1,46 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
 import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
 
-// commumication with manager
+// communication with manager
 const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
-const props = defineProps(["icclub"])
-defineExpose({ readICclub })
+defineExpose({ setup })
 
 // idtoken
 const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
-
-const idclub = ref(0) 
-const { t } = useI18n()
 const { $backend } = useNuxtApp()
 
-
-//icseries
+// datamodel
+const idclub = ref(0)
 let playersindexed = {}
 const players = ref([])
 const icseries = ref({})
-const accessdenied = ref(true)
-const round = ref("1")
-const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
-  return {value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}`}
-})
+const icclub = ref({})
+const round = ref(null)
 const teamsplanning = ref({})
-const games = ref([])
+const errstatus = ref(null) 
 
-// validation
-const validationdialog = ref(false)
-const validationerrors = ref([])
+// i18n
+const { t: $t } = useI18n()
 
-
-// methods alphabetically
+function checkAccess(){
+  emit('changeDialogCounter', 1)
+  try {
+    $backend("club", "verify_club_access", {
+      idclub: idclub.value,
+      role: "InterclubAdmin,InterclubCaptain",
+      token: idtoken.value,
+    })
+    return true
+  } catch (error) {
+      return false
+  } finally {
+    emit('changeDialogCounter',-1)
+  }
+}
 
 function clubLabel(pairingnr, s) {
   let name = ""
@@ -48,69 +53,9 @@ function clubLabel(pairingnr, s) {
   return name
 }
 
-
-function filterPlayers(){
-  players.value = props.icclub.value.players.filter((p) => p.nature != "confirmedout")
-  players.value.forEach((p) => {
-    p.full = `${p.idnumber} ${p.last_name}, ${p.first_name}`
-  })  
-}
-
-async function readICclub(){
-  console.log('read IC club from manager', props.icclub.idclub)
-  idclub.value = props.icclub.idclub
-  if (!idclub.value) {
-    accessdenied.value = true
-    players.value = []
-    return
-  }
-  players.value = []
-  playersindexed.value = {}
-  teamsplanning.value = {}
-  props.icclub.players.forEach((p) => {
-    let player = {}
-    let tit = p.titular ? `:: ${t('Titular')} ${p.titular}` : ""
-    if (p.nature != "confirmedout") {
-      player.first_name = p.first_name
-      player.last_name = p.last_name
-      player.assignedrating = p.assignedrating
-      player.idnumber = p.idnumber
-      player.titular = p.titular
-      player.full = `${p.idnumber}: ${p.last_name}, ${p.first_name} -- ${p.assignedrating} ${tit}`      
-    }
-    players.value.push(player)
-    playersindexed[p.idnumber] = player    
-  })
+async function getICseries() {
+  console.log('getICseries')
   let reply
-  idclub.value = props.icclub.idclub
-  if (!idclub.value) return
-  emit('changeDialogCounter', 1)
-  try {
-    reply = await $backend("club", "verify_club_access", {
-      idclub: idclub.value,
-      role: "InterclubAdmin,InterclubCaptain",
-      token: idtoken.value,
-    })
-    accessdenied.value = false
-  } catch (error) {
-    if (error.code == 401) {
-      accessdenied.value = true
-    } 
-    return
-  } finally {
-    emit('changeDialogCounter',-1)
-  }
-}
-
-
-async function readICSeries() {
-  console.log('read IC series')
-  let reply
-  idclub.value = props.icclub.idclub
-  if (!idclub.value) {
-    icseries.value = {}
-    return
-  }
   emit('changeDialogCounter', 1)
   try {
     reply = await $backend("interclub", "clb_getICseries", {
@@ -118,12 +63,10 @@ async function readICSeries() {
       idclub: idclub.value,
       token: idtoken.value
     })
-    console.log('OK')
-    accessdenied.value = false
   } catch (error) {
     console.log('NOK', error)
     if (error.code == 401) {
-      accessdenied.value = true
+      gotoLogin()
     } 
     return
   } finally {
@@ -131,11 +74,39 @@ async function readICSeries() {
   }
   icseries.value = reply.data
   teamsplanning.value = []
-  nextTick(()=>{ fillPlanning()})
+  readICplanning()
 }
 
-function fillPlanning(){
-  console.log('fillPlanning')
+async function gotoLogin() {
+  await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
+}
+
+async function readICclub(){
+  players.value = []
+  playersindexed.value = {}
+  teamsplanning.value = {}
+  console.log('icclub', icclub.value)
+  icclub.value.players.forEach((p) => {
+    if (p.nature !=  "confirmedout") {
+      let player = {}
+      let tit = p.titular ? `:: ${$t('Titular')} ${p.titular}` : ""
+      if (p.nature != "confirmedout") {
+        player.first_name = p.first_name
+        player.last_name = p.last_name
+        player.assignedrating = p.assignedrating
+        player.idnumber = p.idnumber
+        player.titular = p.titular
+        player.full = `${p.idnumber}: ${p.last_name}, ${p.first_name} -- ${p.assignedrating} ${tit}`      
+      }
+      players.value.push(player)
+      playersindexed[p.idnumber] = player   
+    }
+  })
+  console.log('players', players.value)
+}
+
+function readICplanning(){
+  console.log('readICplanning')
   icseries.value.forEach((s) => {
     // fill in Teams
     s.teams.forEach((t) => {
@@ -183,7 +154,6 @@ function fillPlanning(){
             }
             else {
               avg += playersindexed[g.idnumber_home].assignedrating
-              console.log('avg increased', avg)
             }
           }
           else {
@@ -220,40 +190,68 @@ async function savePlanning(){
   finally {
     emit('changeDialogCounter',-1)
   }
-  validationdialog.value = false
 	emit('displaySnackbar', t('Playerlist saved'))
-  readICSeries()
+  getICseries()
 }
 
-async function validatePlanning(){
+function setup(clb, rnd){
+  console.log('setup planning', clb, rnd)
+  errstatus.value = null
+  icclub.value = clb
+  round.value = rnd
+  idclub.value = clb.idclub
+  if (!idclub.value) {
+    errstatus.value = 'noclub'
+    players.value = []
+    playersindexed = {}
+    icseries.value = {}
+    return
+  }
+  let ca = checkAccess()
+  if (!ca) {
+    errstatus.value = 'noaccess'
+    players.value = []
+    playersindexed = {}
+    icseries.value = {}
+    return
+  }
+  readICclub()
+  const now = new Date().valueOf()
+  const expiry = new Date(INTERCLUBS_ROUNDS[round.value] + 'T14:00').valueOf()
+  console.log('dates', new Date(), new Date(INTERCLUBS_ROUNDS[round.value] + 'T14:00'))
+  if (now > expiry) {
+    errstatus.value = 'expired'
+    players.value = []
+    playersindexed = {}
+    icseries.value = {} 
+    return   
+  }
+  nextTick(()=>{
+    getICseries()
+  })
+}
+
+function validatePlanning(){
   let reply
   savePlanning()
 }
 
- 
 </script>
 <template>
 	<v-container>
-
-    <div v-if="!idclub">
+    <div v-if="errstatus=='noclub'">
       <v-alert  type="warning" variant="outlined" closable 
-        :text="t('Please select a club to view the interclubs planning tool')"/>
+        :text="$t('Please select a club')"/>
     </div>
-    <div v-if="idclub">
-      <div v-if="accessdenied">
-      <v-alert type="error" variant="outlined" closable 
-        :text="t('Permission denied')" />
-    </div> 
-    <div v-if=" !accessdenied">     
-      <v-row>
-        <v-col cols="8" sm="5">
-          <VSelect v-model="round" :items="ic_rounds" :label="t('Round')">
-          </VSelect>
-        </v-col>
-        <v-col cols="4" sm="2">
-          <VBtn icon="mdi-play" @click="readICSeries()"></VBtn>
-        </v-col>
-      </v-row>
+    <div v-if="errstatus=='noaccess'">
+      <v-alert  type="error" variant="outlined" closable 
+        :text="$t('Permission denied')"/>
+    </div>
+    <div v-if="errstatus=='expired'">
+      <v-alert  type="warning" variant="outlined" closable 
+        :text="$t('You can no longer modify the planning of this round')"/>
+    </div>
+    <div v-if="!errstatus">
       <VCard v-for="(tp,ix) in teamsplanning" class="my-2">
         <VCardTitle>
           {{ tp.name }}
@@ -266,23 +264,21 @@ async function validatePlanning(){
             {{ tp.idclub_opponent  }} {{ tp.name_opponent }} - {{  tp.idclub }} {{tp.name}}
           </div>
           <div class="flex-0-0" >
-            {{ t('Average ELO') }}: {{ tp.average }}
+            {{ $t('Average ELO') }}: {{ tp.average }}
           </div>
           <VDivider />
         </VCardSubtitle>
         <VCardText>
-          <div v-for="(g,ix) in tp.games" class="d-flex">
-            <div class="flex-0-0 cw">{{ ix+1 }}
-            </div>
+          <div v-for="(g,ix) in tp.games">
             <VAutocomplete v-model="g.idnumber_home" density="compact" 
                 :items="players" item-title="full" item-value="idnumber" 
-                :label="t('Player')" :hide-details="true" 
-                class="flex-fill" v-show="tp.playinghome" clearable
+                :label="$t('Player')+ ' ' + (ix +1)" :hide-details="true" 
+                v-show="tp.playinghome" clearable
             />
             <VAutocomplete v-model="g.idnumber_visit" density="compact" 
                 :items="players" item-title="full" item-value="idnumber" 
-                :label="t('Player')" :hide-details="true" 
-                class="flex-fill" v-show="!tp.playinghome" clearable
+                :label="$t('Player') + ' ' +  (ix +1)" :hide-details="true" 
+                v-show="!tp.playinghome" clearable
             />
           </div>
         </VCardText>
@@ -290,31 +286,9 @@ async function validatePlanning(){
       <div v-show="icseries.length">
         <VBtn @click="validatePlanning()" color="primary">{{ $t('Save') }}</VBtn>
       </div>
-    </div>      
-    </div>
-
-		<VDialog v-model="validationdialog"  width="30em">
-			<VCard>
-				<VCardTitle>
-					{{ $t('Validation of planning.')}}
-					<VDivider />
-				</VCardTitle>
-				<VCardText class="markdowncontent">
-					<div>{{ $t("The planning contains validation errors") }}</div>
-          <ul>
-            <li v-for="(err, ix) in validationerrors" :key="ix">           
-            </li>
-          </ul>
-          <VDivider />
-				</VCardText>
-				<VCardActions>
-					<VSpacer />
-					<VBtn @click="savePlanning()">{{ $t('Save anyhow') }}</VBtn>
-					<VBtn @click="validationdialog = false">{{ $t('Cancel') }}</VBtn>
-				</VCardActions>
-			</VCard> 
-		</VDialog>    
+    </div>          
   </v-container>
+
 </template>
 
 <style scoped>
@@ -325,7 +299,5 @@ async function validatePlanning(){
 .exported {
   color: rgb(186, 185, 185);
 }
-.cw {
-  min-width: 2em;
-}
+
 </style>

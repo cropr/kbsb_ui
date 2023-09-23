@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'
@@ -13,7 +13,6 @@ const { person } = storeToRefs(personstore)
 
 // communication with tabbed children
 const tab = ref(null)
-const refclub = ref(null) 
 const refdownloads = ref(null)
 const refplayerlist = ref(null)
 const refresults = ref(null) 
@@ -21,9 +20,6 @@ const refvenues = ref(null)
 function changeTab(){
   console.log('changeTab', tab.value)
   switch (tab.value) {
-    case 'club':
-      refclub.value.setup()
-      break
     case 'downloads':
       refdownloads.value.setup()
       break
@@ -40,11 +36,8 @@ function changeTab(){
 }
 
 // datamodel
-const clubmembers = ref([])     // the members of a club as in signaletique
-const clubmembers_id = ref(0)
 const clubs = ref([])
 const icclub = ref({})          // the icclub data
-const icvenues = ref([])        // the venues data
 const idclub = ref(null)
 const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
   return {value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}`}
@@ -153,7 +146,6 @@ async function getClubDetails() {
     } finally {
       changeDialogCounter(-1)
     }
-    console.log('gotClubDetails', reply.data)
     icclub.value = reply.data
     changeTab()
   }
@@ -190,7 +182,7 @@ onMounted( () => {
         <v-row>
         <v-col cols="12" sm="6">
           <VAutocomplete v-model="idclub" :items="clubs" 
-          item-title="merged" item-value="idclub" color="green"
+          item-title="merged" item-value="idclub" color="purple"
           label="Club" clearable @update:model-value="selectClub" >
         </VAutocomplete>
         </v-col>
@@ -200,7 +192,6 @@ onMounted( () => {
           </VSelect>
         </v-col>
       </v-row>
-
       </v-card-text>
     </v-card>
     <h3 class="mt-2">

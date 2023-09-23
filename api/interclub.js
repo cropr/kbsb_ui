@@ -196,4 +196,11 @@ export default {
     });
     return resp;
   },
+  clb_saveICresults: async function (options) {
+    const { token, ...option } = options;
+    const resp = await axios.put(`${prefix}/clb/icresults`, options, {
+      headers: { Authorization: "Bearer " + token },
+    });
+    return resp;
+  },
 };

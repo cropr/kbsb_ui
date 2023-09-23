@@ -1,5 +1,5 @@
 <script setup>
-import { ref, nextTick } from 'vue'
+import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, EMPTY_VENUE } from '@/util/interclubs'

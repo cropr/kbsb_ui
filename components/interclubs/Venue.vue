@@ -1,54 +1,53 @@
 <script setup>
-import {ref, computed, nextTick} from 'vue'
-import { EMPTY_CLUB } from '@/util/club'
+import {ref, computed} from 'vue'
 import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, EMPTY_VENUE } from '@/util/interclubs.js'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
 
-const { localePath } = useLocalePath()
-const { locale, t } = useI18n()
-const { $backend } = useNuxtApp()
-const props = defineProps(["icclub","icvenues"])
-const idclub = ref(0) 
+// communication with manager
+const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
+defineExpose({ setup })
+
+// idtoken
 const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
+const { $backend } = useNuxtApp()
+
+// datamodel
+const idclub = ref(0) 
 const rounds =  Object.entries(INTERCLUBS_ROUNDS).map(x => ({
    value: x[1], title: `R${x[0]}: ${x[1]}` 
 }))
 const statuscm = ref(INTERCLUBS_STATUS.CONSULTING)
 const status_consulting = computed(() => (statuscm.value == INTERCLUBS_STATUS.CONSULTING))
 const status_modifying = computed(() => (statuscm.value == INTERCLUBS_STATUS.MODIFYING))
+const venues = ref([])
 const accessdenied = ref(true)
 
-const icvenues = ref([])
-const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
+// i18n
+const { localePath } = useLocalePath()
+const { locale, t } = useI18n()
+
 
 function  addEmptyVenue() {
-  const last = icvenues.value[icvenues.value.length - 1]
+  const last = venues.value[venues.value.length - 1]
   if (!last || last.address !== '') {
-    icvenues.value.push({ ...EMPTY_VENUE })
+    venues.value.push({ ...EMPTY_VENUE })
   }
 }
 
 function cancelVenues() {
   statuscm.value = INTERCLUBS_STATUS.CONSULTING
-  emit('updateVenues')
 }
 
 function deleteVenue(ix) {
-  icvenues.value,splice(ix, 1)
-  addEmptyVenue()
-}
-
-function modifyVenues() {
-  statuscm.value = INTERCLUBS_STATUS.MODIFYING
+  venues.value,splice(ix, 1)
   addEmptyVenue()
 }
 
 async function getICVenues() {
-  idclub.value = props.icclub.idclub
   if (!idclub.value) {
-    icvenues.value = []
+    venues.value = []
     accessdenied.value = true
     return
   }
@@ -63,6 +62,9 @@ async function getICVenues() {
     accessdenied.value = false
   } catch (error) {
     if (error.code == 401) {
+      gotoLogin()
+    } 
+    if (error.code == 403) {
       accessdenied.value = true
     } 
     return
@@ -81,17 +83,26 @@ async function getICVenues() {
   finally {
     emit('changeDialogCounter', -1)
   }
-  icvenues.value = reply.data.venues  
-  icvenues.value.forEach((v) => {
+  venues.value = reply.data.venues  
+  venues.value.forEach((v) => {
     v.available = v.notavailable.length ? "selected" : "all"
   })
+}
+
+async function gotoLogin() {
+  await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
+}
+
+function modifyICvenues() {
+  statuscm.value = INTERCLUBS_STATUS.MODIFYING
+  addEmptyVenue()
 }
 
 async function saveVenues() {
   let reply
   try {
     let savedvenues = []
-    icvenues.value.forEach(v => {
+    venues.value.forEach(v => {
       if (v.address && v.address.length) {
         let { available, ...others } = v
         savedvenues.push(others)
@@ -99,7 +110,7 @@ async function saveVenues() {
     })
     reply = await $backend("interclub", "set_interclubvenues", {
       token: idtoken.value,
-      idclub: props.icclub.idclub,
+      idclub: idclub.value,
       venues: savedvenues,
     })
   } catch (error) {
@@ -109,16 +120,20 @@ async function saveVenues() {
   }
   statuscm.value = INTERCLUBS_STATUS.CONSULTING
   emit('displaySnackbar', t('Interclub venue saved'))
+}
+
+function setup(clb){
+  console.log('setup venues', clb)
+  idclub.value = clb.idclub
   getICVenues()
 }
 
-defineExpose({getICVenues})
 </script>
 <template>
   <v-container>
     <div v-if="!idclub">
       <v-alert  type="warning" variant="outlined" closable 
-        :text="t('Please select a club to view the interclub venues')"/>
+        :text="t('Please select a club')"/>
     </div>
     <div v-if="idclub">
       <div v-if="accessdenied">
@@ -127,7 +142,7 @@ defineExpose({getICVenues})
       </div>  
       <div v-if="!accessdenied">
         <v-container v-show="status_consulting">
-          <v-row v-show="!icvenues.length">
+          <v-row v-show="!venues.length">
             <v-col cols="12" sm="6" md="4" xl="3">
               <v-card class="elevation-5">
                 <v-card-title class="card-title">
@@ -140,7 +155,7 @@ defineExpose({getICVenues})
             </v-col>
           </v-row>
           <v-row>
-            <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in icvenues" :key="ix" >
+            <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix" >
               <v-card class="elevation-5">
                 <v-card-title>
                   {{ $t('Venue') }}: {{ ix + 1 }}
@@ -159,14 +174,14 @@ defineExpose({getICVenues})
             </v-col>
           </v-row>
           <v-row>
-            <v-btn @click="modifyVenues">
+            <v-btn @click="modifyICvenues">
               {{ $t('Edit') }}
             </v-btn>
           </v-row>
         </v-container>
         <v-container v-show="status_modifying">
           <v-row >
-            <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in icvenues" :key="ix">
+            <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix">
               <v-card class="elevation-5">
                 <v-card-title>
                   {{ $t('Venue') }}: {{ ix + 1 }}
@@ -190,7 +205,7 @@ defineExpose({getICVenues})
                   <v-textarea v-model="v.remarks" :label="$t('Remarks')" />
                 </v-card-text>
                 <v-card-actions>
-                  <v-btn fab small @click="deleteVenue(ix)" v-show="ix < icvenues.length - 1">
+                  <v-btn fab small @click="deleteVenue(ix)" v-show="ix < venues.length - 1">
                     <v-icon>mdi-delete</v-icon>
                   </v-btn>
                 </v-card-actions>

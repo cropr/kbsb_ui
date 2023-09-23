@@ -1,44 +1,79 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted, } from 'vue'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
+import { INTERCLUBS_ROUNDS } from '@/util/interclubs'
 
+// i18n
 const { locale, t } = useI18n()
 const localePath = useLocalePath()
+
+// idtoken
 const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
-
-
-const { $backend } = useNuxtApp()
-const clubmembers = ref([])          // the members of a club as in signaletique
-const clubmembers_id = ref(0)
-const clubs = ref([])
-const icclub = ref({})          
-const reficclub = ref(null)     
-const reficvenues = ref(null)   
-const reficplanning = ref(null)
-const idclub = ref(null)
-const waitingdialog = ref(false)
-let dialogcounter = 0
-const tab = ref(null)
-const errortext = ref(null)
-const snackbar = ref(null)
-
 function checkAuth() {
   if (!idtoken.value) {
     gotoLogin()
   }
 }
+async function gotoLogin() {
+  await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
+}
 
+// communication with tabbed children
+const tab = ref(null)
+const refplanning = ref(null)
+const refplayerlist = ref(null)
+const refresults = ref(null) 
+const refvenues = ref(null) 
+function changeTab(){
+  console.log('changeTab', tab.value)
+  switch (tab.value) {
+    case 'planning':
+      refplanning.value.setup(icclub.value, round.value)
+      break
+    case 'playerlist':
+      // refplayerlist.value.setup(icclub.value)
+      break
+    case 'results':
+      refresults.value.setup(icclub.value, round.value)
+      break
+    case 'venues':
+      refvenues.value.setup(icclub.value)
+      break    
+  }
+}
+
+// datamodel
+const clubs = ref([])
+const icclub = ref({})          // the icclub data
+const idclub = ref(null)
+const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
+  return {value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}`}
+})
+const round = ref("1")
+
+// waiting dialog
+const waitingdialog = ref(false)
+let dialogcounter = 0
 function changeDialogCounter(i) {
     dialogcounter += i
     waitingdialog.value = (dialogcounter > 0)
 }
 
+// snackbar
+const errortext = ref(null)
+const snackbar = ref(null)
 function displaySnackbar(text, color) {
   errortext.value = text
   snackbar.value = true
 }
+
+// API backend
+const { $backend } = useNuxtApp()
+
+// methods alphabetically
+
 
 async function getClubs() {
   let reply
@@ -77,68 +112,48 @@ async function getClubDetails() {
       changeDialogCounter(-1)
     }
     icclub.value = reply.data
-    await getClubMembers()
-    console.log('icclub: ', icclub.value.idclub)
-    nextTick(() => {
-      reficclub.value.readICclub()
-      reficvenues.value.getICVenues()
-      reficplanning.value.readICclub()
-    })    
-  }
-}
-
-async function getClubMembers() {
-  let reply
-  if (!idclub.value) return
-  if (idclub.value == clubmembers_id.value) return  // it is already read in
-  clubmembers.value = {}
-  try {
-    changeDialogCounter(1)
-    reply = await $backend("member", "anon_getclubmembers", {
-      idclub: idclub.value,
-    })
-  } catch (error) {   
-    displaySnackbar(t(error.message))
-    return
-  } finally {
-    changeDialogCounter(-1)
-  }
-  const members = reply.data
-  clubmembers_id.value = idclub.value
-  members.forEach((p) => {
-    p.fullname = `${p.last_name}, ${p.first_name}`
-  })
-  clubmembers.value = members
-  nextTick(() => {
-    reficclub.value.readMembers()
-  })  
-}
-
-
-
-async function gotoLogin() {
-  await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
-}
-
-
-async function selectClub(){
-  console.log('selected', idclub.value)
-  if (idclub.value) {
-    await getClubDetails()
+    changeTab()
   }
   else {
-    icclub.value = {}
-    nextTick(() => {
-      reficclub.value.readICclub()
-      reficvenues.value.getICVenues() 
-      reficplanning.value.readICclub()     
-    })  
+    changeTab()
   }
+}
+
+// async function getClubMembers() {
+//   let reply
+//   if (!idclub.value) return
+//   if (idclub.value == clubmembers_id.value) return  // it is already read in
+//   clubmembers.value = {}
+//   try {
+//     changeDialogCounter(1)
+//     reply = await $backend("member", "anon_getclubmembers", {
+//       idclub: idclub.value,
+//     })
+//   } catch (error) {   
+//     displaySnackbar(t(error.message))
+//     return
+//   } finally {
+//     changeDialogCounter(-1)
+//   }
+//   const members = reply.data
+//   clubmembers_id.value = idclub.value
+//   members.forEach((p) => {
+//     p.fullname = `${p.last_name}, ${p.first_name}`
+//   })
+//   clubmembers.value = members
+// }
+
+function selectClub(){
+  console.log('selected', idclub.value)
+  getClubDetails()
 }
 
 onMounted( () => {
   checkAuth()
   getClubs()
+  tab.value = "results"
+  changeTab()
+
 })
 
 </script>
@@ -156,45 +171,53 @@ onMounted( () => {
     </v-dialog>
     <v-card>
       <v-card-text>
-        {{ $t('Select the club') }} ({{ $t('Start typing number or name') }})
-        <VAutocomplete v-model="idclub" :items="clubs" 
-          item-title="merged" item-value="idclub" color="green"
-          label="Club" clearable @update:model-value="selectClub" >
-        </VAutocomplete>
+        <v-row>
+          <v-col cols="12" sm="6">
+            <VAutocomplete v-model="idclub" :items="clubs" 
+            item-title="merged" item-value="idclub" color="green"
+            label="Club" clearable @update:model-value="selectClub" >
+          </VAutocomplete>
+          </v-col>
+          <v-col cols="12" sm="6">
+            <VSelect v-model="round" :items="ic_rounds" :label="t('Round')" 
+              @update:model-value="changeTab">
+            </VSelect>
+          </v-col>
+        </v-row>  
       </v-card-text>
     </v-card>
-    <h3 class="mt-2">
+    <h3 class="my-2">
       {{ $t('Selected club') }}: {{ icclub.idclub }} {{ icclub.name }}
     </h3>
     <div class="elevation-2">
-      <v-tabs v-model="tab" color="green">
-        <v-tab>{{ $t('Venue') }}</v-tab>
-        <v-tab>{{ $t('Player list') }}</v-tab>        
-        <v-tab>{{ $t('Planning') }}</v-tab>        
+      <v-tabs v-model="tab" color="green" @update:modelValue="changeTab">
+        <v-tab value="results">{{ $t('Results') }}</v-tab>   
+        <v-tab value="planning">{{ $t('Planning') }}</v-tab>        
+        <v-tab value="venues">{{ $t('Venue') }}</v-tab>
+        <v-tab value="playerlist">{{ $t('Player list') }}</v-tab>        
       </v-tabs>
-      <v-window v-model="tab" >
-        <v-window-item :eager="true">
-          <InterclubsIcVenue  ref="reficvenues"
-            :icclub="icclub" 
+      <v-window v-model="tab" @update:modelValue="changeTab">
+        <v-window-item :eager="true" value="results">
+          <InterclubsResults ref="refresults" 
+            @snackbar="displaySnackbar"
+            @changeDialogCounter="changeDialogCounter"
+          />
+        </v-window-item>      
+        <v-window-item :eager="true" value="planning">
+          <InterclubsPlanning ref="refplanning" 
+            @snackbar="displaySnackbar"
+            @changeDialogCounter="changeDialogCounter"
+          />
+        </v-window-item>         
+        <v-window-item :eager="true" value="venues">
+          <InterclubsVenue  ref="refvenues"
             @snackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
             />
         </v-window-item>
-        <v-window-item :eager="true">
-          <InterclubsIcClub ref="reficclub" 
-            :icclub="icclub" 
-            :members="clubmembers"
-            @displaySnackbar="displaySnackbar"
-            @changeDialogCounter="changeDialogCounter"
-          />
-        </v-window-item>
-        <v-window-item :eager="true">
-          <InterclubsIcPlanning ref="reficplanning"
-            :icclub="icclub" 
-            @displaySnackbar="displaySnackbar"
-            @changeDialogCounter="changeDialogCounter"
-          />
-        </v-window-item>        
+        <v-window-item :eager="true" value="playerlist">
+          <InterclubsPlayerlist ref="refplayerlist" />
+        </v-window-item>       
       </v-window>
     </div>
     <VSnackbar v-model="snackbar" timeout="6000">
