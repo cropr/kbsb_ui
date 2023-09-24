@@ -15,7 +15,7 @@ export const empty_enrollment = {
 export const STOPDATE = new Date("2023-08-05");
 
 export const INTERCLUBS_ROUNDS = {
-  1: "2023-09-23",
+  1: "2023-09-24",
   2: "2023-10-15",
   3: "2023-10-22",
   4: "2023-11-19",
