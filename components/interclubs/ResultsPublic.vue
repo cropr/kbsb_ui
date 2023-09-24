@@ -111,14 +111,14 @@ onMounted(()=>{
       </v-card-title>
       <v-card-text>
         <v-row v-for="enc in s.rounds[0].encounters">
-          <v-col cols="5">
+          <v-col cols="4">
             {{ enc.icclub_home}}: {{ clubLabel(enc.pairingnr_home, s) }}
           </v-col>
-          <v-col cols="5">
+          <v-col cols="4">
             {{ enc.icclub_visit}}: {{ clubLabel(enc.pairingnr_visit, s) }}
           </v-col>
           <v-col cols="2">
-            {{ enc.matchpoint_home }} - {{ enc.matchpoint_visit }} 
+            {{ enc.boardpoint2_home / 2 }} - {{ enc.boardpoint2_visit /2 }} 
           </v-col>
         </v-row>
       </v-card-text>
