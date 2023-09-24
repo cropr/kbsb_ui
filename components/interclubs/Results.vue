@@ -278,7 +278,7 @@ function sign(tr, who) {
         plinpll = true
       }
     })
-    if (! plinpll ) {
+    if (! plinpll && idn.value < 200000) {
       console.error('idn not in club home')
       return
     }
@@ -287,13 +287,13 @@ function sign(tr, who) {
   }
   else {
     const clb = tr.icclub_visit
-    playerlist_buffer[clb].forEach((p) => {
+    playerlist_buffer.value[clb].forEach((p) => {
       if (p.idnumber == idn.value) {
         console.log('idn belongs to club visit')
         plinpll = true
       }
     })
-    if (! plinpll ) {
+    if (! plinpll && idn.value < 200000 ) {
       console.error('idn not in club visit')
       return
     }
@@ -368,7 +368,7 @@ function sign(tr, who) {
                 BP: {{ tr.boardpoints }}
               </v-col>
               <v-col col="4" v-show="tr.matchpoints && tr.signvisit_idnumber">
-                {{ $t('signature') }} {{ $t('away') }}: {{ tr.signhome_idnumber }}
+                {{ $t('signature') }} {{ $t('away') }}: {{ tr.signvisit_idnumber }}
               </v-col>
               <v-col col="4" v-show="tr.matchpoints && !tr.signvisit_idnumber">
                 {{ $t('away') }} 
