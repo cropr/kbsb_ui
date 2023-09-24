@@ -1,6 +1,7 @@
 <script setup>
 import { ref, nextTick } from 'vue'
 import { useIdtokenStore}  from '@/store/idtoken'
+import { useIdnumberStore}  from '@/store/idnumber'
 import { storeToRefs } from 'pinia'
 import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
 
@@ -11,6 +12,8 @@ defineExpose({ setup })
 // idtoken
 const idstore = useIdtokenStore()
 const { token: idtoken } = storeToRefs(idstore)
+const idnstore = useIdnumberStore()
+const { idnumber: idn } = storeToRefs(idnstore)
 const { $backend } = useNuxtApp()
 
 // datamodel
@@ -172,7 +175,11 @@ async function readICSeries(){
             name_home: clubLabel(enc.pairingnr_home, s.teams),
             name_visit: clubLabel(enc.pairingnr_visit, s.teams),
             nrgames: PLAYERS_DIVISION[division],
-            round: round.value
+            round: round.value,
+            signhome_idnumber: enc.signhome_idnumber,
+            signhome_ts: enc.signhome_ts,
+            signvisit_idnumber: enc.signvisit_idnumber,
+            signvisit_ts: enc.signvisit_ts,
           }
           for (let i = tr.games.length; i < tr.nrgames; i++) {
             tr.games[i] = {
@@ -258,6 +265,44 @@ async function setup(clb, rnd){
   getICSeries()    
 }
 
+
+function sign(tr, who) {
+  let plinpll = false
+  console.log('tr', tr)
+  if (who == "home") {
+    const clb = tr.icclub_home
+    console.log('clb', clb, "idn", idn.value)
+    playerlist_buffer.value[clb].forEach((p) => {
+      if (p.idnumber == idn.value ) {
+        console.log('idn belongs to club home')
+        plinpll = true
+      }
+    })
+    if (! plinpll ) {
+      console.error('idn not in club home')
+      return
+    }
+    tr.signhome_idnumber = idn
+    tr.signhome_ts = new Date().toISOString()
+  }
+  else {
+    const clb = tr.icclub_visit
+    playerlist_buffer[clb].forEach((p) => {
+      if (p.idnumber == idn.value) {
+        console.log('idn belongs to club visit')
+        plinpll = true
+      }
+    })
+    if (! plinpll ) {
+      console.error('idn not in club visit')
+      return
+    }
+    tr.signvisit_idnumber = idn
+    tr.signvisit_ts = new Date().toISOString()
+  }
+  
+}
+
 </script>
 
 <template>
@@ -309,12 +354,26 @@ async function setup(clb, rnd){
             </v-row>
             <VDivider />
             <v-row class="mt-1">
+              <v-col col="4" v-show="tr.matchpoints && tr.signhome_idnumber">
+                {{ $t('signature') }} {{ $t('home')  }}: {{ tr.signhome_idnumber }}
+              </v-col>
+              <v-col col="4" v-show="tr.matchpoints && !tr.signhome_idnumber">
+                {{ $t('home') }} 
+                <v-btn @click="sign(tr, 'home')" color="green" density="compact">{{ $t('sign') }}</v-btn>
+              </v-col> 
               <v-col cols="2">
                 MP: {{ tr.matchpoints }}
               </v-col>
               <v-col cols="2">
                 BP: {{ tr.boardpoints }}
               </v-col>
+              <v-col col="4" v-show="tr.matchpoints && tr.signvisit_idnumber">
+                {{ $t('signature') }} {{ $t('away') }}: {{ tr.signhome_idnumber }}
+              </v-col>
+              <v-col col="4" v-show="tr.matchpoints && !tr.signvisit_idnumber">
+                {{ $t('away') }} 
+                <v-btn  @click="sign(tr, 'away')" color="green" density="compact">{{ $t('sign') }}</v-btn>
+              </v-col>             
             </v-row> 
           </v-container>    
         </v-card-text>

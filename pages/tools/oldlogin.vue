@@ -2,6 +2,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { useIdtokenStore}  from '@/store/idtoken'
+import { useIdnumberStore}  from '@/store/idnumber'
 import showdown from 'showdown'
 
 const { locale, t } = useI18n()
@@ -10,6 +11,7 @@ const { $backend } = useNuxtApp()
 const router = useRouter() 
 const route = useRoute()
 const idstore = useIdtokenStore()
+const idnstore = useIdnumberStore()
 
 // help dialog 
 const ttitle = `title_${locale.value}`
@@ -38,6 +40,7 @@ async function dologin() {
     return
   }
   idstore.updateToken(reply.data)
+  idnstore.updateIdnumber(login.value.idnumber)
   navigateTo(localePath(returnUrl))
 }
 
