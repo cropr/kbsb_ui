@@ -26,16 +26,18 @@ const errstatus = ref(null)
 // i18n
 const { t: $t } = useI18n()
 
-function checkAccess(){
+async function checkAccess(){
+  let reply
   emit('changeDialogCounter', 1)
   try {
-    $backend("club", "verify_club_access", {
+    reply = await $backend("club", "verify_club_access", {
       idclub: idclub.value,
       role: "InterclubAdmin,InterclubCaptain",
       token: idtoken.value,
     })
     return true
   } catch (error) {
+      console.log('reply NOK', error)
       return false
   } finally {
     emit('changeDialogCounter',-1)
@@ -194,7 +196,7 @@ async function savePlanning(){
   getICseries()
 }
 
-function setup(clb, rnd){
+async function setup(clb, rnd){
   console.log('setup planning', clb, rnd)
   errstatus.value = null
   icclub.value = clb
@@ -207,7 +209,8 @@ function setup(clb, rnd){
     icseries.value = {}
     return
   }
-  let ca = checkAccess()
+  let ca = await checkAccess()
+  console.log('ca', ca)
   if (!ca) {
     errstatus.value = 'noaccess'
     players.value = []
