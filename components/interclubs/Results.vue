@@ -65,10 +65,10 @@ function calc_points(tr){
   }
 }
 
-function checkAccess(){
+async function checkAccess(){
   emit('changeDialogCounter', 1)
   try {
-    $backend("club", "verify_club_access", {
+    await $backend("club", "verify_club_access", {
       idclub: idclub.value,
       role: "InterclubAdmin,InterclubCaptain",
       token: idtoken.value,
@@ -213,7 +213,7 @@ async function saveResults(){
 	emit('displaySnackbar', $t('Results saved'))
 }
 
-function setup(clb, rnd){
+async function setup(clb, rnd){
   console.log('setup results', clb, rnd)
   errstatus.value = null
   icclub.value = clb
@@ -226,7 +226,7 @@ function setup(clb, rnd){
     icseries.value = []
     return
   }
-  let ca = checkAccess()
+  let ca = await checkAccess()
   if (!ca) {
     errstatus.value = 'noaccess'
     playerlist_buffer.value = {}
