@@ -204,4 +204,10 @@ export default {
     });
     return resp;
   },
+  anon_getICencounterdetails: async function (options) {
+    const resp = await axios.get(`${prefix}/anon/icresultdetails`, {
+      params: options,
+    });
+    return resp;
+  },
 };

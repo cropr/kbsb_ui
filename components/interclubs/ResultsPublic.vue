@@ -18,6 +18,7 @@ function displaySnackbar(text, color) {
   snackbar.value = true
 }
 
+// datamodel
 const { t } = useI18n()
 const { $backend } = useNuxtApp()
 const idclub = ref(null)
@@ -27,6 +28,8 @@ const round = ref("1")
 const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
   return {value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}`}
 })
+const games = ref([])
+const gamesdialog = ref(false)
 
 
 async function getSeries(){
@@ -61,9 +64,32 @@ async function getClubs() {
     changeDialogCounter(-1)
   }
   icclubs.value = reply.data
-  icclubs.value.forEach(p => {
+  icclubs.value.forEach((p) => {
     p.merged = `${p.idclub}: ${p.name}`
-  })
+  }) 
+}
+
+async function getICencounterdetails(series, enc){
+  let reply
+  changeDialogCounter(1)
+  console.log('getICencounterdetails', enc)
+  try {
+    reply = await $backend("interclub","anon_getICencounterdetails", {
+      division: series.division,
+      index: series.index,
+      round: round.value,
+      icclub_home: enc.icclub_home,
+      icclub_visit: enc.icclub_visit,
+    })
+  } catch (error) {
+    displaySnackbar(t(error.message))
+    return
+  }
+  finally {
+    changeDialogCounter(-1)
+  }
+  games.value = reply.data
+  gamesdialog.value = true
 }
 
 function clubLabel(pairingnr, s) {
@@ -119,6 +145,8 @@ onMounted(()=>{
           </v-col>
           <v-col cols="2">
             {{ enc.boardpoint2_home / 2 }} - {{ enc.boardpoint2_visit /2 }} 
+            <VBtn icon="mdi-account-switch" @click="getICencounterdetails(s, enc)" 
+              class="float-right" density="compact" color="green"/>
           </v-col>
         </v-row>
       </v-card-text>
@@ -130,6 +158,24 @@ onMounted(()=>{
           <v-progress-circular indeterminate color="green" />
         </v-card-text>
       </v-card>
-    </v-dialog> 
+    </v-dialog>
+    <v-dialog width="40em" v-model="gamesdialog">
+      <v-card>
+        <v-card-title>{{ $t('Details') }}<VDivider /></v-card-title>
+
+        <v-card-text>
+          <div v-for="g in games">
+            {{ g.fullname_home }} ({{ g.rating_home }}) - 
+            {{ g.fullname_visit }} ({{ g.rating_visit }}): {{ g.result }}
+          </div>
+          <VDivider />
+        </v-card-text>
+        <v-card-actions>
+
+          <VSpacer />
+          <VBtn @click="gamesdialog = false">OK</VBtn>
+        </v-card-actions>
+      </v-card>
+    </v-dialog>  
   </v-container>
 </template>
