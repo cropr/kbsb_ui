@@ -278,6 +278,7 @@ export default {
 "Tournament rules": `Règlement des tournois`,
 "Transfer of all members to a single club at once.": `Transfert de tous les membres vers un seul club à la fois.`,
 "Treasurer": `Trésorier`,
+"Treasurer a.i.": `Trésorier a.i.`,
 "Tuesday": `Mardi`,
 "Useful information": `Information utile`,
 "Validation of player list.": `Validation de la liste de force`,

@@ -278,6 +278,7 @@ export default {
 "Tournament rules": `Wedstrijdreglement`,
 "Transfer of all members to a single club at once.": `Transfer van alle leden in één keer naar één club.`,
 "Treasurer": `Penningmeester`,
+"Treasurer a.i.": `Penningmeester a.i.`,
 "Tuesday": `Dinsdag`,
 "Useful information": `Nuttige informatie`,
 "Validation of player list.": `Validatie van de spelerslijst.`,
