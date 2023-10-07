@@ -1,5 +1,7 @@
 <script setup>
 import {ref, computed} from 'vue'
+import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VRow, 
+  VCol} from 'vuetify/lib/components/index.mjs';
 import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, EMPTY_VENUE } from '@/util/interclubs.js'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'

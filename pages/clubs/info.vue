@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { VContainer, VAutocomplete, VBtn, VCard, VCardTitle, VCardText, VRow, 
+  VCol, VDialog, VProgressCircular, VSnackbar} from 'vuetify/lib/components/index.mjs';
+
 import { EMPTY_CLUB } from '@/util/club'
 
 const { locale, t } = useI18n()

@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted } from 'vue'
+import { VContainer, VAutocomplete, VSelect, VBtn, VCard, VCardTitle, VCardText, VRow, 
+  VCol, VDialog, VProgressCircular, VSnackbar} from 'vuetify/lib/components/index.mjs';
+
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'

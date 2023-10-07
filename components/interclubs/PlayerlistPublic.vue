@@ -1,5 +1,7 @@
 <script setup>
-import {ref, computed, nextTick} from 'vue'
+import {ref } from 'vue'
+import { VContainer, VAutocomplete, VCard, VCardText } from 'vuetify/lib/components/index.mjs';
+import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 
 // waiting
 const waitingdialog = ref(false)

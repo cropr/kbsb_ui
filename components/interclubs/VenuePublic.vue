@@ -1,5 +1,7 @@
 <script setup>
 import {ref, computed, nextTick} from 'vue'
+import { VContainer, VAutocomplete, VSelect, VBtn, VCard, VCardTitle, VCardText, VRow, 
+  VCol, VDivider, VCheckbox, VDialog, VProgressCircular} from 'vuetify/lib/components/index.mjs';
 
 const { t } = useI18n()
 const { $backend } = useNuxtApp()

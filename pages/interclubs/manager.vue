@@ -1,11 +1,14 @@
 <script setup>
 import { ref, onMounted, } from 'vue'
+import { VContainer, VAutocomplete, VSelect, VBtn, VCard, VCardTitle, VCardText, VRow, 
+  VCol, VDialog, VProgressCircular, VSnackbar} from 'vuetify/lib/components/index.mjs';
+
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
 import { INTERCLUBS_ROUNDS } from '@/util/interclubs'
 
 // i18n
-const { locale, t } = useI18n()
+const { locale, t: $t } = useI18n()
 const localePath = useLocalePath()
 
 // idtoken
@@ -82,7 +85,7 @@ async function getClubs() {
     reply = await $backend("club","anon_get_clubs", {})
   } catch (error) {
     if (error.code == 401) gotoLogin()
-    displaySnackbar(t(error.message))
+    displaySnackbar($t(error.message))
     return
   }
   finally {
@@ -106,7 +109,7 @@ async function getClubDetails() {
       })
     } catch (error) {
       if (error.code == 401) gotoLogin()
-      displaySnackbar(t(t(error.message)))
+      displaySnackbar($t(error.message))
       return
     } finally {
       changeDialogCounter(-1)
@@ -119,29 +122,6 @@ async function getClubDetails() {
   }
 }
 
-// async function getClubMembers() {
-//   let reply
-//   if (!idclub.value) return
-//   if (idclub.value == clubmembers_id.value) return  // it is already read in
-//   clubmembers.value = {}
-//   try {
-//     changeDialogCounter(1)
-//     reply = await $backend("member", "anon_getclubmembers", {
-//       idclub: idclub.value,
-//     })
-//   } catch (error) {   
-//     displaySnackbar(t(error.message))
-//     return
-//   } finally {
-//     changeDialogCounter(-1)
-//   }
-//   const members = reply.data
-//   clubmembers_id.value = idclub.value
-//   members.forEach((p) => {
-//     p.fullname = `${p.last_name}, ${p.first_name}`
-//   })
-//   clubmembers.value = members
-// }
 
 function selectClub(){
   console.log('selected', idclub.value)
@@ -153,7 +133,6 @@ onMounted( () => {
   getClubs()
   tab.value = "results"
   changeTab()
-
 })
 
 </script>

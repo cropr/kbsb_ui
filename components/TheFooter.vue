@@ -1,3 +1,6 @@
+<script setup>
+import { VContainer, VRow, VCol } from 'vuetify/components';
+</script>
 <template>
   <v-container fluid class="bg-green-darken-2 text-white">
     <v-row class="py-3 px-2">

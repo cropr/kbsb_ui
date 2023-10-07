@@ -1,5 +1,9 @@
 <script setup>
 import showdown from 'showdown'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VCardActions, VRow, VCol, 
+  VDialog, VProgressCircular, VImg, VSnackbar} from 'vuetify/lib/components/index.mjs';
+
+
 const localePath = useLocalePath()
 
 const { locale, t } = useI18n()
