@@ -53,12 +53,12 @@ onMounted( () => {
   <v-container>
     <h1>Interclubs 2023-24</h1>
     <v-tabs v-model="tab" color="green" @update:modelValue="changeTab">
-      <v-tab>{{ $t('Results') }}</v-tab>
-      <v-tab>{{ $t('Standings') }}</v-tab>
-      <v-tab>{{ $t('Player list') }}</v-tab>
-      <v-tab>{{ $t('Venues') }}</v-tab>
-      <v-tab>{{ $t('Announcements') }}</v-tab>
-      <v-tab>{{ $t('Dates') }}</v-tab>
+      <v-tab value="results">{{ $t('Results') }}</v-tab>
+      <v-tab value="standings">{{ $t('Standings') }}</v-tab>
+      <v-tab value="playerlist">{{ $t('Player list') }}</v-tab>
+      <v-tab value="venues">{{ $t('Venues') }}</v-tab>
+      <v-tab value="announcements">{{ $t('Announcements') }}</v-tab>
+      <v-tab value="dates">{{ $t('Dates') }}</v-tab>
     </v-tabs>
     <v-window v-model="tab" @update:modelValue="changeTab">
       <v-window-item :eager="true" value="results">

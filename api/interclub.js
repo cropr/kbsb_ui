@@ -210,4 +210,11 @@ export default {
     });
     return resp;
   },
+  anon_getICstandings: async function (options) {
+    const { idclub } = options;
+    const resp = await axios.get(`${prefix}/anon/icstandings`, {
+      params: { idclub },
+    });
+    return resp;
+  },
 };
