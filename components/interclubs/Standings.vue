@@ -24,7 +24,7 @@ function displaySnackbar(text, color) {
 }
 
 // datamodel
-const { t } = useI18n()
+const { t: $t } = useI18n()
 const { $backend } = useNuxtApp()
 const icstandings = ref([])
 const icclubs = ref([])
@@ -88,20 +88,20 @@ function setup(){
     </v-row>
     <v-card v-for="s in icstandings" class="my-2">
       <v-card-title> 
-        {{ t('Division') }} {{ s.division }}{{ s.index }}
+        {{ $t('Division') }} {{ s.division }}{{ s.index }}
         <VDivider />
       </v-card-title>
       <v-card-text>
         <v-row>
           <v-col>#</v-col>
-          <v-col>Team</v-col>
-          <v-col># Games</v-col>
+          <v-col>{{ $t('Team') }}</v-col>
+          <v-col># {{ $t('Games') }}</v-col>
           <v-col>MP</v-col>
           <v-col>BP</v-col>
         </v-row>
         <v-row v-for="(t, ix) in s.teams">
           <v-col>{{ ix + 1 }}</v-col>
-          <v-col>{{ t.name }}</v-col>
+          <v-col cols="6">{{ t.name }}</v-col>
           <v-col>{{ t.games.length }}</v-col>
           <v-col>{{ t.matchpoints }}</v-col>
           <v-col>{{ t.boardpoints }}</v-col>
