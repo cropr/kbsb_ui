@@ -1,7 +1,12 @@
 <script setup>
 import { ref, onMounted, } from 'vue'
 import { VContainer, VAutocomplete, VSelect, VBtn, VCard, VCardTitle, VCardText, VRow, 
-  VCol, VDialog, VProgressCircular, VSnackbar} from 'vuetify/lib/components/index.mjs';
+  VCol, VDialog, VProgressCircular, VSnackbar,  VTabs, VTab,VWindow, 
+  VWindowItem } from 'vuetify/lib/components/index.mjs';
+import Results from '@/components/interclubs/Results.vue'
+import Planning from '@/components/interclubs/Planning.vue'
+import Playerlist from '@/components/interclubs/Playerlist.vue'
+import Venue from '@/components/interclubs/Venue.vue'
 
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
@@ -158,7 +163,7 @@ onMounted( () => {
           </VAutocomplete>
           </v-col>
           <v-col cols="12" sm="6">
-            <VSelect v-model="round" :items="ic_rounds" :label="t('Round')" 
+            <VSelect v-model="round" :items="ic_rounds" :label="$t('Round')" 
               @update:model-value="changeTab">
             </VSelect>
           </v-col>
@@ -177,25 +182,25 @@ onMounted( () => {
       </v-tabs>
       <v-window v-model="tab" @update:modelValue="changeTab">
         <v-window-item :eager="true" value="results">
-          <InterclubsResults ref="refresults" 
+          <Results ref="refresults" 
             @snackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
           />
         </v-window-item>      
         <v-window-item :eager="true" value="planning">
-          <InterclubsPlanning ref="refplanning" 
+          <Planning ref="refplanning" 
             @snackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
           />
         </v-window-item>         
         <v-window-item :eager="true" value="venues">
-          <InterclubsVenue  ref="refvenues"
+          <Venue  ref="refvenues"
             @snackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
             />
         </v-window-item>
         <v-window-item :eager="true" value="playerlist">
-          <InterclubsPlayerlist ref="refplayerlist" />
+          <Playerlist ref="refplayerlist" />
         </v-window-item>       
       </v-window>
     </div>

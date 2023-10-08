@@ -94,16 +94,16 @@ function setup(){
       <v-card-text>
         <v-row>
           <v-col>#</v-col>
-          <v-col>{{ $t('Team') }}</v-col>
-          <v-col># {{ $t('Games') }}</v-col>
-          <v-col>MP</v-col>
+          <v-col cols="6">{{ $t('Team') }}</v-col>
+          <v-col># {{ $t('Played') }}</v-col>
+          <v-col><b>MP</b></v-col>
           <v-col>BP</v-col>
         </v-row>
         <v-row v-for="(t, ix) in s.teams">
           <v-col>{{ ix + 1 }}</v-col>
-          <v-col cols="6">{{ t.name }}</v-col>
+          <v-col cols="6">{{ t.name }} ({{ t.idclub }})</v-col>
           <v-col>{{ t.games.length }}</v-col>
-          <v-col>{{ t.matchpoints }}</v-col>
+          <v-col><b>{{ t.matchpoints }}</b></v-col>
           <v-col>{{ t.boardpoints }}</v-col>
         </v-row>
       </v-card-text>

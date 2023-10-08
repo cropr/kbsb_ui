@@ -1,6 +1,6 @@
 <script setup>
 import showdown from 'showdown'
-
+import { VContainer} from 'vuetify/lib/components/index.mjs';
 const { locale } = useI18n()
 const ttitle = `title_${locale.value}`
 const tcontent = `content_${locale.value}`

@@ -1,7 +1,8 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import { VContainer, VAutocomplete, VBtn, VCard, VCardTitle, VCardText, 
-  VDialog, VProgressCircular, VSnackbar} from 'vuetify/lib/components/index.mjs';
+  VDialog, VProgressCircular, VSnackbar,  VTabs, VTab,VWindow, 
+  VWindowItem} from 'vuetify/lib/components/index.mjs';
 
 import  { EMPTY_CLUB } from '@/util/club'
 import { useMgmtTokenStore } from "@/store/mgmttoken";

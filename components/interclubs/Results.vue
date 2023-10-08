@@ -1,5 +1,7 @@
 <script setup>
 import { ref, nextTick } from 'vue'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, VCol,
+  VAlert, VDivider, VAutocomplete, VSelect, } from 'vuetify/lib/components/index.mjs';
 import { useIdtokenStore}  from '@/store/idtoken'
 import { useIdnumberStore}  from '@/store/idnumber'
 import { storeToRefs } from 'pinia'

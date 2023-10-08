@@ -36,8 +36,7 @@ const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
 })
 
 function addDetails(series, enc, games){
-  console.log('games', games)
-
+  console.log('enc', enc)
   const newlines = games.map((g)=> {
     return {
       nature: 'detail',
@@ -50,14 +49,15 @@ function addDetails(series, enc, games){
       result: g.result,
     }
   })
-  const avg_home = newlines.reduce((acc, current)=>acc + current.rating_home, 0) / newlines.length
-  const avg_visit = newlines.reduce((acc, current)=>acc + current.rating_visit, 0) / newlines.length
-  console.log('newlines', newlines)
+  const avg_home = Math.round(newlines.reduce((acc, current)=>acc + current.rating_home, 0) / newlines.length)
+  const avg_visit = Math.round(newlines.reduce((acc, current)=>acc + current.rating_visit, 0) / newlines.length)
   const ix = series.lines.findIndex((l) => 
     l.idclub_home == enc.icclub_home && l.idclub_visit == enc.icclub_visit
   )
   console.log('ix', ix)
-  series.lines.splice(ix+1, 0, ...newlines, {nature: 'average', avg_home, avg_visit})
+  if (enc.icclub_home && enc.icclub_visit) {
+    series.lines.splice(ix+1, 0, ...newlines, {nature: 'average', avg_home, avg_visit})
+  }
 }
 
 async function getSeries(){
@@ -97,7 +97,6 @@ async function getClubs() {
     p.merged = `${p.idclub}: ${p.name}`
   }) 
 }
-
 
 async function getICencounterdetails(series, enc){
   let reply
@@ -191,10 +190,10 @@ function updateDetails(s){
         <div v-for="l in s.lines">
           <v-row v-show="l.nature == 'teamresult'" class="pt-2">
             <v-col cols="5">
-              {{ l.idclub_home}} {{ l.name_home }}
+              {{ l.name_home }} ({{ l.idclub_home}} )
             </v-col>
             <v-col cols="5">
-              {{ l.idclub_visit}} {{ l.name_visit }}
+              {{ l.name_visit }} ({{ l.idclub_visit}})
             </v-col>
             <v-col>
               {{l.result }} 
@@ -205,7 +204,7 @@ function updateDetails(s){
               {{ l.fullname_home}} ({{ l.rating_home }})
             </v-col>
             <v-col cols="5">
-              {{ l.fullname_visit}} {{ l.rating_visit }}
+              {{ l.fullname_visit}} ({{ l.rating_visit }})
             </v-col>
             <v-col>
               {{ l.result }} 

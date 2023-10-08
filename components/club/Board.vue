@@ -1,5 +1,8 @@
 <script setup>
 import { ref, computed } from 'vue'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, VCol, VSelect, 
+  VAutocomplete,VTextField } from 'vuetify/lib/components/index.mjs';
+import TrFieldname  from '@/components/TrFieldname.vue'
 import { BOARDROLES, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'

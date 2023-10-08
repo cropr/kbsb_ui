@@ -1,7 +1,10 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
-import { VContainer, VAutocomplete, VBtn, VCard, VCardTitle, VCardText, 
-  VDialog, VProgressCircular, VSnackbar} from 'vuetify/lib/components/index.mjs';
+import { VContainer, VAutocomplete, VBtn, VCard, VCardTitle, VCardText, VDialog, 
+  VProgressCircular, VSnackbar, VTabs, VTab,VWindow, VWindowItem } from 'vuetify/lib/components/index.mjs';
+import Details from '@/components/club/Details.vue'
+import Board from '@/components/club/Board.vue'
+import Access from '@/components/club/Access.vue'
 
 import { EMPTY_CLUB } from '@/util/club'
 import { useIdtokenStore}  from '@/store/idtoken'
@@ -180,15 +183,15 @@ onMounted( () => {
       </v-tabs>
       <v-window v-model="tab" >
         <v-window-item :eager="true">
-          <ClubDetails :club="club" ref="detail" @snackbar="displaySnackbar" 
+          <Details :club="club" ref="detail" @snackbar="displaySnackbar" 
             @updateClub="getClubDetails" />
         </v-window-item>
         <v-window-item :eager="true">
-          <ClubBoard  :club="club" :clubmembers="clubmembers" ref="board" @snackbar="displaySnackbar"
+          <Board  :club="club" :clubmembers="clubmembers" ref="board" @snackbar="displaySnackbar"
             @updateClub="getClubDetails" />
         </v-window-item>
         <v-window-item :eager="true">
-          <ClubAccess  :club="club" :clubmembers="clubmembers" ref="access" @snackbar="displaySnackbar"
+          <Access  :club="club" :clubmembers="clubmembers" ref="access" @snackbar="displaySnackbar"
             @updateClub="getClubDetails" />
         </v-window-item>
       </v-window>

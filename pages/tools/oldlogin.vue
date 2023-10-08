@@ -1,7 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, 
-  VCol, VDivider, VDialog, VSnackbar, VSpacer} from 'vuetify/lib/components/index.mjs';
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VCardActions, VRow, VIcon, VTextField, 
+  VCol, VDivider, VDialog, VSnackbar, VSpacer } from 'vuetify/lib/components/index.mjs';
 import { useRouter, useRoute } from 'vue-router'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { useIdnumberStore}  from '@/store/idnumber'

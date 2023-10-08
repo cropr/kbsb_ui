@@ -1,7 +1,7 @@
 <script setup>
 import showdown from 'showdown'
 import { VContainer, VBtn, VCard, VCardTitle, VCardText, VCardActions, VRow, VCol, 
-  VDialog, VProgressCircular, VImg, VSnackbar} from 'vuetify/lib/components/index.mjs';
+  VDialog, VProgressCircular, VImg, VSnackbar, VSpacer} from 'vuetify/lib/components/index.mjs';
 
 
 const localePath = useLocalePath()
@@ -66,7 +66,6 @@ function calenderText(c) {
 }
 
 function gotoArticle (a) {
-  console.log('a', a)
   navigateTo(localePath('/article?slug=' + a.slug))
 }
 
@@ -91,7 +90,6 @@ function parseCalendarItems(listci) {
 }
 
 async function getArticles(){
-  console.log('running getArticles')
   let reply
   changeDialogCounter(1)
   try {
@@ -114,7 +112,6 @@ function readArticles () {
     const activedate = new Date(a.active_since)
     const expirydate = new Date(a.active_since)
     expirydate.setDate(expirydate.getDate() + Number(a.active_days))
-    console.log('expiry', expirydate, a)
     if (activedate < now && expirydate > now) {
       const titlei18n = a[`title_${locale.value}`]
       const introi18n = a[`intro_${locale.value}`]
