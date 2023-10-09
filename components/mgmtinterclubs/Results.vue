@@ -78,20 +78,13 @@ function clubLabel(pairingnr, teams) {
   return name
 }
 
-function getICplayerlist(ic_clb){
-  if (!ic_clb && !ic_clb.idclub) return
-  let players = ic_clb.players.filter((p) => p.nature != "confirmedout")
-  playerlist_buffer.value[ic_clb.idclub] = players
-  players.forEach((p) => {
-    p.full = `${p.idnumber} ${p.last_name}, ${p.first_name}`
-    playersindexed[p.idnumber] = p
-  })  
-}
-
 async function getICclub(clb_id) {
+  console.log('gettting playerlist', clb_id)
   if (playerlist_buffer.value[clb_id]) {
+    console.log('playerlist in cache', clb_id)
     return
   }
+  console.log('calling anon_getICclub', clb_id)
   let reply
   emit('changeDialogCounter',1)
   try {
@@ -106,7 +99,7 @@ async function getICclub(clb_id) {
     emit('changeDialogCounter', -1)
   }
   let cl = reply.data
-  getICplayerlist(cl)
+  processICplayerlist(cl)
 }
 
 async function getICSeries() {
@@ -133,6 +126,17 @@ async function getICSeries() {
   }
   icseries.value = reply.data
   await readICSeries()
+}
+
+function processICplayerlist(ic_clb){
+  console.log('processing playerlist', ic_clb.idclub)
+  if (!ic_clb && !ic_clb.idclub) return
+  let players = ic_clb.players.filter((p) => p.nature != "confirmedout")
+  playerlist_buffer.value[ic_clb.idclub] = players
+  players.forEach((p) => {
+    p.full = `${p.idnumber} ${p.last_name}, ${p.first_name}`
+    playersindexed[p.idnumber] = p
+  })  
 }
 
 async function readICSeries(){
@@ -208,7 +212,7 @@ function setup(clb, rnd){
     return
   }
   if (!playerlist_buffer[idclub.value] ) {
-    getICplayerlist(clb)
+    processICplayerlist(clb)
   }
   if (roundold != round) {
     getICSeries()  

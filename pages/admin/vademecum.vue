@@ -1,3 +1,7 @@
+<script setup>
+import { VContainer } from 'vuetify/lib/components/index.mjs';
+</script>
+
 <template>
   <v-container>
     <h1>Vademecum</h1>

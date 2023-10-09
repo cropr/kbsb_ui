@@ -13,6 +13,9 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
+  components: {
+    dirs: []
+  },
   content: {
     api: {
       baseURL: '/capi'

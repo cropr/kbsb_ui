@@ -1,6 +1,7 @@
 <script setup>
 import showdown from 'showdown'
 import { ref } from 'vue'
+import { VContainer, VTabs, VTab,VWindow, VWindowItem} from 'vuetify/lib/components/index.mjs';
 
 const { locale } = useI18n()
 const ttitle = `title_${locale.value}`

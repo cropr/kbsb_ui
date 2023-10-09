@@ -1,5 +1,7 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
+import { VContainer,  VRow, VCol, VCheckbox, } from 'vuetify/lib/components/index.mjs';
+import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 
 const config = useRuntimeConfig()
 const { locale } = useI18n()

@@ -1,4 +1,5 @@
 <script setup>
+import { VContainer, VAlert } from 'vuetify/lib/components/index.mjs';
 // i18n
 const { t: $t } = useI18n()
 </script>

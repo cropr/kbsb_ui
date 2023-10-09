@@ -1,5 +1,8 @@
 <script setup>
 import { ref } from 'vue'
+import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VDivider, VDialog, VSpacer} from 'vuetify/lib/components/index.mjs';
+import { VDataTable } from 'vuetify/lib/labs/components.mjs';
+
 import { storeToRefs } from 'pinia'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { PLAYERSTATUS } from "@/util/interclubs"
@@ -108,9 +111,16 @@ function fillinPlayerList() {
   })
 }
 
+const cutoffday = "2023-09-18"
+
 async function getClubMembers() {
   // get club members for member database currently on old site
   if (!idclub.value) {
+    clubmembers.value = []
+    return
+  }
+  if (new Date().valueOf > cutoffday.valueOf()) {
+    console.log('New member are not added after cutoff date')
     clubmembers.value = []
     return
   }

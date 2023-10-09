@@ -49,7 +49,6 @@ async function checkin () {
       'Content-Type': 'application/json'
     }
   })
-  console.log('reply', reply)
   checkinlaunched = false
   checkinsuccess = true
 }
@@ -68,7 +67,6 @@ async function checkout () {
       'Content-Type': 'application/json'
     }
   })
-  console.log('reply', reply)
   checkoutlaunched = false
   checkoutsuccess = true
 }
