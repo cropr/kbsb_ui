@@ -1,13 +1,13 @@
 <script setup>
 import { ref, onMounted } from 'vue'
 import { VContainer, VAutocomplete, VSelect, VBtn, VCard, VCardTitle, VCardText, VRow, 
-  VCol, VDialog, VProgressCircular, VSnackbar, VTabs, VTab,VWindow, 
-  VWindowItem} from 'vuetify/lib/components/index.mjs';
+  VCol, VDialog, VProgressCircular, VSnackbar, VTabs, VTab, VWindow,  VWindowItem} from 'vuetify/components';
+import { Downloads, Playerlist, Results, Venue } from '@/components/mgmtinterclubs'
 
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'
-import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
+import { INTERCLUBS_ROUNDS } from '@/util/interclubs'
 
 // idtoken
 const mgmtstore = useMgmtTokenStore()
@@ -206,37 +206,29 @@ onMounted( () => {
         <v-tab value="results">Results</v-tab>        
         <v-tab value="venues">Venues</v-tab>
         <v-tab value="playerlist">Player lists</v-tab>
-        <!-- <v-tab value="enrollments">Enrollment</v-tab> -->
         <v-tab value="downloads">Downloads</v-tab>   
       </v-tabs>
       <v-window v-model="tab" @update:modelValue="changeTab">
         <v-window-item value="results" :eager="true">
-          <MgmtinterclubsResults ref="refresults"
+          <Results ref="refresults"
             @displaySnackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"          
           />
         </v-window-item>      
         <v-window-item value="venues" :eager="true">
-          <MgmtinterclubsVenue  ref="refvenues" 
+          <Venue ref="refvenues" 
             @displaySnackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter" 
           />
         </v-window-item>
         <v-window-item value="playerlist" :eager="true">
-          <MgmtinterclubsPlayerlist ref="refplayerlist"
+          <Playerlist ref="refplayerlist"
             @displaySnackbar="displaySnackbar"
             @changeDialogCounter="changeDialogCounter"
           />
         </v-window-item>
-        <!-- <v-window-item value="enrollment" :eager="true">
-          <MgmtinterclubsEnrollment ref="refenrollment"
-            :icclub="icclub" 
-            @displaySnackbar="displaySnackbar"
-            @changeDialogCounter="changeDialogCounter" 
-          />
-        </v-window-item>         -->
         <v-window-item value="downloads" :eager="true">
-          <MgmtinterclubsDownloads ref="refdownloads"
+          <Downloads ref="refdownloads"
             :icclub="icclub" 
             :round="round"          
           />

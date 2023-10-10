@@ -1,5 +1,7 @@
 <script setup>
 import { ref } from "vue";
+import { VApp, VAppBar, VAppBarTitle, VNavigationDrawer, 
+  VAppBarNavIcon, VMain, VList, VListItem, VToolbar, VToolbarTitle } from 'vuetify/components'
 const drawer = ref(false);
 const localePath = useLocalePath();
 </script>

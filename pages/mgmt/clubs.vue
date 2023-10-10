@@ -1,8 +1,11 @@
 <script setup>
 import { ref, onMounted, nextTick } from 'vue'
 import { VContainer, VAutocomplete, VBtn, VCard, VCardTitle, VCardText, 
-  VDialog, VProgressCircular, VSnackbar,  VTabs, VTab,VWindow, 
-  VWindowItem} from 'vuetify/lib/components/index.mjs';
+  VDialog, VProgressCircular, VSnackbar,  VTabs, VTab, VWindow, 
+  VWindowItem} from 'vuetify/components'
+import Details from '@/components/mgmtclub/Details.vue'
+import Access from '@/components/mgmtclub/Access.vue'
+import Board from '@/components/mgmtclub/Board.vue'
 
 import  { EMPTY_CLUB } from '@/util/club'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
@@ -94,21 +97,6 @@ function changeDialogCounter(i) {
 function displaySnackbar(text, color) {
   errortext.value = text
   snackbar.value = true
-}
-
-async function download(){
-  // switch(this.exportformat) {
-  //   case "JSON":
-  //     window.open('/api/v1/a/clubs', "_download")
-  //     break
-  //   case "CSV":
-  //   window.open('/api/v1/a/csv/clubs', "_download")
-  //     break
-  //   case "Excel":
-  //     this.$root.$emit('snackbar', {
-  //       text: 'Not supported yet'
-  //     })
-  // }
 }
 
 async function getClubs() {
@@ -228,15 +216,15 @@ onMounted( () => {
         </v-tabs>
         <v-window v-model="tab" >
           <v-window-item :eager="true">
-            <MgmtclubDetails :club="club" ref="detail" @snackbar="displaySnackbar" 
+            <Details :club="club" ref="detail" @snackbar="displaySnackbar" 
               @updateClub="getClubDetails" />
           </v-window-item>
           <v-window-item :eager="true">
-            <MgmtclubBoard  :club="club" :clubmembers="clubmembers" ref="board" @snackbar="displaySnackbar"
+            <Board  :club="club" :clubmembers="clubmembers" ref="board" @snackbar="displaySnackbar"
               @updateClub="getClubDetails" />
           </v-window-item>
           <v-window-item :eager="true">
-            <MgmtclubAccess  :club="club" :clubmembers="clubmembers" ref="access" @snackbar="displaySnackbar"
+            <Access  :club="club" :clubmembers="clubmembers" ref="access" @snackbar="displaySnackbar"
               @updateClub="getClubDetails" />
           </v-window-item>
         </v-window>

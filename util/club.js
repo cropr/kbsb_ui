@@ -1,76 +1,7 @@
-export const BOARDROLES = {
-  president: {
-    fr: "président",
-    en: "president",
-    de: "Präsident",
-    nl: "voorzitter",
-  },
-  vice_president: {
-    fr: "vice-président",
-    en: "vice president",
-    de: "Vizepräsident",
-    nl: "vicevoorzitter",
-  },
-  secretary: {
-    fr: "secrétaire",
-    en: "secretary",
-    de: "Sekretär",
-    nl: "secretaris",
-  },
-  treasurer: {
-    fr: "trésorier",
-    en: "treasurer",
-    de: "Schatzmeister",
-    nl: "penningmeester",
-  },
-  tournament_director: {
-    fr: "directeur de tournoi",
-    en: "tournament director",
-    de: "Turnierleiter",
-    nl: "toernooileider",
-  },
-  youth_director: {
-    fr: "directeur de jeunesse",
-    en: "youth director",
-    de: "Jugendleiter",
-    nl: "jeugdleider",
-  },
-  interclub_director: {
-    fr: "directeur d'interclubs",
-    en: "interclub director",
-    de: "Interclubleiter",
-    nl: "verantwoordlijke interclub",
-  },
-  webmaster: {
-    fr: "webmaster",
-    en: "webmaster",
-    de: "Webmaster",
-    nl: "webmaster",
-  },
-  bar_manager: {
-    fr: "responsable du bar",
-    en: "bar manager",
-    de: "Barleiter",
-    nl: "barmanager",
-  },
-  press_officer: {
-    fr: "attaché de presse",
-    en: "press manager",
-    de: "Pressesprecher",
-    nl: "persverantwoordelijke",
-  },
-  material_manager: {
-    fr: "gestionnaire de matérial",
-    en: "material manager",
-    de: "Materialmanager",
-    nl: "materiaalverantwoordelijke",
-  },
-};
-
 export const CLUB_STATUS = {
   CONSULTING: 0,
   MODIFYING: 1,
-};
+}
 
 export const EMPTY_BOARD = {
   president: { idnumber: 0 },
@@ -84,18 +15,18 @@ export const EMPTY_BOARD = {
   bar_manager: { idnumber: 0 },
   press_officer: { idnumber: 0 },
   material_manager: { idnumber: 0 },
-};
+}
 
 export const visibility_items = [
   { title: "Hidden", value: "HIDDEN" },
   { title: "Club", value: "CLUB" },
   { title: "Public", value: "PUBLIC" },
-];
+]
 
 export const EMPTY_CLUB = {
   venue: "",
   address: "",
   openinghours: {},
-};
+}
 
-export const ROLES = ["ClubAdmin", "InterclubAdmin"];
+export const ROLES = ["ClubAdmin", "InterclubAdmin"]

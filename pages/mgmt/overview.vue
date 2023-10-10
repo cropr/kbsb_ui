@@ -1,5 +1,6 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { onMounted } from 'vue'
+import { VContainer } from 'vuetify/components'
 import { usePersonStore } from "@/store/person";
 import { storeToRefs } from "pinia";
 

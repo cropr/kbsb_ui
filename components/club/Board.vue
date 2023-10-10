@@ -2,13 +2,13 @@
 import { ref, computed } from 'vue'
 import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, VCol, VSelect, 
   VAutocomplete,VTextField } from 'vuetify/lib/components/index.mjs';
-import TrFieldname  from '@/components/TrFieldname.vue'
-import { BOARDROLES, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
+
+import { visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
 
 const { localePath } = useLocalePath()
-const { locale, t } = useI18n()
+const { locale, t: $t } = useI18n()
 const { $backend } = useNuxtApp()
 const props = defineProps(["club","clubmembers"])
 const boardmembers = ref(EMPTY_BOARD)
@@ -19,7 +19,7 @@ const statuscm = ref(CLUB_STATUS.CONSULTING)
 const status_consulting = computed(() => (statuscm.value == CLUB_STATUS.CONSULTING))
 const status_modifying = computed(() => (statuscm.value == CLUB_STATUS.MODIFYING))
 const t_vis_items = computed(()=>  visibility_items.map((x) =>({
-  title: t(x.title),
+  title: $t(x.title),
   value: x.value
 })))
 let copyclubdetails = null
@@ -64,11 +64,11 @@ async function saveClub() {
       token: idtoken.value,
     })
     statuscm.value = CLUB_STATUS.CONSULTING
-    emit('displaySnackbar', t('Club saved'))
+    emit('displaySnackbar', $t('Club saved'))
     emit('updateClub')
   } catch (error) {
     if (error.code == 401) gotoLogin()
-    emit('displaySnackbar', t(error.message))
+    emit('displaySnackbar', $t(error.message))
     return
   }
 }
@@ -110,8 +110,8 @@ defineExpose({readClubDetails, readClubMembers})
         <v-row>
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(bm, f) in boardmembers" :key="f">
             <v-card class="elevation-5">
-              <v-card-title>
-                <tr-fieldname :fieldname="f" />
+              <v-card-title class="text-green">
+                {{  $t(f) }}
               </v-card-title>
               <v-card-text>
                 {{ $t('Name') }}: {{ bm.first_name }} {{ bm.last_name }}<br />
@@ -130,8 +130,8 @@ defineExpose({readClubDetails, readClubMembers})
         <v-row>
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(bm, f) in boardmembers" :key="f">
             <v-card class="elevation-5">
-              <v-card-title>
-                <tr-fieldname :fieldname="f" />
+              <v-card-title class="text-green">
+                {{  $t(f) }}
               </v-card-title>
               <v-card-text>
                 <v-autocomplete v-model="boardmembers[f].idnumber" :items="props.clubmembers" item-title="merged"

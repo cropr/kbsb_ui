@@ -1,11 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
-import { BOARDROLES, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, VCol, 
+  VAutocomplete, VSelect, VTextField,  } from 'vuetify/components';
+import { visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { storeToRefs } from 'pinia'
 
 const { localePath } = useLocalePath()
-const { locale, t } = useI18n()
 const { $backend } = useNuxtApp()
 const props = defineProps(["club","clubmembers"])
 const boardmembers = ref(EMPTY_BOARD)
@@ -109,7 +110,7 @@ defineExpose({readClubDetails, readClubMembers})
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(bm, f) in boardmembers" :key="f">
             <v-card class="elevation-5">
               <v-card-title>
-                <tr-fieldname :fieldname="f" />
+                {{ f }}
               </v-card-title>
               <v-card-text>
                 Name: {{ bm.first_name }} {{ bm.last_name }}<br />
@@ -129,7 +130,7 @@ defineExpose({readClubDetails, readClubMembers})
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(bm, f) in boardmembers" :key="f">
             <v-card class="elevation-5">
               <v-card-title>
-                <tr-fieldname :fieldname="f" />
+                <!-- AA<tr-fieldname :fieldname="f" /> -->
               </v-card-title>
               <v-card-text>
                 <v-autocomplete v-model="boardmembers[f].idnumber" :items="props.clubmembers" item-title="merged"
