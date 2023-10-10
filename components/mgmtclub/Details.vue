@@ -1,5 +1,7 @@
 <script setup>
-import { ref, computed, nextTick } from 'vue'
+import { ref, computed } from 'vue'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, VCol, 
+  VDialog, VDivider, VTextField, VTextarea,  } from 'vuetify/components';
 import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { storeToRefs } from 'pinia'
@@ -7,7 +9,6 @@ import showdown from 'showdown'
 
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
-const { localePath } = useLocalePath()
 const { locale, t } = useI18n()
 const { $backend } = useNuxtApp()
 const props = defineProps(['club'])

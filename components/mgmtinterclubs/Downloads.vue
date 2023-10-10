@@ -1,5 +1,6 @@
 <script setup>
 import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { VContainer, VBtn } from "vuetify/components";
 import { storeToRefs } from 'pinia'
 
 // communication with manager

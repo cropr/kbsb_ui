@@ -1,4 +1,5 @@
 <script setup>
+import { VContainer  } from 'vuetify/components';
 definePageMeta({
   layout: 'mgmt',
 })
@@ -13,8 +14,8 @@ useHead({
 </script>
 
 <template>
-    <v-container>
-      <h1>Reports</h1>
-      Porting to Vue3 not done yet
-    </v-container>
-  </template>
+  <v-container>
+    <h1>Reports</h1>
+    Porting to Vue3 not done yet
+  </v-container>
+</template>
