@@ -3,9 +3,7 @@ import { ref, onMounted, nextTick } from 'vue'
 import { VContainer, VAutocomplete, VBtn, VCard, VCardTitle, VCardText, 
   VDialog, VProgressCircular, VSnackbar,  VTabs, VTab, VWindow, 
   VWindowItem} from 'vuetify/components'
-import Details from '@/components/mgmtclub/Details.vue'
-import Access from '@/components/mgmtclub/Access.vue'
-import Board from '@/components/mgmtclub/Board.vue'
+import { Details, Access, Board }  from '@/components/mgmtclub'
 
 import  { EMPTY_CLUB } from '@/util/club'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
