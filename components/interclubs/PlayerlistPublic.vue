@@ -1,6 +1,6 @@
 <script setup>
 import {ref } from 'vue'
-import { VContainer, VAutocomplete, VCard, VCardText } from 'vuetify/lib/components/index.mjs';
+import { VContainer, VAutocomplete, VCard, VCardText, VBtn } from 'vuetify/lib/components/index.mjs';
 import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 
 // waiting
@@ -25,6 +25,7 @@ const idclub = ref(null)
 const clubs = ref([])
 const icclub = ref([])
 const players = ref([])
+const runtimeConfig = useRuntimeConfig(); 
 
 
 const headers = [
@@ -42,10 +43,10 @@ const itemsPerPageOptions = [
   {value: -1, title: 'All'}
 ]
 
-
-
-
-
+function download(){
+  const url = `${runtimeConfig.public.apiurl}api/v1/interclubs/anon/command/xls/playerlist?idclub=${idclub.value}`
+  window.location.href = url
+}
 
 function filterPlayers(){
   if (!icclub.value.enrolled) {
@@ -116,6 +117,7 @@ onMounted( () => {
       </v-card-text>
     </v-card>    
     <div v-if="idclub">
+      <VBtn @click="download" class="mt-2" color="green">{{ $t('Download') }}</VBtn>
       <VDataTable :items="players" :headers="headers"
         density="compact" 
         :items-per-page="itemsPerPage"

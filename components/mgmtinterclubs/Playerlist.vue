@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from 'vue'
-import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VDivider, VDialog, VSpacer} from 'vuetify/lib/components/index.mjs';
+import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog, 
+  VSpacer, VTextField} from 'vuetify/lib/components/index.mjs';
 import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 
 import { storeToRefs } from 'pinia'
@@ -337,8 +338,8 @@ async function validatePlayerlist(){
 					<div>Current assigned rating: {{ playeredit.assignedrating }} </div>
 					<div>Max ELO: {{ Math.max(playeredit.fiderating, playeredit.natrating) + 100 }}</div>
 					<div>Min ELO: {{ minelo(playeredit) }}</div>
-					<div>BEL ELO: {{ playeredit.natrating }}</div>
-					<div>FIDE ELO: {{ playeredit.fiderating }}</div>
+					<VTextField v-model="playeredit.natrating" label="Bel Elo" />
+					<VTextField v-model="playeredit.fiderating" label="Fide Elo" />
 					<VTextField v-model="playeredit.assignedrating" label="New Elo" />
 					<VDivider />
 					<h4>Titular</h4>
@@ -365,7 +366,6 @@ async function validatePlayerlist(){
 				<VCardActions>
 					<VSpacer />
 					<VBtn @click="doExportPlayer">OK</VBtn>
-					<!-- <VBtn @click="undoExportPlayer">Undo export</VBtn> -->
           <VBtn @click="exportdialog = false">Cancel</VBtn>
 				</VCardActions>
 			</VCard> 
