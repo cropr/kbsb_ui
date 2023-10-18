@@ -134,8 +134,11 @@ async function saveAccess() {
   }
 }
 
+function setup(){
+  console.log('setupAccess')
+}
 
-defineExpose({readClubDetails, readClubMembers})
+defineExpose({setup, readClubMembers})
 </script>
 
 

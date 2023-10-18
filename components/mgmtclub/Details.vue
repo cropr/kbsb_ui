@@ -68,7 +68,11 @@ async function saveClub() {
 }
 
 
-defineExpose({readClubDetails})
+function setup(){
+  console.log('setupDetails')
+}
+
+defineExpose({setup})
 
 
 </script>

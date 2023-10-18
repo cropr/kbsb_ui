@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog, 
-  VSpacer, VTextField} from 'vuetify/lib/components/index.mjs';
+  VSpacer, VTextField, VIcon} from 'vuetify/components';
 import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 
 import { storeToRefs } from 'pinia'

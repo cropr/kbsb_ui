@@ -1,9 +1,12 @@
 <script setup>
 import { ref, computed } from 'vue'
 import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, VCol, 
-  VAutocomplete, VSelect, VTextField,  } from 'vuetify/components';
+  VAutocomplete, VSelect, VTextField,  } from 'vuetify/components'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
+import ProgressLoading from '@/components/ProgressLoading.vue'
+
 import { visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { useMgmtTokenStore } from "@/store/mgmttoken"
 import { storeToRefs } from 'pinia'
 
 const { localePath } = useLocalePath()
@@ -13,7 +16,6 @@ const boardmembers = ref(EMPTY_BOARD)
 const clubdetails = ref(EMPTY_CLUB)
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore)
-console.log('mgmttoken', mgmttoken.value, mgmtstore) 
 const statuscm = ref(CLUB_STATUS.CONSULTING)
 const status_consulting = computed(() => (statuscm.value == CLUB_STATUS.CONSULTING))
 const status_modifying = computed(() => (statuscm.value == CLUB_STATUS.MODIFYING))
@@ -22,7 +24,9 @@ const t_vis_items = computed(()=>  visibility_items.map((x) =>({
   value: x.value
 })))
 let copyclubdetails = null
-const emit = defineEmits(['displaySnackbar', 'updateClub'])
+const emit = defineEmits(['updateClub'])
+const progressLoading = ref(false)
+const showsnackbar = ref(false)
 
 function cancelClub() {
   statuscm.value = CLUB_STATUS.CONSULTING
@@ -50,6 +54,7 @@ function readClubMembers() {
 
 async function saveClub() {
   // build a a diff between clubdetails and its cooy
+  progressLoading.value = true
   let update = {}
   for (const [key, value] of Object.entries(clubdetails.value)) {
     if (value != copyclubdetails[key]) {
@@ -65,10 +70,13 @@ async function saveClub() {
     statuscm.value = CLUB_STATUS.CONSULTING
     emit('displaySnackbar', 'Club saved')
     emit('updateClub')
-  } catch (error) {
+  } catch (error) { 
     if (error.code == 401) gotoLogin()
     emit('displaySnackbar', error.message)
     return
+  }
+  finally {
+    progressLoading.value = false
   }
 }
 
@@ -95,13 +103,19 @@ function updateboard(f) {
  }
 }
 
-defineExpose({readClubDetails, readClubMembers})
+function setup(){
+  console.log('setupBoard')
+}
+
+defineExpose({setup, readClubMembers})
 
 </script>
 
 
 <template>
   <v-container>
+    <ProgressLoading :visible="progressLoading" />
+    <SnackbarMessage ref="refsnackbar" />
     <p v-if="!club.idclub">Select a club to view the club details</p>
     <div v-if="club.idclub">
       <v-container v-if="status_consulting">
