@@ -11,11 +11,11 @@ import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'
 
+// stores
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
 const personstore = usePersonStore();
 const { person } = storeToRefs(personstore)
-
 
 //  snackbar and loading widgets
 const refsnackbar = ref(null)
@@ -23,8 +23,7 @@ let showSnackbar
 const refloading = ref(null)
 let showLoading
 
-const localePath = useLocalePath()
-const { $backend } = useNuxtApp()
+// datamodel
 const clubmembers = ref(null)
 const clubmembers_id = ref(0)
 const club = ref(EMPTY_CLUB) 
@@ -32,7 +31,8 @@ const clubs = ref([])
 const idclub = ref(null)
 
 
-// communication with tabbed children
+// communication
+const { $backend } = useNuxtApp()
 const tab = ref(null)
 const refboard = ref(null)
 const refdetails = ref(null)
@@ -40,15 +40,16 @@ const refaccess = ref(null)
 function changeTab(){
   console.log('changeTab', tab.value)
   switch (tab.value) {
-    // case 'board':
-    //   refboard.value.setup(club.value)
-    //   break
-    case 'details':
-      refdetails.value.setup(club.value)
+    case 'access':
+      refaccess.value.setup(club.value)
+      break 
+    case 'board':
+      refboard.value.setup(club.value)
       break
-    // case 'access':
-    //   refaccess.value.setup(club.value)
-    //   break    
+    case 'details':
+      console.log('refdetails', refdetails.value)
+      refdetails.value.setup(club.value)
+      break   
   }
 }
 
@@ -64,16 +65,15 @@ useHead({
   title: 'Management Clubs',    
 })
 
-
 async function checkAuth() {
   console.log('checking if auth is already set', mgmttoken.value)
   if (mgmttoken.value) return 
   if (person.value.credentials.length === 0) {
-    navigateTo(localePath('/mgmt'))
+    navigateTo('/mgmt')
     return
   }
   if (!person.value.email.endsWith('@frbe-kbsb-ksb.be')) {
-    navigateTo(localePath('/mgmt'))
+    navigateTo('/mgmt')
     return
   }
   let reply
@@ -88,7 +88,7 @@ async function checkAuth() {
     })
   }
   catch (error) {
-    navigateTo(localePath('/mgmt'))
+    navigateTo('/mgmt')
   }
   finally {
     showLoading(false)
@@ -126,14 +126,15 @@ async function getClubDetails() {
         token: mgmttoken.value
       })
     } catch (error) {
-      console.log('getClubDetails error')
+      console.log('getClubDetails error', error)
       showSnackbar(error.message)
       return
     } finally {
       showLoading(false)
     }
     club.value = reply.data
-    // await getClubMembers()
+    refdetails.value.setup(club.value)
+    refaccess.value.setup(club.value)
   }
 }
 
@@ -162,15 +163,17 @@ async function getClubMembers() {
   })
   clubmembers.value = members.sort((a, b) =>
     (a.last_name > b.last_name ? 1 : -1))
-  nextTick(() => {
-    // refboard.value.readClubMembers()
-    // refaccess.value.readClubMembers()  
-  })  
+  refboard.value.copyClubMembers(clubmembers.value)
+  refaccess.value.copyClubMembers(clubmembers.value)
 }
 
 async function selectClub(){
   await getClubDetails()
   await getClubMembers()
+}
+
+function updateClubDetails(){
+  console.log('getting updated club details')
 }
 
 onMounted( () => {
@@ -181,8 +184,8 @@ onMounted( () => {
   getClubs()
 })
 
-
 </script>
+
 <template>
   <VContainer>
     <SnackbarMessage ref="refsnackbar" />
@@ -192,7 +195,7 @@ onMounted( () => {
         <v-card-text>
           Select the club: start typing number or name
           <VAutocomplete v-model="idclub" :items="clubs" 
-            item-title="merged" item-value="idclub" color="green"
+            item-title="merged" item-value="idclub" color="purple"
             label="Club" clearable @update:model-value="selectClub" >
           </VAutocomplete>
         </v-card-text>
@@ -201,21 +204,21 @@ onMounted( () => {
         Selected club: {{ club.idclub }} {{ club.name_short }}
       </h3>
       <div class="elevation-2">
-        <v-tabs v-model="tab" color="green">
+        <v-tabs v-model="tab" color="purple" @update:modelValue="changeTab">
           <v-tab value="details">Details</v-tab>
-          <!-- <v-tab value="baord">Board members</v-tab>
-          <v-tab value="access">Access Rights</v-tab> -->
+          <v-tab value="board">Board members</v-tab>
+          <v-tab value="access">Access Rights</v-tab>
         </v-tabs>
-        <v-window v-model="tab" >
-          <v-window-item :eager="true">
-            <Details :club="club" ref="refdetails" @updateClub="getClubDetails" />
+        <v-window v-model="tab" @update:modelValue="changeTab" >
+          <v-window-item value="details" :eager="true">
+            <Details ref="refdetails" @updateClub="updateClubDetails" />
           </v-window-item>
-          <!-- <v-window-item :eager="true">
-            <Board :club="club" :clubmembers="clubmembers" ref="refboard" @updateClub="getClubDetails" />
+          <v-window-item value="board" :eager="true">
+            <Board ref="refboard" @updateClub="updateClubDetails" />
           </v-window-item>
-          <v-window-item :eager="true">
-            <Access :club="club" :clubmembers="clubmembers" ref="refaccess" @updateClub="getClubDetails" /> 
-          </v-window-item> -->
+          <v-window-item value="access" :eager="true">
+            <Access ref="refaccess" @updateClub="updateClubDetails" /> 
+          </v-window-item>
         </v-window>
       </div>
     
