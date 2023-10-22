@@ -25,7 +25,7 @@ function changeTab(){
   console.log('changeTab', tab.value)
   switch (tab.value) {
     case 'downloads':
-      refdownloads.value.setup()
+      refdownloads.value.setup(icclub.value, round.value)
       break
     case 'playerlist':
       refplayerlist.value.setup(icclub.value)
