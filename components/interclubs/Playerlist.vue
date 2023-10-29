@@ -8,9 +8,9 @@ import { PLAYERSTATUS } from "@/util/interclubs"
 
 // store
 import { storeToRefs } from 'pinia'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
-const mgmtstore = useMgmtTokenStore()
-const {token: mgmttoken} = storeToRefs(mgmtstore) 
+import { useIdtokenStore}  from '@/store/idtoken'
+const idstore = useIdtokenStore()
+const { token: idtoken } = storeToRefs(idstore)
 
 // communication
 const emit = defineEmits(['playerlistUpdated'])
@@ -85,26 +85,30 @@ function assignPlayer(idnumber){
   playerEdit2Player()
 }
 
-function calcPlstatus(){
-  if (!idclub.value) return 'noclub'
+async function calcPlstatus(){
+  if (!icclub.value.idclub) return 'noclub'
   const now = new Date().valueOf()
   if (now < startdate1.valueOf()) {
-    console.log('Playerlist not open yet')
     clubmembers.value = []
     return "closed"
   }
+  console.log('checking access')
+  const acc = await checkAccess() 
+  console.log('checked access', acc)
+  if (!acc) {
+    console.log('no access granted')
+    clubmembers.value = []
+    return "noaccess"
+  }
   if (cutoffday1.valueOf() >= now && now > startdate2.valueOf() ) {
-    console.log('Plauerlist is closed')
     clubmembers.value = []
     return "closed"
   }
   if (cutoffday2.valueOf() >= now && now > startdate3.valueOf() ) {
-    console.log('Playerlist is closed')
     clubmembers.value = []
     return "closed"
   }
   if (cutoffday3.valueOf() >= now ) {
-    console.log('Playerlist is closed')
     clubmembers.value = []
     return "closed"
   }
@@ -130,7 +134,7 @@ function canExport(idnumber){
 
 async function checkAccess(){
   let reply
-  emit('changeDialogCounter', 1)
+  showLoading(true)
   try {
     reply = await $backend("club", "verify_club_access", {
       idclub: idclub.value,
@@ -142,7 +146,7 @@ async function checkAccess(){
       console.log('reply NOK', error)
       return false
   } finally {
-    emit('changeDialogCounter',-1)
+    showLoading(false)
   }
 }
 
@@ -236,9 +240,6 @@ async function getClubMembers() {
   fillinPlayerList()  
 }
 
-async function gotoLogin() {
-  await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
-}
 
 function maxelo(p) {
   if (!p.fiderating && !p.natrating) return 1600
@@ -301,8 +302,8 @@ async function savePlayerlist(){
   let reply
   try {
     showLoading(true)
-		reply = await $backend("interclub","mgmt_setICclub", {
-			token: mgmttoken.value,
+		reply = await $backend("interclub","clb_setICclub", {
+			token: idtoken.value,
 			idclub: idclub.value,
 			players: players.value,
 		})
@@ -322,11 +323,12 @@ function visitingclub(idnumber) {
   return pl ? pl.idclubvisit : ""
 }
 
-function setup(clb){
+async function setup(clb){
   console.log('setup playerlist', clb)
   icclub.value = clb
   readICclub()
-  plstatus.value = calcPlstatus()
+  plstatus.value = await calcPlstatus()
+  console.log()
   getClubMembers()
 } 
 
@@ -338,8 +340,8 @@ async function validatePlayerlist(){
   let reply
   try {
     showLoading(true)
-		reply = await $backend("interclub","mgmt_validateICplayers", {
-			token: mgmttoken.value,
+		reply = await $backend("interclub","clb_validateICplayers", {
+			token: idtoken.value,
 			idclub: idclub.value,
 			players: players.value,
 		})
@@ -378,6 +380,9 @@ onMounted( () => {
     <v-alert type="warning" variant="outlined"
       v-if="plstatus == 'closed'"
       :text="$t('Currently the player list cannot be modified')" />
+    <v-alert  type="error" variant="outlined"  
+      v-if="plstatus == 'noaccess'"
+      :text="$t('Permission denied')"/>
 		<div v-if="plstatus == 'open'">
       <div v-if="!enrolled">
         This club is not enrolled in Interclubs 2023-24
