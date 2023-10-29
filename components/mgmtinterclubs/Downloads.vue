@@ -9,8 +9,7 @@ const mgmtstore = useMgmtTokenStore()
 const { token: mgmttoken } = storeToRefs(mgmtstore) 
 
 // communication 
-const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
-defineExpose({ setup })
+defineExpose({ updateClub, updateRound })
 const { $backend } = useNuxtApp()
 
 //  snackbar and loading widgets
@@ -69,16 +68,20 @@ async function generateFideELO(){
   }
 }
 
-function setup(clb, rnd){
-  console.log('setup downloads')
+function updateClub(clb){
   club.value = clb
+}
+
+function updateRound(rnd){
   round.value = rnd 
 }
 
+// trigger
 onMounted( () => {
   showSnackbar = refsnackbar.value.showSnackbar
   showLoading = refloading.value.showLoading
 })
+
 </script>
 <template>
   <VContainer>
@@ -87,8 +90,8 @@ onMounted( () => {
     <h3>Playerlist</h3>
     <v-btn @click="d">Download full playerlist</v-btn>
     <h3 class="mt-3">ELO processing</h3>
-    <VBtn  @click="generateFideELO">Generate FIDE rapport</VBtn>
-    <VBtn @click="generateBelELO">Generate BEL rapport</VBtn>
+    <VBtn @click="generateFideELO" disabled>Generate FIDE rapport</VBtn>
+    <VBtn @click="generateBelELO" disabled>Generate BEL rapport</VBtn>
     <h4 class="mt-2">Availabale ELo rapports</h4>
   </VContainer>
 </template>

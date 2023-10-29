@@ -2,23 +2,28 @@
 import { ref } from 'vue'
 import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VDivider, 
   VAutocomplete, VCol, VRow} from 'vuetify/lib/components/index.mjs';
+  import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
 
+// stores
+import { useMgmtTokenStore } from "@/store/mgmttoken"
 import { storeToRefs } from 'pinia'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
-import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
-
-// communication with manager
-const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
-defineExpose({ setup })
-
-// idtoken
 const mgmtstore = useMgmtTokenStore()
-const {token: mgmttoken} = storeToRefs(mgmtstore) 
+const { token: mgmttoken } = storeToRefs(mgmtstore) 
+
+// communication
+defineExpose({ updateClub, updateRound })
 const { $backend } = useNuxtApp()
+
+//  snackbar and loading widgets
+import ProgressLoading from '@/components/ProgressLoading.vue'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
+const refsnackbar = ref(null)
+let showSnackbar
+const refloading = ref(null)
+let showLoading
 
 // datamodel
 const idclub = ref(0) 
-let idclubold = -1
 let roundold = -1
 const playerlist_buffer = ref({})
 let playersindexed = {}
@@ -89,17 +94,17 @@ async function getICclub(clb_id) {
   }
   console.log('calling anon_getICclub', clb_id)
   let reply
-  emit('changeDialogCounter',1)
+  showLoading(true)
   try {
     reply = await $backend("interclub", "anon_getICclub", {
         idclub: clb_id
     })
   } catch (error) {
-    displaySnackbar(error.message)
+    snowSnackbar(error.message)
     return
   }
   finally {
-    emit('changeDialogCounter', -1)
+    showLoading(false)
   }
   let cl = reply.data
   processICplayerlist(cl)
@@ -111,7 +116,7 @@ async function getICSeries() {
     icseries.value = {}
     return
   }
-  emit('changeDialogCounter', 1)
+  showLoading(true)
   try {
     reply = await $backend("interclub", "mgmt_getICseries", {
       round: round.value,
@@ -125,7 +130,7 @@ async function getICSeries() {
     } 
     return
   } finally {
-    emit('changeDialogCounter',-1)
+    showLoading(false)
   }
   icseries.value = reply.data
   await readICSeries()
@@ -188,26 +193,24 @@ async function readICSeries(){
 async function saveResults(){
   let reply
   try {
-    emit('changeDialogCounter', 1)
+    showLoading(true)
 		reply = await $backend("interclub","mgmt_saveICresults", {
 			token: mgmttoken.value,
 			results: teamresults.value
 		})
   } catch (error) {
-    emit('displaySnackbar', error.message)
+    showSnackbar(error.message)
     return
   }
   finally {
-    emit('changeDialogCounter', -1)
+    showLoading(false)
   }
   validationdialog.value = false
-	emit('displaySnackbar', 'Results saved')
+	showSnackbar('Results saved')
 }
 
-function setup(clb, rnd){
-  console.log('setup results', clb)
+function updateClub(clb) {
   idclub.value = clb.idclub
-  round.value = rnd
   if (!clb.idclub) {
     playerlist_buffer.value = {}
     teamresults.value = []
@@ -217,59 +220,71 @@ function setup(clb, rnd){
   if (!playerlist_buffer[idclub.value] ) {
     processICplayerlist(clb)
   }
+}
+
+function updateRound(rnd) {
+  round.value = rnd
   if (roundold != round) {
     getICSeries()  
   }
 }
 
+onMounted( () => {
+  showSnackbar = refsnackbar.value.showSnackbar
+  showLoading = refloading.value.showLoading
+})
+
 </script>
 
 <template>
-  <v-container v-if="!idclub">
-    No club selected.
-  </v-container>
-	<v-container v-if="idclub">
-    <VBtn color="purple" @click="saveResults">Save results</VBtn>
-    <v-card v-for="tr in teamresults" class="my-2">
-      <v-card-title>
-        Division {{ tr.division }}{{ tr.index }}: &nbsp; 
-        {{ tr.icclub_home }} {{ tr.name_home }} -
-        {{ tr.icclub_visit }}  {{ tr.name_visit}}
-      </v-card-title>
-      <v-card-text>
-        <v-container>
-          <v-row v-for="(g,ix) in tr.games" class="d-flex">
-            <v-col cols="5">            
-              <VAutocomplete v-model="g.idnumber_home" density="compact" clearable
-                  :items="playerlist_buffer[tr.icclub_home]" item-title="full" 
-                  item-value="idnumber" :label="`Player home ${ix+1}`" :hide-details="true" 
-              />
-            </v-col>
-            <v-col cols="2">
-              <VSelect v-model="g.result" :items="resultchoices" 
-                density="compact"  :hide-details="true" @update:model-value="calc_points(tr)"/>
-            </v-col>
-            <v-col col="5">
-              <VAutocomplete v-model="g.idnumber_visit" density="compact" 
-                  :items="playerlist_buffer[tr.icclub_visit]" item-title="full" item-value="idnumber" 
-                  :label="`Player visit ${ix+1}`" :hide-details="true" 
-                  clearable
-              />            
-            </v-col>
-          </v-row>
-          <VDivider />
-          <v-row class="mt-1">
-            <v-col cols="2">
-              MP: {{ tr.matchpoints }}
-            </v-col>
-            <v-col cols="2">
-              BP: {{ tr.boardpoints }}
-            </v-col>
-          </v-row> 
-        </v-container>    
-      </v-card-text>
-    </v-card>
-    <VBtn color="purple" @click="saveResults">Save results</VBtn>
-  </v-container>
+  <VContainer>
+    <SnackbarMessage ref="refsnackbar" />
+    <ProgressLoading ref="refloading"/> 
+    <h2>Results</h2>
+    <p v-if="!idclub">Please select a club to view the interclubs player list</p>
+    <div v-if="idclub">
+      <VBtn color="purple" @click="saveResults">Save results</VBtn>
+      <v-card v-for="tr in teamresults" class="my-2">
+        <v-card-title>
+          Division {{ tr.division }}{{ tr.index }}: &nbsp; 
+          {{ tr.icclub_home }} {{ tr.name_home }} -
+          {{ tr.icclub_visit }}  {{ tr.name_visit}}
+        </v-card-title>
+        <v-card-text>
+          <v-container>
+            <v-row v-for="(g,ix) in tr.games" class="d-flex">
+              <v-col cols="5">            
+                <VAutocomplete v-model="g.idnumber_home" density="compact" clearable
+                    :items="playerlist_buffer[tr.icclub_home]" item-title="full" 
+                    item-value="idnumber" :label="`Player home ${ix+1}`" :hide-details="true" 
+                />
+              </v-col>
+              <v-col cols="2">
+                <VSelect v-model="g.result" :items="resultchoices" 
+                  density="compact"  :hide-details="true" @update:model-value="calc_points(tr)"/>
+              </v-col>
+              <v-col col="5">
+                <VAutocomplete v-model="g.idnumber_visit" density="compact" 
+                    :items="playerlist_buffer[tr.icclub_visit]" item-title="full" item-value="idnumber" 
+                    :label="`Player visit ${ix+1}`" :hide-details="true" 
+                    clearable
+                />            
+              </v-col>
+            </v-row>
+            <VDivider />
+            <v-row class="mt-1">
+              <v-col cols="2">
+                MP: {{ tr.matchpoints }}
+              </v-col>
+              <v-col cols="2">
+                BP: {{ tr.boardpoints }}
+              </v-col>
+            </v-row> 
+          </v-container>    
+        </v-card-text>
+      </v-card>
+      <VBtn color="purple" @click="saveResults">Save results</VBtn>
+    </div>
+  </VContainer>
 </template>
 

@@ -3,19 +3,38 @@ import { ref, onMounted } from 'vue'
 import { VContainer, VAutocomplete, VSelect, VBtn, VCard, VCardTitle, VCardText, VRow, 
   VCol, VDialog, VProgressCircular, VSnackbar, VTabs, VTab, VWindow,  VWindowItem} from 'vuetify/components';
 import { Downloads, Playerlist, Results, Venue } from '@/components/mgmtinterclubs'
+import ProgressLoading from '@/components/ProgressLoading.vue'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
 
+import { INTERCLUBS_ROUNDS } from '@/util/interclubs'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'
-import { INTERCLUBS_ROUNDS } from '@/util/interclubs'
 
-// idtoken
+// stores
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
 const personstore = usePersonStore();
 const { person } = storeToRefs(personstore)
 
-// communication with tabbed children
+//  snackbar and loading widgets
+const refsnackbar = ref(null)
+let showSnackbar
+const refloading = ref(null)
+let showLoading
+
+// datamodel
+const clubs = ref([])
+const icclub = ref({})          // the icclub data
+const idclub = ref(null)
+const club = ref(null)          // the mgmt club details 
+const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
+  return {value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}`}
+})
+const round = ref("1")
+
+// communication
+const { $backend } = useNuxtApp()
 const tab = ref(null)
 const refdownloads = ref(null)
 const refplayerlist = ref(null)
@@ -25,49 +44,21 @@ function changeTab(){
   console.log('changeTab', tab.value)
   switch (tab.value) {
     case 'downloads':
-      refdownloads.value.setup(icclub.value, round.value)
+      refdownloads.value.updateClub(icclub.value)
+      refdownloads.value.updateRound(round.value)
       break
     case 'playerlist':
-      refplayerlist.value.setup(icclub.value)
+      refplayerlist.value.updateClub(icclub.value)
       break
     case 'results':
-      refresults.value.setup(icclub.value, round.value)
+      refresults.value.updateClub(icclub.value)
+      refresults.value.updateRound(round.value)
       break
     case 'venues':
-      refvenues.value.setup(icclub.value)
+      refvenues.value.updateClub(icclub.value)
       break    
   }
 }
-
-// datamodel
-const clubs = ref([])
-const icclub = ref({})          // the icclub data
-const idclub = ref(null)
-const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
-  return {value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}`}
-})
-const round = ref("1")
-
-// waiting dialog
-const waitingdialog = ref(false)
-let dialogcounter = 0
-function changeDialogCounter(i) {
-    dialogcounter += i
-    waitingdialog.value = (dialogcounter > 0)
-}
-
-// snackbar
-const errortext = ref(null)
-const snackbar = ref(null)
-function displaySnackbar(text, color) {
-  errortext.value = text
-  snackbar.value = true
-}
-
-
-// others
-const localePath = useLocalePath()
-const { $backend } = useNuxtApp()
 
 
 // layout + header
@@ -84,18 +75,19 @@ useHead({
 // methods alphabetically
 
 async function checkAuth() {
+  console.log('checking if auth is already set', mgmttoken.value)
   if (mgmttoken.value) return 
   if (person.value.credentials.length === 0) {
-    navigateTo(localePath('/mgmt'))
+    navigateTo('/mgmt')
     return
   }
   if (!person.value.email.endsWith('@frbe-kbsb-ksb.be')) {
-    navigateTo(localePath('/mgmt'))
+    navigateTo('/mgmt')
     return
   }
   let reply
+  showLoading(true)
   // now login using the Google auth token
-  changeDialogCounter(1)
   try {
     reply = await $backend("accounts", "login", {
       logintype: 'google',
@@ -105,28 +97,26 @@ async function checkAuth() {
     })
   }
   catch (error) {
-    console.log('login not valid')
-    navigateTo(localePath('/mgmt'))
+    navigateTo('/mgmt')
   }
   finally {
-    changeDialogCounter(-1)
+    showLoading(false)
   }
   mgmtstore.updateToken(reply.data)
 }
 
-
 async function getClubs() {
   let reply
-  changeDialogCounter(1)
+  showLoading(true)
   try {
     reply = await $backend("club", "anon_get_clubs", {})
   } catch (error) {
     console.log('getClubs error')
-    displaySnackbar(error.message)
+    showSnackbar(error.message)
     return
   }
   finally {
-    changeDialogCounter(-1)
+    showLoading(false)
   }
   clubs.value = reply.data
   clubs.value.forEach(p => {
@@ -138,109 +128,101 @@ async function getClubDetails() {
   let reply
   icclub.value = {}
   if (idclub.value) {
-    changeDialogCounter(1)
+    showLoading(true)
     try {
       reply = await $backend("interclub","mgmt_getICclub" ,{
         idclub: idclub.value,
         token: mgmttoken.value
       })
     } catch (error) {
-      displaySnackbar(error.message)
+      showSnackbar(error.message)
       return
     } finally {
-      changeDialogCounter(-1)
+      showLoading(false)
     }
     icclub.value = reply.data
-    changeTab()
   }
-  else {
-    changeTab()
-  }
-
+  refdownloads.value.updateClub(icclub.value)
+  refplayerlist.value.updateClub(icclub.value)
+  refresults.value.updateClub(icclub.value)
+  refvenues.value.updateClub(icclub.value)   
 }
 
+function onPlayerlistUpdated(){
+  console.log('player list updated')
+}
 
 function selectClub(){
   getClubDetails()
 }
 
+function selectRound(){
+  refdownloads.value.updateRound(round.value)  
+  refresults.value.updateRound(round.value)  
+}
+
+// triggers
+
 onMounted( () => {
+  showSnackbar = refsnackbar.value.showSnackbar
+  showLoading = refloading.value.showLoading  
   checkAuth()
   getClubs()
+  selectRound()
 })
+
+
 </script>
 
 <template>
   <VContainer>
+    <SnackbarMessage ref="refsnackbar" />
+    <ProgressLoading ref="refloading"/>
     <h1>Interclubs Manager</h1>
-    <v-dialog width="10em" v-model="waitingdialog">
-      <v-card>
-        <v-card-title>Loading...</v-card-title>
-        <v-card-text>
-          <v-progress-circular indeterminate color="green" />
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-card>
-      <v-card-text>
-        <v-row>
-        <v-col cols="12" sm="6">
-          <VAutocomplete v-model="idclub" :items="clubs" 
-          item-title="merged" item-value="idclub" color="purple"
-          label="Club" clearable @update:model-value="selectClub" >
-        </VAutocomplete>
-        </v-col>
-        <v-col cols="12" sm="6">
-          <VSelect v-model="round" :items="ic_rounds" label="Round" 
-            @update:model-value="changeTab">
-          </VSelect>
-        </v-col>
-      </v-row>
-      </v-card-text>
-    </v-card>
+    <VCard>
+      <VCardText>
+        <VRow>
+          <VCol cols="12" sm="6">
+            <VAutocomplete v-model="idclub" :items="clubs" 
+              item-title="merged" item-value="idclub" color="purple"
+              label="Club" clearable @update:model-value="selectClub" >
+            </VAutocomplete>
+          </VCol>
+          <VCol cols="12" sm="6">
+            <VSelect v-model="round" :items="ic_rounds" label="Round" 
+              @update:model-value="selectRound">
+            </VSelect>
+          </VCol>
+        </VRow>
+      </VCardText>
+    </VCard>
     <h3 class="mt-2">
       Selected club: {{ icclub.idclub }} {{ icclub.name }}
     </h3>
     <div class="elevation-2">
-      <v-tabs v-model="tab" color="purple" @update:modelValue="changeTab" >
-        <v-tab value="results">Results</v-tab>        
-        <v-tab value="venues">Venues</v-tab>
-        <v-tab value="playerlist">Player lists</v-tab>
-        <v-tab value="downloads">Downloads</v-tab>   
-      </v-tabs>
-      <v-window v-model="tab" @update:modelValue="changeTab">
-        <v-window-item value="results" :eager="true">
-          <Results ref="refresults"
-            @displaySnackbar="displaySnackbar"
-            @changeDialogCounter="changeDialogCounter"          
-          />
-        </v-window-item>      
-        <v-window-item value="venues" :eager="true">
-          <Venue ref="refvenues" 
-            @displaySnackbar="displaySnackbar"
-            @changeDialogCounter="changeDialogCounter" 
-          />
-        </v-window-item>
-        <v-window-item value="playerlist" :eager="true">
+      <VTabs v-model="tab" color="purple" @update:modelValue="changeTab" >
+        <VTab value="results">Results</VTab>        
+        <VTab value="venues">Venues</VTab>
+        <VTab value="playerlist">Player lists</VTab>
+        <VTab value="downloads">Downloads</VTab>   
+      </VTabs>
+      <VWindow v-model="tab" @update:modelValue="changeTab">
+        <VWindowItem value="results" :eager="true">
+          <Results ref="refresults"  />
+        </VWindowItem>      
+        <VWindowItem value="venues" :eager="true">
+          <Venue ref="refvenues" />
+        </VWindowItem>
+        <VWindowItem value="playerlist" :eager="true">
           <Playerlist ref="refplayerlist"
-            @displaySnackbar="displaySnackbar"
-            @changeDialogCounter="changeDialogCounter"
+            @playerlist-updated="onPlayerlistUpdated"
           />
-        </v-window-item>
-        <v-window-item value="downloads" :eager="true">
-          <Downloads ref="refdownloads"
-            :icclub="icclub" 
-            :round="round"          
-          />
-        </v-window-item>
-      </v-window>
-    </div>
-    <VSnackbar v-model="snackbar" timeout="6000">
-      {{ errortext }}
-      <template v-slot:actions>
-        <v-btn color="green-lighten-2" variant="text" @click="snackbar = false" icon="mdi-close" />
-      </template>
-    </VSnackbar>     
+        </VWindowItem>
+        <VWindowItem value="downloads" :eager="true">
+          <Downloads ref="refdownloads"  />
+        </VWindowItem>
+      </VWindow>
+    </div>    
   </VContainer>
 
 </template>
