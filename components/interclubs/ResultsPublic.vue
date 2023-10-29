@@ -55,7 +55,7 @@ function addDetails(series, enc, games){
     l.idclub_home == enc.icclub_home && l.idclub_visit == enc.icclub_visit
   )
   console.log('ix', ix)
-  if (enc.icclub_home && enc.icclub_visit) {
+  if (enc.icclub_home && enc.icclub_visit && games.length) {
     series.lines.splice(ix+1, 0, ...newlines, {nature: 'average', avg_home, avg_visit})
   }
 }
