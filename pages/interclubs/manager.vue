@@ -41,7 +41,7 @@ function changeTab(){
       refplanning.value.setup(icclub.value, round.value)
       break
     case 'playerlist':
-      // refplayerlist.value.setup(icclub.value)
+      refplayerlist.value.setup(icclub.value)
       break
     case 'results':
       refresults.value.setup(icclub.value, round.value)

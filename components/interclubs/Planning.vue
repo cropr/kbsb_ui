@@ -27,6 +27,7 @@ const errstatus = ref(null)
 
 // i18n
 const { t: $t } = useI18n()
+const { localePath } = useLocalePath()
 
 async function checkAccess(){
   let reply

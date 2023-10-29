@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from 'vue'
 import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog, 
-  VSpacer, VTextField} from 'vuetify/lib/components/index.mjs';
+  VSpacer, VTextField, VIcon} from 'vuetify/lib/components/index.mjs';
 import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 import { PLAYERSTATUS } from "@/util/interclubs"
 
@@ -73,8 +73,11 @@ const cutoffday3 = "2024-01-04"
 
 // methods alphabetically
 
-function assignPlayer(){
-  console.log('Assigning player')
+function assignPlayer(idnumber){
+  console.log('Assigning player', idnumber)
+  playeredit.value = { ... playersindexed[idnumber]}
+  playeredit.value.nature = PLAYERSTATUS.assigned
+  playerEdit2Player()
 }
 
 function canAssign(idnumber){
@@ -83,7 +86,7 @@ function canAssign(idnumber){
 }
 
 function canEdit(idnumber){
-  return [PLAYERSTATUS.uassigned, PLAYERSTATUS.comfirmedin, PLAYERSTATUS.requestedin].includes(
+  return [PLAYERSTATUS.assigned, PLAYERSTATUS.comfirmedin, PLAYERSTATUS.requestedin].includes(
     playersindexed[idnumber].nature)    
 }
 
