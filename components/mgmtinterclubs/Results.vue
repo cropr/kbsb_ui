@@ -224,9 +224,7 @@ function updateClub(clb) {
 
 function updateRound(rnd) {
   round.value = rnd
-  if (roundold != round) {
-    getICSeries()  
-  }
+  getICSeries()  
 }
 
 onMounted( () => {
