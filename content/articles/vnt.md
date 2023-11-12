@@ -1,7 +1,7 @@
 ---
 id: 2f372759-8479-43e5-ab09-137dfb390fa6
 blueprint: article
-title: 'VNT'
+title: VNT
 active_days: 180
 active_since: '2023-11-11'
 title_nl: 'Verantwoordelijke Nationale Toernooien'

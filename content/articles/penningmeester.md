@@ -1,7 +1,7 @@
 ---
 id: 2f372759-8479-43e5-ab09-137dfb390fa6
 blueprint: article
-title: 'VNT'
+title: penningmeester
 active_days: 180
 active_since: '2023-11-11'
 title_nl: Ontslag Penningmeester
@@ -10,9 +10,10 @@ intro_nl: |-
 text_nl: |-
   Het BO is op zoek naar een neiuwe bestuurder die als penningmeester kan fungeren
 
-  Laurent Wery is momenteel penningmeester a.i/, maar het BO zoekt een neiiuwe kandidaat die de functie van penningmeester die met volle bevoegdheid kan uitvoeren
+  Laurent Wery is momenteel penningmeester ad interim, maar het BO zoekt een neiiuwe kandidaat die de functie van penningmeester die met volle bevoegdheid kan uitvoeren
 
   Voor vragen ivm de functie kan je je wenden tot Laurent Wery en Geert Bailleul
+
 title_fr: Démission du trésorier
 intro_fr: !-
   Pierre Gonzalez Garcia a démissionné de son poste d'administrateur.
