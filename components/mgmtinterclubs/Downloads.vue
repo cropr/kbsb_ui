@@ -90,8 +90,10 @@ onMounted( () => {
     <h3>Playerlist</h3>
     <v-btn @click="d">Download full playerlist</v-btn>
     <h3 class="mt-3">ELO processing</h3>
-    <VBtn @click="generateFideELO" disabled>Generate FIDE rapport</VBtn>
-    <VBtn @click="generateBelELO" disabled>Generate BEL rapport</VBtn>
+    <VBtn class="ma-2" @click="generateFideELO" disabled>Generate FIDE rapport</VBtn>
+    <VBtn class="ma-2" @click="generateBelELO" disabled>Generate BEL rapport</VBtn>
+    <!-- <VBtn class="ma-2" @click="generateFideELO" >Generate FIDE rapport</VBtn>
+    <VBtn class="ma-2" @click="generateBelELO" >Generate BEL rapport</VBtn> -->
     <h4 class="mt-2">Availabale ELo rapports</h4>
   </VContainer>
 </template>
