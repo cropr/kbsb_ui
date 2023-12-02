@@ -4,6 +4,7 @@ import { VContainer, VAutocomplete, VSelect, VBtn, VCard, VCardTitle, VCardText,
   VCol, VDivider, VCheckbox, VDialog, VProgressCircular} from 'vuetify/lib/components/index.mjs';
 import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION} from '@/util/interclubs'
 
+
 // communication with manager
 const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
 defineExpose({ setup })
@@ -36,7 +37,7 @@ const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x)=> {
 })
 
 function addDetails(series, enc, games){
-  console.log('enc', enc)
+  console.log('enc', enc.icclub_home, enc.pairingnr_home, games[0].fullname_home)
   const newlines = games.map((g)=> {
     return {
       nature: 'detail',
@@ -52,7 +53,8 @@ function addDetails(series, enc, games){
   const avg_home = Math.round(newlines.reduce((acc, current)=>acc + current.rating_home, 0) / newlines.length)
   const avg_visit = Math.round(newlines.reduce((acc, current)=>acc + current.rating_visit, 0) / newlines.length)
   const ix = series.lines.findIndex((l) => 
-    l.idclub_home == enc.icclub_home && l.idclub_visit == enc.icclub_visit
+    l.idclub_home == enc.icclub_home && l.idclub_visit == enc.icclub_visit 
+    && l.pairingnr_home == enc.pairingnr_home && l.pairingnr_visit == enc.pairingnr_visit
   )
   console.log('ix', ix)
   if (enc.icclub_home && enc.icclub_visit && games.length) {
@@ -108,6 +110,8 @@ async function getICencounterdetails(series, enc){
       round: round.value,
       icclub_home: enc.icclub_home,
       icclub_visit: enc.icclub_visit,
+      pairingnr_home: enc.pairingnr_home,
+      pairingnr_visit: enc.pairingnr_visit,        
     })
   } catch (error) {
     emit('displaySnackbar',$t(error.message))
@@ -116,8 +120,8 @@ async function getICencounterdetails(series, enc){
   finally {
     emit('changeDialogCounter', -1)
   }
-  console.log('got encounterdetails', reply.data)
-  addDetails(series, enc, reply.data)
+  const details = reply.data
+  addDetails(series, enc, details)
 }
 
 function processSeries(s){
@@ -128,9 +132,11 @@ function processSeries(s){
     s.lines.push({
       nature: "teamresult",
       idclub_home: enc.icclub_home,
-      name_home: names[enc.pairingnr_home],
       idclub_visit: enc.icclub_visit,
+      name_home: names[enc.pairingnr_home],
       name_visit: names[enc.pairingnr_visit],
+      pairingnr_home: enc.pairingnr_home,
+      pairingnr_visit: enc.pairingnr_visit,
       result: `${enc.boardpoint2_home / 2} - ${enc.boardpoint2_visit / 2}` 
     }) 
   })
