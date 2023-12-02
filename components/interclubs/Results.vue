@@ -177,6 +177,8 @@ async function readICSeries(){
             name_home: clubLabel(enc.pairingnr_home, s.teams),
             name_visit: clubLabel(enc.pairingnr_visit, s.teams),
             nrgames: PLAYERS_DIVISION[division],
+            pairingnr_home: enc.pairingnr_home,
+            pairingnr_visit: enc.pairingnr_visit,            
             round: round.value,
             signhome_idnumber: enc.signhome_idnumber,
             signhome_ts: enc.signhome_ts,
