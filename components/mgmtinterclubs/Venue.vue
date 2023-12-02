@@ -1,17 +1,28 @@
 <script setup>
 import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VRow, 
+  VCol, VIcon, VRadioGroup, VRadio, VTextField, VTextarea} from 'vuetify/lib/components/index.mjs';
 import { INTERCLUBS_STATUS, INTERCLUBS_ROUNDS, EMPTY_VENUE } from '@/util/interclubs'
 
-// communication with manager
-const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
-defineExpose({ setup })
 
-// idtoken
+// stores
+import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { storeToRefs } from 'pinia'
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
+
+
+// communication with manager
+defineExpose({ updateClub })
 const { $backend } = useNuxtApp()
+
+//  snackbar and loading widgets
+import ProgressLoading from '@/components/ProgressLoading.vue'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
+const refsnackbar = ref(null)
+let showSnackbar
+const refloading = ref(null)
+let showLoading
 
 // datamodel
 const idclub = ref(0) 
@@ -47,18 +58,18 @@ async function getICVenues() {
     venues.value = []
     return
   }
-  emit('changeDialogCounter',1)
+  showLoading(true)
   try {
     reply = await $backend("interclub","anon_getICVenues", {
         idclub: idclub.value
     })
   } catch (error) {
     console.log('NOK getICVenues')       
-    displaySnackbar(t(error.message))
+    showSnackbar(error.message)
     return
   }
   finally {
-    emit('changeDialogCounter', -1)
+    showLoading(false)
   }
   venues.value = reply.data.venues
   venues.value.forEach((v) => {
@@ -82,71 +93,79 @@ async function saveVenues() {
         savedvenues.push(others)
       }
     })
+    showLoading(true)
     reply = await $backend("interclub", "mgmt_set_interclubvenues", {
       token: mgmttoken.value,
       idclub: idclub.value,
       venues: savedvenues,
     })
   } catch (error) {
-    emit('displaySnackbar', error.message)
+    showSnackbar(error.message)
     return
   }
+  finally{
+    showLoading(false)
+  }
   statuscm.value = INTERCLUBS_STATUS.CONSULTING
-  emit('displaySnackbar', 'Interclub venue saved')
+  showSnackbar('Interclub venue saved')
 }
 
-function setup(clb){
-  console.log('setup venues', clb)
+function updateClub(clb){
   idclub.value = clb.idclub
   getICVenues()
 }
 
+onMounted( () => {
+  showSnackbar = refsnackbar.value.showSnackbar
+  showLoading = refloading.value.showLoading
+})
+
 </script>
 <template>
-  <v-container v-if="!idclub">
-    No club selected.
-  </v-container>
-  <v-container  v-if="idclub">
-    <h2>Interclub venues</h2>
-    <v-container v-show="status_consulting">
-        <v-row v-show="!venues.length">
-          <v-col cols="12" sm="6" md="4" xl="3">
-            <v-card class="elevation-5">
-              <v-card-title class="card-title">
-                Venues
-              </v-card-title>
-              <v-card-text>
-                No interclub venue is defined
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix" >
-            <v-card class="elevation-5">
-              <v-card-title>
-                Venue: {{ ix + 1 }}
-              </v-card-title>
-              <v-card-text>
-                <div><b>Address:</b> <br />
-                  <span v-html="v.address.split('\n').join('<br />')"></span>
-                </div>
-                <div><b>Capacity (boards):</b> {{ v.capacity }}</div>
-                <div><b>Not available:</b> {{ v.notavailable.join(', ') }}</div>
-                <p>Optional</p>
-                <div><b>Email address venue:</b> {{ v.email }}</div>
-                <div><b>Telephone number venue:</b> {{ v.phone }}</div>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-        <v-row>
-          <v-btn @click="modifyICvenues">
-            Edit
-          </v-btn>
-        </v-row>
+  <VContainer>
+    <SnackbarMessage ref="refsnackbar" />
+    <ProgressLoading ref="refloading"/>  
+		<h2>Interclub venues</h2>
+    <p v-if="!idclub">Please select a club to view the interclubs player list</p>
+		<div v-if="idclub">
+      <v-container v-show="status_consulting">
+          <v-row v-show="!venues.length">
+            <v-col cols="12" sm="6" md="4" xl="3">
+              <v-card class="elevation-5">
+                <v-card-title class="card-title">
+                  Venues
+                </v-card-title>
+                <v-card-text>
+                  No interclub venue is defined
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix" >
+              <v-card class="elevation-5">
+                <v-card-title>
+                  Venue: {{ ix + 1 }}
+                </v-card-title>
+                <v-card-text>
+                  <div><b>Address:</b> <br />
+                    <span v-html="v.address.split('\n').join('<br />')"></span>
+                  </div>
+                  <div><b>Capacity (boards):</b> {{ v.capacity }}</div>
+                  <div><b>Not available:</b> {{ v.notavailable.join(', ') }}</div>
+                  <p>Optional</p>
+                  <div><b>Email address venue:</b> {{ v.email }}</div>
+                  <div><b>Telephone number venue:</b> {{ v.phone }}</div>
+                </v-card-text>
+              </v-card>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-btn @click="modifyICvenues">
+              Edit
+            </v-btn>
+          </v-row>
       </v-container>
-
       <v-container v-show="status_modifying">
         <v-row >
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(v, ix) in venues" :key="ix">
@@ -187,6 +206,7 @@ function setup(clb){
             Cancel
           </v-btn>
         </v-row>
-      </v-container>    
-  </v-container>
+      </v-container>
+    </div>
+  </VContainer>
 </template>

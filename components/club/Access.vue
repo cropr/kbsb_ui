@@ -1,5 +1,7 @@
 <script setup>
 import {ref, computed, nextTick} from 'vue'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VAutocomplete,VIcon, 
+  VRow, VCol } from 'vuetify/lib/components/index.mjs';
 import { visibility_items, CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'

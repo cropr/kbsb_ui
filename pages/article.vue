@@ -1,5 +1,8 @@
 <script setup>
 import showdown from 'showdown'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VDialog, 
+  VProgressCircular, VSnackbar} from 'vuetify/lib/components/index.mjs';
+
 
 const { locale, t } = useI18n()
 const { $backend } = useNuxtApp()

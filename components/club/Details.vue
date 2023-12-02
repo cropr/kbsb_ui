@@ -1,6 +1,9 @@
 <script setup>
 import { ref, computed, nextTick } from 'vue'
 import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VDialog, VRow, VCol,
+  VTextField,VTextarea, VDivider } from 'vuetify/lib/components/index.mjs';
+
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
 import showdown from 'showdown'

@@ -1,5 +1,7 @@
 <script setup>
 import { phpbaseurl } from '@/util/cms'
+import { VBtn, VList, VListItem, VListGroup } from 'vuetify/components';
+
 const { locale, setLocale } = useI18n()
 const localePath = useLocalePath()
 

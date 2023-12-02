@@ -1,7 +1,18 @@
 <script setup>
 import { ref } from "vue";
+import { VApp, VAppBar, VAppBarTitle, VNavigationDrawer, 
+  VAppBarNavIcon, VMain, VList, VListItem, VToolbar, VToolbarTitle } from 'vuetify/components'
+
 const drawer = ref(false);
-const localePath = useLocalePath();
+
+// we need ot because nuxt i18n is buggy
+const localePath = useLocalePath()
+
+async function goto(section) {
+  const url=`/mgmt/${section}`
+  console.log('going to', url)
+  navigateTo(localePath(url))
+}
 </script>
 
 <template>
@@ -11,12 +22,13 @@ const localePath = useLocalePath();
         <VToolbarTitle>Menu</VToolbarTitle>
       </VToolbar>
       <VList class="bg-deep-purple-lighten-1 text-white">
-        <VListItem :to="localePath('/mgmt/overview')" title="Overview" />
-        <VListItem :to="localePath('/mgmt/content')" title="Site Content" />
-        <VListItem :to="localePath('/mgmt/clubs')" title="Clubs" />
-        <VListItem :to="localePath('/mgmt/filelist')" title="Files (Reports)" />
-        <VListItem :to="localePath('/mgmt/interclubs')" title="Interclubs" />
-        <VListItem :to="localePath('/mgmt/logout')" title="Logout" />
+        <VListItem @click="goto('overview')" title="Overview" />
+        <VListItem @click="goto('content')" title="Site Content" />
+        <VListItem @click="goto('clubs')" title="Clubs" />
+        <VListItem @click="goto('filelist')" title="Files (Reports)" />
+        <VListItem @click="goto('interclubs')" title="Interclubs" />
+        <VListItem @click="goto('mailing')" title="Mailing" />
+        <VListItem @click="goto('logout')" title="Logout" />
       </VList>
     </VNavigationDrawer>
     <VAppBar class="bg-deep-purple-darken-1 text-white">

@@ -1,5 +1,6 @@
 <script setup>
-import { ref, onMounted, nextTick } from 'vue'
+import { ref, onMounted } from 'vue'
+import { VContainer } from 'vuetify/components'
 import * as jose from 'jose'
 import { usePersonStore } from "@/store/person"
 import { storeToRefs } from 'pinia'

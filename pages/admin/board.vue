@@ -1,6 +1,6 @@
 <script setup>
-import { ref, onMounted } from 'vue'
-const { locale } = useI18n()
+import { VContainer, VBtn, VRow, VCol, VIcon } from 'vuetify/lib/components/index.mjs';
+
 
 const { data: board } = await useAsyncData('board', () => 
   queryContent('/app/board').where({ category: "board"}).sort({order: 1}).find())

@@ -1,5 +1,7 @@
 <script setup>
 import { ref, nextTick } from 'vue'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VCardSubtitle,
+  VAlert, VDivider, VAutocomplete } from 'vuetify/lib/components/index.mjs';
 import { useIdtokenStore}  from '@/store/idtoken'
 import { storeToRefs } from 'pinia'
 import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
@@ -25,6 +27,7 @@ const errstatus = ref(null)
 
 // i18n
 const { t: $t } = useI18n()
+const { localePath } = useLocalePath()
 
 async function checkAccess(){
   let reply

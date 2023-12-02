@@ -1,18 +1,28 @@
 <script setup>
 import { ref } from 'vue'
-import { storeToRefs } from 'pinia'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog, 
+  VSpacer, VTextField, VIcon} from 'vuetify/lib/components/index.mjs';
+import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 import { PLAYERSTATUS } from "@/util/interclubs"
 
-// communication with manager
-const emit = defineEmits(['displaySnackbar',  'changeDialogCounter'])
-defineExpose({ setup })
-
-// idtoken
+// store
+import { storeToRefs } from 'pinia'
+import { useMgmtTokenStore } from "@/store/mgmttoken";
 const mgmtstore = useMgmtTokenStore()
 const {token: mgmttoken} = storeToRefs(mgmtstore) 
 
+// communication
+const emit = defineEmits(['playerlistUpdated'])
+defineExpose({ updateClub })
 const { $backend } = useNuxtApp()
+
+//  snackbar and loading widgets
+import ProgressLoading from '@/components/ProgressLoading.vue'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
+const refsnackbar = ref(null)
+let showSnackbar
+const refloading = ref(null)
+let showLoading
 
 // datamodel
 const clubmembers = ref([])
@@ -53,10 +63,36 @@ const itemsPerPageOptions = [
   {value: -1, title: 'All'}
 ]
 
+// Constants changing per year
+const startdate1 = "2023-09-01"
+const cutoffday1 = "2023-09-18"
+const startdate2 = "2023-10-28"
+const cutoffday2 = "2023-11-04"
+const startdate3 = "2023-12-28"
+const cutoffday3 = "2024-01-04"
+
 // methods alphabetically
+
+function assignPlayer(idnumber){
+  console.log('Assigning player', idnumber)
+  playeredit.value = { ... playersindexed[idnumber]}
+  playeredit.value.nature = PLAYERSTATUS.assigned
+  playerEdit2Player()
+}
+
+function canAssign(idnumber){
+  return [PLAYERSTATUS.unassigned].includes(
+    playersindexed[idnumber].nature)    
+}
 
 function canEdit(idnumber){
   return [PLAYERSTATUS.assigned, PLAYERSTATUS.comfirmedin, PLAYERSTATUS.requestedin].includes(
+    playersindexed[idnumber].nature)    
+}
+
+
+function canExport(idnumber){
+  return [PLAYERSTATUS.assigned, PLAYERSTATUS.unassiged].includes(
     playersindexed[idnumber].nature)    
 }
 
@@ -81,6 +117,13 @@ function doExportPlayer(){
 }
 
 function fillinPlayerList() {
+  // add new members to the playerlist
+  let pnature = PLAYERSTATUS.unassigned
+  const now = new Date().valueOf()
+  if (enrolled.value && now < startdate1.valueOf) {
+    // automatically make players assigned at the start of the Interclubs
+    p.nature = PLAYERSTATUS.assigned
+  }
   clubmembers.value.forEach((m) => {
     if (!playersindexed[m.idnumber]) {
       let newplayer = {
@@ -93,7 +136,7 @@ function fillinPlayerList() {
         idclubvisit: 0,
         last_name: m.last_name,
         natrating: m.natrating,
-        nature: enrolled.value ? PLAYERSTATUS.assigned: PLAYERSTATUS.unassigned,
+        nature: pnature,
         titular: "",
         transfer: null,
       }
@@ -108,7 +151,6 @@ function fillinPlayerList() {
   })
 }
 
-const cutoffday = "2023-09-18"
 
 async function getClubMembers() {
   // get club members for member database currently on old site
@@ -116,13 +158,33 @@ async function getClubMembers() {
     clubmembers.value = []
     return
   }
-  if (new Date().valueOf > cutoffday.valueOf()) {
-    console.log('New member are not added after cutoff date')
-    clubmembers.value = []
-    return
+  const now = new Date().valueOf()
+  // if (now < startoffday1.valueOf()) {
+  //   console.log('Playerlist not open yet')
+  //   clubmembers.value = []
+  //   return
+  // }
+  // if (cutoffday1.valueOf() >= now && now > startdate2.valueOf() ) {
+  //   console.log('Plauerlist is closed')
+  //   clubmembers.value = []
+  //   return
+  // }
+  // if (cutoffday2.valueOf() >= now && now > startdate3.valueOf() ) {
+  //   console.log('Playerlist is closed')
+  //   clubmembers.value = []
+  //   return
+  // }
+  // if (cutoffday3.valueOf() >= now ) {
+  //   console.log('Playerlist is closed')
+  //   clubmembers.value = []
+  //   return
+  // }
+  if (idclub.value == clubmembers_id.value) {
+    console.log("using cached version of members")
+    return  // it is already read in
   }
-  if (idclub.value == clubmembers_id.value) return  // it is already read in
-  emit('changeDialogCounter',1)
+  console.log('getting Club Members from signaletique')
+  showLoading(true)
   let reply
   clubmembers.value = []
   try {
@@ -131,10 +193,10 @@ async function getClubMembers() {
     })
   } catch (error) {    
     console.log('getClubMembers error')
-    displaySnackbar(t(error.message))
+    showSnackbar(error.message)
     return
   } finally {
-    emit('changeDialogCounter', -1)
+    showLoading(false)
   }
   clubmembers_id.value = idclub.value
   const members = reply.data
@@ -193,27 +255,28 @@ function rowstyle(idnumber){
   return {
     imported: pl.nature == "requestedin",
     exported: pl.nature == "confirmedout",
+    unassigned: pl.nature == "unassigned"
   }
 }
 
 async function savePlayerlist(){
   let reply
   try {
-    emit('changeDialogCounter', 1)
+    showLoading(true)
 		reply = await $backend("interclub","mgmt_setICclub", {
 			token: mgmttoken.value,
 			idclub: idclub.value,
 			players: players.value,
 		})
   } catch (error) {
-    emit('displaySnackbar', error.message)
+    showSnackbar(error.message)
     return
   }
   finally {
-    emit('changeDialogCounter',-1)
+    showLoading(false)
   }
   validationdialog.value = false
-	emit('displaySnackbar', 'Playerlist saved')
+	showSnackbar('Playerlist saved')
 }
 
 function status(idnumber) {
@@ -221,7 +284,7 @@ function status(idnumber) {
   return pl ? pl.idclubvisit : ""
 }
 
-function setup(clb, mbrs){
+function updateClub(clb, mbrs){
   console.log('setup playerlist', clb)
   icclub.value = clb
   readICclub()
@@ -235,18 +298,18 @@ async function validatePlayerlist(){
   }
   let reply
   try {
-    emit('changeDialogCounter', 1)
+    showLoading(true)
 		reply = await $backend("interclub","mgmt_validateICplayers", {
 			token: mgmttoken.value,
 			idclub: idclub.value,
 			players: players.value,
 		})
   } catch (error) {
-    emit('displaySnackbar', error.message)
+    showSnackbar(error.message)
     return
   }
   finally {
-    emit('changeDialogCounter',-1)
+    showLoading(false)
   }
   console.log('reply.data', reply.data)
   validationerrors.value = reply.data
@@ -259,9 +322,16 @@ async function validatePlayerlist(){
    
 }
 
+onMounted( () => {
+  showSnackbar = refsnackbar.value.showSnackbar
+  showLoading = refloading.value.showLoading
+})
+
 </script>
 <template>
 	<v-container>
+    <SnackbarMessage ref="refsnackbar" />
+    <ProgressLoading ref="refloading"/>  
 		<h2>Player list</h2>
 		<p v-if="!idclub">Please select a club to view the interclubs player list</p>
 		<div v-if="idclub">
@@ -316,7 +386,11 @@ async function validatePlayerlist(){
             @click="openEditPlayer(item.columns.idnumber)" 
           />
           <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text" 
+            v-show="canExport(item.columns.idnumber)"           
             @click="openExportPlayer(item.columns.idnumber)" />
+          <VBtn density="compact" color="green" icon="mdi-arrow-left" variant="text" 
+            v-show="canAssign(item.columns.idnumber)"           
+            @click="assignPlayer(item.columns.idnumber)" />        
         </template>
       </VDataTable>
       <div>
@@ -334,8 +408,8 @@ async function validatePlayerlist(){
 					<div>Current assigned rating: {{ playeredit.assignedrating }} </div>
 					<div>Max ELO: {{ Math.max(playeredit.fiderating, playeredit.natrating) + 100 }}</div>
 					<div>Min ELO: {{ minelo(playeredit) }}</div>
-					<div>BEL ELO: {{ playeredit.natrating }}</div>
-					<div>FIDE ELO: {{ playeredit.fiderating }}</div>
+					<VTextField v-model="playeredit.natrating" label="Bel Elo" />
+					<VTextField v-model="playeredit.fiderating" label="Fide Elo" />
 					<VTextField v-model="playeredit.assignedrating" label="New Elo" />
 					<VDivider />
 					<h4>Titular</h4>
@@ -362,7 +436,6 @@ async function validatePlayerlist(){
 				<VCardActions>
 					<VSpacer />
 					<VBtn @click="doExportPlayer">OK</VBtn>
-					<!-- <VBtn @click="undoExportPlayer">Undo export</VBtn> -->
           <VBtn @click="exportdialog = false">Cancel</VBtn>
 				</VCardActions>
 			</VCard> 
@@ -422,7 +495,7 @@ async function validatePlayerlist(){
   color: purple;
   font-weight: 500;
 }
-.exported {
+.exported, .unassigned {
   color: rgb(186, 185, 185);
 }
 

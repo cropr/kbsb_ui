@@ -1,8 +1,11 @@
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, onMounted } from 'vue'
+import { VContainer, VAutocomplete, VBtn, VCard, VCardTitle, VCardText, VRow, 
+  VCol, VDialog, VProgressCircular, VSnackbar} from 'vuetify/lib/components/index.mjs';
+
 import { EMPTY_CLUB } from '@/util/club'
 
-const { locale, t } = useI18n()
+const { locale, t: $t } = useI18n()
 const { $backend } = useNuxtApp()
 const boardmembers = ref({})
 const club = ref({...EMPTY_CLUB})
@@ -34,7 +37,7 @@ async function getClubs() {
     reply = await $backend("club","anon_get_clubs", {})
   } catch (error) {
     if (error.code == 401) gotoLogin()
-    displaySnackbar(t(error.message))
+    displaySnackbar($t(error.message))
     return
   }
   finally {
@@ -101,25 +104,25 @@ onMounted(()=>(getClubs()))
         <v-col cols="12" md="6">
           <h4>{{ $t("Details") }}</h4>
           <div>
-            <span class="fieldname">{{ $t("Long name") }}</span>: {{ club.name_long }}
+            <span class="text-green-darken-2">{{ $t("Long name") }}</span>: {{ club.name_long }}
           </div>
           <div>
-            <span class="fieldname">{{ $t("Short name") }}</span>: {{ club.name_short }}
+            <span class="text-green-darken-2">{{ $t("Short name") }}</span>: {{ club.name_short }}
           </div>
           <div>
-            <span class="fieldname">{{ $t("Club venue") }}</span>:<br />
+            <span class="text-green-darken-2">{{ $t("Club venue") }}</span>:<br />
             <span v-html="club.venue.replaceAll('\n', '<br />')"></span>
           </div>
           <h4 class="mt-2">{{ $t("Contact") }}</h4>
           <div>
-            <span class="fieldname">{{ $t("Main email address") }}</span>: {{ club.email_main }}
+            <span class="text-green-darken-2">{{ $t("Main email address") }}</span>: {{ club.email_main }}
           </div>
           <div>
-            <span class="fieldname">{{ $t("Postal address") }}</span>:<br />
+            <span class="text-green-darken-2">{{ $t("Postal address") }}</span>:<br />
             <span v-html="club.address.replaceAll('\n', '<br />')"></span>
           </div>
           <div>
-            <span class="fieldname">{{ $t("Website") }}</span>: <a :href="club.website" target="_blank">{{ club.website
+            <span class="text-green-darken-2">{{ $t("Website") }}</span>: <a :href="club.website" target="_blank">{{ club.website
             }}</a>
           </div>
         </v-col>
@@ -128,7 +131,7 @@ onMounted(()=>(getClubs()))
           <h4>{{ $t("Board members") }}</h4>
           <ul>
             <li v-for="(bm, f) in club.boardmembers" :key="f">
-              <tr-fieldname :fieldname="f" />: {{ bm.first_name }} {{ bm.last_name}}<br />
+              <span class="text-green-darken-2">{{ $t(f) }}</span>: {{ bm.first_name }} {{ bm.last_name}}<br />
               <span v-show="bm.email && bm.email != '#NA'">e-mail: {{ bm.email }}<br /></span>
               <span v-show="bm.mobile && bm.mobile != '#NA'">gsm: {{ bm.mobile }}<br /></span>
             </li>
@@ -145,8 +148,4 @@ onMounted(()=>(getClubs()))
   </v-container>
 </template>
 
-<style scoped>
-.fieldname {
-  color: green;
-}
-</style>
+
