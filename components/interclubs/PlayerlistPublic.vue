@@ -44,7 +44,7 @@ const itemsPerPageOptions = [
 ]
 
 function download(){
-  const url = `${runtimeConfig.public.apiurl}api/v1/interclubs/anon/command/xls/playerlist?idclub=${idclub.value}`
+  const url = `${runtimeConfig.public.apiurl}/api/v1/interclubs/anon/command/xls/playerlist?idclub=${idclub.value}`
   window.location.href = url
 }
 
