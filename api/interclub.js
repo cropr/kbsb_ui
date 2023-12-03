@@ -231,9 +231,20 @@ export default {
   },
   mgmt_generate_fide_elo: async function (options) {
     const { token, round } = options
-    console.log("round", round)
     const resp = await axios.post(
       `${prefix}/mgmt/command/fide_elo`,
+      {},
+      {
+        headers: { Authorization: "Bearer " + token },
+        params: { round },
+      }
+    )
+    return resp
+  },
+  mgmt_generate_penalties: async function (options) {
+    const { token, round } = options
+    const resp = await axios.post(
+      `${prefix}/mgmt/command/penalties`,
       {},
       {
         headers: { Authorization: "Bearer " + token },

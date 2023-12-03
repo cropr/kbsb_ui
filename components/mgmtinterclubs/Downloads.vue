@@ -68,6 +68,24 @@ async function generateFideELO(){
   }
 }
 
+async function generatePenalties(){
+  showLoading(true)
+  try {
+    await $backend("interclub", "mgmt_generate_penalties",{
+      round: round.value,
+      token: mgmttoken.value,
+    })    
+    showSnackbar("Penalties rapport created")
+  }
+  catch(error) {
+    console.log("error", error)
+    showSnackbar(error.message)
+  }
+  finally {
+    showLoading(false)
+  }
+}
+
 function updateClub(clb){
   club.value = clb
 }
@@ -90,11 +108,12 @@ onMounted( () => {
     <h3>Playerlist</h3>
     <v-btn @click="d">Download full playerlist</v-btn>
     <h3 class="mt-3">ELO processing</h3>
-    <VBtn class="ma-2" @click="generateFideELO" disabled>Generate FIDE rapport</VBtn>
-    <VBtn class="ma-2" @click="generateBelELO" disabled>Generate BEL rapport</VBtn>
-    <!-- <VBtn class="ma-2" @click="generateFideELO" >Generate FIDE rapport</VBtn>
-    <VBtn class="ma-2" @click="generateBelELO" >Generate BEL rapport</VBtn> -->
-    <h4 class="mt-2">Availabale ELo rapports</h4>
+    <VBtn class="ma-2" @click="generateFideELO" >Generate FIDE rapport</VBtn>
+    <VBtn class="ma-2" @click="generateBelELO" >Generate BEL rapport</VBtn>
+    <h4 class="mt-2">Availabale ELO rapports</h4>
+    <h3 class="mt-3">Penalties</h3>
+    <VBtn class="ma-2" @click="generatePenalties" >Generate Penalties rapport</VBtn>
+    <h4 class="mt-2">Availabale Penalties rapports</h4>
   </VContainer>
 </template>
 
