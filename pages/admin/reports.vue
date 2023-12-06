@@ -39,7 +39,7 @@ const filteredfiles = computed(()=> {
 })
 
 function urlfile(url){
-  return `${config.public.apiurl}api/v1/report/anon/filecontent/${url}`
+  return `${config.public.apiurl}/api/v1/report/anon/filecontent/${url}`
 }
 
 async function getReports () {
