@@ -1,7 +1,9 @@
-category: collaborator
+category: board
 email: laurent.wery
 first_name: Laurent
 last_name: Wéry
 roles: 
-  - "Treasurer a.i."
+  - President
+  - "Interclubs Communication"
 slug: laurent
+order: 1
