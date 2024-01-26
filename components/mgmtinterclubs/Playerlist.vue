@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue'
-import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog, 
-  VSpacer, VTextField, VIcon} from 'vuetify/lib/components/index.mjs';
+import {
+  VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog,
+  VSpacer, VTextField, VIcon
+} from 'vuetify/lib/components/index.mjs';
 import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 import { PLAYERSTATUS } from "@/util/interclubs"
 
@@ -9,7 +11,7 @@ import { PLAYERSTATUS } from "@/util/interclubs"
 import { storeToRefs } from 'pinia'
 import { useMgmtTokenStore } from "@/store/mgmttoken";
 const mgmtstore = useMgmtTokenStore()
-const {token: mgmttoken} = storeToRefs(mgmtstore) 
+const { token: mgmttoken } = storeToRefs(mgmtstore)
 
 // communication
 const emit = defineEmits(['playerlistUpdated'])
@@ -28,7 +30,7 @@ let showLoading
 const clubmembers = ref([])
 const clubmembers_id = ref(null)
 const icclub = ref({})
-const idclub = ref(0) 
+const idclub = ref(0)
 const enrolled = ref(null)
 let playersindexed = {}
 const players = ref([])
@@ -37,7 +39,7 @@ const editdialog = ref(false)
 const exportalldialog = ref(false)
 const exportallvisit = ref(0)
 const exportdialog = ref(false)
-const titularchoices = [{title: "No titular", value:""}]
+const titularchoices = [{ title: "No titular", value: "" }]
 
 // validation
 const validationdialog = ref(false)
@@ -45,22 +47,22 @@ const validationerrors = ref([])
 
 // data table definiton
 const headers = [
-  { title: "N", key: "index"},
-	{ title: "Name", key: 'fullname' },
-	{ title: "ID number", key: 'idnumber', sortable: false },
-	{ title: "ELO", key: "assignedrating" },
-	{ title: "F-ELO", key: "fiderating" },
-	{ title: "B-ELO", key: "natrating" },  
-	{ title: "Club", key: "idcluborig" },
-	{ title: "Titular", key: "titular" },
-	{ title: "Status", key: "nature"},
-	{ title: "Actions", key:"action" },
+  { title: "N", key: "index" },
+  { title: "Name", key: 'fullname' },
+  { title: "ID number", key: 'idbel', sortable: false },
+  { title: "ELO", key: "assignedrating" },
+  { title: "F-ELO", key: "fiderating" },
+  { title: "B-ELO", key: "natrating" },
+  { title: "Club", key: "idcluborig" },
+  { title: "Titular", key: "titular" },
+  { title: "Status", key: "nature" },
+  { title: "Actions", key: "action" },
 ]
 const itemsPerPage = 50
 const itemsPerPageOptions = [
-  {value: 50, title: '50'},
-  {value: 150, title: '150'},
-  {value: -1, title: 'All'}
+  { value: 50, title: '50' },
+  { value: 150, title: '150' },
+  { value: -1, title: 'All' }
 ]
 
 // Constants changing per year
@@ -73,43 +75,51 @@ const cutoffday3 = "2024-01-04"
 
 // methods alphabetically
 
-function assignPlayer(idnumber){
-  console.log('Assigning player', idnumber)
-  playeredit.value = { ... playersindexed[idnumber]}
+function assignPlayer(idbel) {
+  console.log('Assigning player', idbel)
+  playeredit.value = { ...playersindexed[idbel] }
   playeredit.value.nature = PLAYERSTATUS.assigned
   playerEdit2Player()
 }
 
-function canAssign(idnumber){
+function canAssign(idbel) {
   return [PLAYERSTATUS.unassigned].includes(
-    playersindexed[idnumber].nature)    
+    playersindexed[idbel].nature)
 }
 
-function canEdit(idnumber){
+function canEdit(idbel) {
+  if (!playersindexed[idbel]) {
+    console.log('idbel not in playersindexed', idbel)
+  }
   return [PLAYERSTATUS.assigned, PLAYERSTATUS.comfirmedin, PLAYERSTATUS.requestedin].includes(
-    playersindexed[idnumber].nature)    
+    playersindexed[idbel].nature)
 }
 
-
-function canExport(idnumber){
+function canExport(idbel) {
   return [PLAYERSTATUS.assigned, PLAYERSTATUS.unassiged].includes(
-    playersindexed[idnumber].nature)    
+    playersindexed[idbel].nature)
 }
 
-function doEditPlayer(){
+function compareLastName(a, b) {
+  if (a.last_name > b.last_name) return 1
+  if (a.last_name < b.last_name) return -1
+  return 0
+}
+
+function doEditPlayer() {
   playerEdit2Player()
   editdialog.value = false
 }
 
-function doExportAll(){
-  players.value.forEach((m)=> {
+function doExportAll() {
+  players.value.forEach((m) => {
     m.nature = PLAYERSTATUS.confirmedout
     m.idclubvisit = parseInt(exportallvisit.value) + 0
   })
   exportalldialog.value = false
 }
 
-function doExportPlayer(){
+function doExportPlayer() {
   playeredit.value.nature = PLAYERSTATUS.confirmedout
   playeredit.value.idclubvisit = parseInt(playeredit.value.idclubvisit) + 0
   playerEdit2Player()
@@ -117,40 +127,58 @@ function doExportPlayer(){
 }
 
 function fillinPlayerList() {
-  // add new members to the playerlist
-  let pnature = PLAYERSTATUS.unassigned
+  console.log('filling playerlist', clubmembers.value)
+  let assigning = []
   const now = new Date().valueOf()
-  if (enrolled.value && now < startdate1.valueOf) {
-    // automatically make players assigned at the start of the Interclubs
-    p.nature = PLAYERSTATUS.assigned
-  }
   clubmembers.value.forEach((m) => {
-    if (!playersindexed[m.idnumber]) {
-      let newplayer = {
-        assignedrating:  Math.max(m.fiderating, m.natrating),
-        fiderating: m.fiderating,
-        fullname: `${m.last_name}, ${m.first_name}`,
-        first_name: m.first_name,
-        idnumber: m.idnumber,
-        idcluborig: m.idclub,
-        idclubvisit: 0,
-        last_name: m.last_name,
-        natrating: m.natrating,
-        nature: pnature,
-        titular: "",
-        transfer: null,
+    let maxrating = Math.max(m.fiderating, m.natrating)
+    let newplayer = {
+      assignedrating: maxrating,
+      date_affiliation: m.date_affiliation,
+      fiderating: m.fiderating,
+      fullname: `${m.last_name}, ${m.first_name}`,
+      first_name: m.first_name,
+      idbel: m.idbel,
+      idcluborig: m.idclub,
+      idclubvisit: 0,
+      last_name: m.last_name,
+      natrating: m.natrating,
+      nature: maxrating ? PLAYERSTATUS.unassigned : PLAYERSTATUS.assigned,
+      titular: "",
+      transfer: null,
+    }
+    if (!playersindexed[newplayer.idbel]) {
+      playersindexed[newplayer.idbel] = newplayer
+      // delay adding assigning members after setting assignedrating 
+      if (maxrating) {
+        console.log('adding to players', newplayer.idbel, newplayer.assignedrating)
+        players.value.push(newplayer)
       }
-      players.value.push(newplayer)
-      playersindexed[m.idnumber] = newplayer
+      else {
+        console.log('adding to assigning', newplayer.idbel, newplayer.assignedrating)
+        assigning.push(newplayer)
+      }
     }
   })
+  console.log('assigning', assigning)
+  if (assigning.length) {
+    assigning.sort(compareLastName)
+    console.log('assigning sorted', assigning)
+    let minelo = (players.value.reduce((prev, curr) =>
+      prev.assignedrating < curr.assignedrating ? prev : curr).assignedrating
+    )
+    console.log('minelo', minelo)
+    assigning.forEach((m) => {
+      m.assignedrating = --minelo
+      players.value.push(m)
+    })
+  }
   players.value.forEach((p) => {
     if (!p.fullname) {
       p.fullname = `${p.last_name}, ${p.first_name}`
     }
   })
 }
-
 
 async function getClubMembers() {
   // get club members for member database currently on old site
@@ -159,26 +187,6 @@ async function getClubMembers() {
     return
   }
   const now = new Date().valueOf()
-  // if (now < startoffday1.valueOf()) {
-  //   console.log('Playerlist not open yet')
-  //   clubmembers.value = []
-  //   return
-  // }
-  // if (cutoffday1.valueOf() >= now && now > startdate2.valueOf() ) {
-  //   console.log('Plauerlist is closed')
-  //   clubmembers.value = []
-  //   return
-  // }
-  // if (cutoffday2.valueOf() >= now && now > startdate3.valueOf() ) {
-  //   console.log('Playerlist is closed')
-  //   clubmembers.value = []
-  //   return
-  // }
-  // if (cutoffday3.valueOf() >= now ) {
-  //   console.log('Playerlist is closed')
-  //   clubmembers.value = []
-  //   return
-  // }
   if (idclub.value == clubmembers_id.value) {
     console.log("using cached version of members")
     return  // it is already read in
@@ -188,10 +196,11 @@ async function getClubMembers() {
   let reply
   clubmembers.value = []
   try {
-    reply = await $backend("member", "anon_getclubmembers", {
+    reply = await $backend("member", "mgmt_getclubmembers", {
+      token: mgmttoken.value,
       idclub: idclub.value,
     })
-  } catch (error) {    
+  } catch (error) {
     console.log('getClubMembers error')
     showSnackbar(error.message)
     return
@@ -199,58 +208,64 @@ async function getClubMembers() {
     showLoading(false)
   }
   clubmembers_id.value = idclub.value
-  const members = reply.data
+  let cutoff = new Date(cutoffday3).getTime()
+  const members = reply.data.filter((m) =>
+    cutoff > new Date(m.date_affiliation).getTime()
+  )
   members.forEach(p => {
-    p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
+    p.merged = `${p.idbel}: ${p.first_name} ${p.last_name}`
   })
   clubmembers.value = members.sort((a, b) =>
     (a.last_name > b.last_name ? 1 : -1))
-  fillinPlayerList()  
+  fillinPlayerList()
 }
 
 function minelo(p) {
   let minrating = p.fiderating ? Math.min(p.fiderating, p.natrating) - 100 : p.natrating - 100
-  return Math.max (minrating, 1000)
+  return Math.max(minrating, 1000)
 }
 
-function openEditPlayer(idnumber) {
-	playeredit.value = { ... playersindexed[idnumber]}
-	editdialog.value = true
+function openEditPlayer(idbel) {
+  playeredit.value = { ...playersindexed[idbel] }
+  editdialog.value = true
 }
 
-function openExportAll(){
+function openExportAll() {
   exportalldialog.value = true
 }
 
-function openExportPlayer(idnumber) {
-	playeredit.value = { ... playersindexed[idnumber]}
+function openExportPlayer(idbel) {
+  playeredit.value = { ...playersindexed[idbel] }
   exportdialog.value = true
 }
 
-function playerEdit2Player(){
+function playerEdit2Player() {
   // copy the data of Player Edit back to the Player
   // we splice the players array and add the playeredit to trigger a repaint of the table
-  const aix = players.value.findIndex((p)=> p.idnumber == playeredit.value.idnumber)
+  const aix = players.value.findIndex((p) => p.idbel == playeredit.value.idbel)
   players.value.splice(aix, 1, playeredit.value)
-  playersindexed[playeredit.value.idnumber] = players.value[aix]
+  playersindexed[playeredit.value.idbel] = players.value[aix]
 }
 
 function readICclub() {
+  console.log('reading IC Club', icclub.value.idclub,
+    icclub.value.players ? icclub.value.players.length : 0)
   idclub.value = icclub.value.idclub
   enrolled.value = icclub.value.enrolled
-	players.value = icclub.value.players ? [...icclub.value.players] : []
-	playersindexed = Object.fromEntries(players.value.map((x)=> [x.idnumber, x]))
-  titularchoices.splice(1,titularchoices.length-1)
+  players.value = icclub.value.players ? [...icclub.value.players] : []
+  players.value.forEach((m) => m.idbel = m.idnumber)
+  playersindexed = Object.fromEntries(players.value.map((x) => [x.idbel, x]))
+  titularchoices.splice(1, titularchoices.length - 1)
   if (icclub.value.teams) {
-    icclub.value.teams.forEach((t)=> {
-      titularchoices.push({title: t.name, value: t.name })
+    icclub.value.teams.forEach((t) => {
+      titularchoices.push({ title: t.name, value: t.name })
     })
   }
   fillinPlayerList()
 }
 
-function rowstyle(idnumber){
-  const pl = playersindexed[idnumber]
+function rowstyle(idbel) {
+  const pl = playersindexed[idbel]
   if (!pl) return {}
   return {
     imported: pl.nature == "requestedin",
@@ -259,15 +274,15 @@ function rowstyle(idnumber){
   }
 }
 
-async function savePlayerlist(){
+async function savePlayerlist() {
   let reply
   try {
     showLoading(true)
-		reply = await $backend("interclub","mgmt_setICclub", {
-			token: mgmttoken.value,
-			idclub: idclub.value,
-			players: players.value,
-		})
+    reply = await $backend("interclub", "mgmt_setICclub", {
+      token: mgmttoken.value,
+      idclub: idclub.value,
+      players: players.value,
+    })
   } catch (error) {
     showSnackbar(error.message)
     return
@@ -276,22 +291,22 @@ async function savePlayerlist(){
     showLoading(false)
   }
   validationdialog.value = false
-	showSnackbar('Playerlist saved')
+  showSnackbar('Playerlist saved')
 }
 
-function status(idnumber) {
-  const pl = playersindexed[idnumber]
+function status(idbel) {
+  const pl = playersindexed[idbel]
   return pl ? pl.idclubvisit : ""
 }
 
-function updateClub(clb, mbrs){
+function updateClub(clb, mbrs) {
   console.log('setup playerlist', clb)
   icclub.value = clb
   readICclub()
   getClubMembers()
-} 
+}
 
-async function validatePlayerlist(){
+async function validatePlayerlist() {
   if (!enrolled.value) {
     savePlayerlist()
     return
@@ -299,11 +314,11 @@ async function validatePlayerlist(){
   let reply
   try {
     showLoading(true)
-		reply = await $backend("interclub","mgmt_validateICplayers", {
-			token: mgmttoken.value,
-			idclub: idclub.value,
-			players: players.value,
-		})
+    reply = await $backend("interclub", "mgmt_validateICplayers", {
+      token: mgmttoken.value,
+      idclub: idclub.value,
+      players: players.value,
+    })
   } catch (error) {
     showSnackbar(error.message)
     return
@@ -319,174 +334,167 @@ async function validatePlayerlist(){
   else {
     savePlayerlist()
   }
-   
+
 }
 
-onMounted( () => {
+onMounted(() => {
   showSnackbar = refsnackbar.value.showSnackbar
   showLoading = refloading.value.showLoading
 })
 
 </script>
 <template>
-	<v-container>
+  <v-container>
     <SnackbarMessage ref="refsnackbar" />
-    <ProgressLoading ref="refloading"/>  
-		<h2>Player list</h2>
-		<p v-if="!idclub">Please select a club to view the interclubs player list</p>
-		<div v-if="idclub">
+    <ProgressLoading ref="refloading" />
+    <h2>Player list</h2>
+    <p v-if="!idclub">Please select a club to view the interclubs player list</p>
+    <div v-if="idclub">
       <div v-if="enrolled">
         This club is enrolled in Interclubs 2023-24
       </div>
       <div v-else>
         This club is not enrolled in Interclubs 2023-24
-        <VBtn @click="openExportAll"  color="primary" class="ml-8">
+        <VBtn @click="openExportAll" color="primary" class="ml-8">
           Export all players
         </VBtn>
       </div>
-      <VDataTable :items="players" :headers="headers"
-        density="compact" 
-        :items-per-page="itemsPerPage"
-        :items-per-page-options="itemsPerPageOptions" 
-        :sort-by="[{key: 'assignedrating', order: 'desc'}]"
-      >
+      <VDataTable :items="players" :headers="headers" density="compact" :items-per-page="itemsPerPage"
+        :items-per-page-options="itemsPerPageOptions"
+        :sort-by="[{ key: 'assignedrating', order: 'desc' }]">
         <template v-slot:item.index="{ item, index }">
-          <span :class="rowstyle(item.columns.idnumber)">
+          <span :class="rowstyle(item.columns.idbel)">
             {{ index + 1 }}
           </span>
         </template>
         <template v-slot:item.fullname="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
+          <span :class="rowstyle(item.columns.idbel)">
             {{ item.columns.fullname }}
           </span>
         </template>
-        <template v-slot:item.idnumber="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.idnumber }}
+        <template v-slot:item.idbel="{ item }">
+          <span :class="rowstyle(item.columns.idbel)">
+            {{ item.columns.idbel }}
           </span>
         </template>
         <template v-slot:item.assignedrating="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
+          <span :class="rowstyle(item.columns.idbel)">
             {{ item.columns.assignedrating }}
           </span>
         </template>
         <template v-slot:item.idclub="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
+          <span :class="rowstyle(item.columns.idbel)">
             {{ item.columns.idclub }}
           </span>
         </template>
         <template v-slot:item.nature="{ item }">
           <span v-show="item.columns.nature == 'confirmedout'">
-            <VIcon>mdi-arrow-right-bold</VIcon>{{ status(item.columns.idnumber) }}
+            <VIcon>mdi-arrow-right-bold</VIcon>{{ status(item.columns.idbel) }}
           </span>
-        </template>                         
+        </template>
         <template v-slot:item.action="{ item }">
           <VBtn density="compact" color="green" icon="mdi-pencil" variant="text"
-            v-show="canEdit(item.columns.idnumber)" 
-            @click="openEditPlayer(item.columns.idnumber)" 
-          />
-          <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text" 
-            v-show="canExport(item.columns.idnumber)"           
-            @click="openExportPlayer(item.columns.idnumber)" />
-          <VBtn density="compact" color="green" icon="mdi-arrow-left" variant="text" 
-            v-show="canAssign(item.columns.idnumber)"           
-            @click="assignPlayer(item.columns.idnumber)" />        
+            v-show="canEdit(item.columns.idbel)" @click="openEditPlayer(item.columns.idbel)" />
+          <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text"
+            v-show="canExport(item.columns.idbel)" @click="openExportPlayer(item.columns.idbel)" />
+          <VBtn density="compact" color="green" icon="mdi-arrow-left" variant="text"
+            v-show="canAssign(item.columns.idbel)" @click="assignPlayer(item.columns.idbel)" />
         </template>
       </VDataTable>
       <div>
         <VBtn @click="validatePlayerlist()" color="primary">Save</VBtn>
       </div>
     </div>
-		<VDialog v-model="editdialog"  width="20em">
-			<VCard>
-				<VCardTitle>
-					Edit: {{ playeredit.fullname }}
-					<VDivider />
-				</VCardTitle>
-				<VCardText>
-					<h4>Modify assigned Elo</h4>
-					<div>Current assigned rating: {{ playeredit.assignedrating }} </div>
-					<div>Max ELO: {{ Math.max(playeredit.fiderating, playeredit.natrating) + 100 }}</div>
-					<div>Min ELO: {{ minelo(playeredit) }}</div>
-					<VTextField v-model="playeredit.natrating" label="Bel Elo" />
-					<VTextField v-model="playeredit.fiderating" label="Fide Elo" />
-					<VTextField v-model="playeredit.assignedrating" label="New Elo" />
-					<VDivider />
-					<h4>Titular</h4>
-						<VSelect :items="titularchoices" v-model="playeredit.titular"></VSelect>
-					<VDivider />
-				</VCardText>
-				<VCardActions>
-					<VSpacer />
-					<VBtn @click="doEditPlayer">OK</VBtn>
-					<VBtn @click="editdialog  = false">Cancel</VBtn>
-				</VCardActions>
-			</VCard> 
-		</VDialog>
-    <VDialog v-model="exportdialog"  width="30em">
-			<VCard>
-				<VCardTitle>
-					Export: {{ playeredit.fullname }}
-					<VDivider />
-				</VCardTitle>
-				<VCardText>
+    <VDialog v-model="editdialog" width="20em">
+      <VCard>
+        <VCardTitle>
+          Edit: {{ playeredit.fullname }}
+          <VDivider />
+        </VCardTitle>
+        <VCardText>
+          <h4>Modify assigned Elo</h4>
+          <div>Current assigned rating: {{ playeredit.assignedrating }} </div>
+          <div>Max ELO: {{ Math.max(playeredit.fiderating, playeredit.natrating) + 100 }}</div>
+          <div>Min ELO: {{ minelo(playeredit) }}</div>
+          <VTextField v-model="playeredit.natrating" label="Bel Elo" />
+          <VTextField v-model="playeredit.fiderating" label="Fide Elo" />
+          <VTextField v-model="playeredit.assignedrating" label="New Elo" />
+          <VDivider />
+          <h4>Titular</h4>
+          <VSelect :items="titularchoices" v-model="playeredit.titular"></VSelect>
+          <VDivider />
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn @click="doEditPlayer">OK</VBtn>
+          <VBtn @click="editdialog = false">Cancel</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
+    <VDialog v-model="exportdialog" width="30em">
+      <VCard>
+        <VCardTitle>
+          Export: {{ playeredit.fullname }}
+          <VDivider />
+        </VCardTitle>
+        <VCardText>
           <p>Exporting a player to another club</p>
           <VTextField label="Club number" v-model="playeredit.idclubvisit" />
-				</VCardText>
-				<VCardActions>
-					<VSpacer />
-					<VBtn @click="doExportPlayer">OK</VBtn>
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn @click="doExportPlayer">OK</VBtn>
           <VBtn @click="exportdialog = false">Cancel</VBtn>
-				</VCardActions>
-			</VCard> 
-		</VDialog>
-    <VDialog v-model="exportalldialog"  width="30em">
-			<VCard>
-				<VCardTitle>
-					Export all players
-					<VDivider />
-				</VCardTitle>
-				<VCardText>
+        </VCardActions>
+      </VCard>
+    </VDialog>
+    <VDialog v-model="exportalldialog" width="30em">
+      <VCard>
+        <VCardTitle>
+          Export all players
+          <VDivider />
+        </VCardTitle>
+        <VCardText>
           <p>Exporting all players to another club</p>
           <VTextField label="Club number" v-model="exportallvisit" />
-				</VCardText>
-				<VCardActions>
-					<VSpacer />
-					<VBtn @click="doExportAll">OK</VBtn>
-					<VBtn @click="exportalldialog = false">Cancel</VBtn>
-				</VCardActions>
-			</VCard> 
-		</VDialog>    
-		<VDialog v-model="validationdialog"  width="30em">
-			<VCard>
-				<VCardTitle>
-					Validation of player list.
-					<VDivider />
-				</VCardTitle>
-				<VCardText class="markdowncontent">
-					<div>The player list contains validation errors</div>
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn @click="doExportAll">OK</VBtn>
+          <VBtn @click="exportalldialog = false">Cancel</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
+    <VDialog v-model="validationdialog" width="30em">
+      <VCard>
+        <VCardTitle>
+          Validation of player list.
+          <VDivider />
+        </VCardTitle>
+        <VCardText class="markdowncontent">
+          <div>The player list contains validation errors</div>
           <ul>
             <li v-for="(err, ix) in validationerrors" :key="ix">
               <span v-show="err.errortype == 'ELO'">
-                Player {{ err.detail  }}: {{  err.message }}
+                Player {{ err.detail }}: {{ err.message }}
               </span>
               <span v-show="err.errortype == 'TitularOrder'">
-                {{  err.message }}
+                {{ err.message }}
               </span>
               <span v-show="err.errortype == 'TitularCount'">
-                {{ err.detail  }}: {{  err.message }}
-              </span>            
+                {{ err.detail }}: {{ err.message }}
+              </span>
             </li>
           </ul>
           <VDivider />
-				</VCardText>
-				<VCardActions>
-					<VSpacer />
-					<VBtn @click="savePlayerlist()">Save anyhow</VBtn>
-					<VBtn @click="validationdialog = false">Cancel</VBtn>
-				</VCardActions>
-			</VCard> 
-		</VDialog>    
+        </VCardText>
+        <VCardActions>
+          <VSpacer />
+          <VBtn @click="savePlayerlist()">Save anyhow</VBtn>
+          <VBtn @click="validationdialog = false">Cancel</VBtn>
+        </VCardActions>
+      </VCard>
+    </VDialog>
   </v-container>
 </template>
 
@@ -495,8 +503,9 @@ onMounted( () => {
   color: purple;
   font-weight: 500;
 }
-.exported, .unassigned {
+
+.exported,
+.unassigned {
   color: rgb(186, 185, 185);
 }
-
 </style>
