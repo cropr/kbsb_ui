@@ -1,11 +1,9 @@
-category: board
+category: collaborator
 email: geert.bailleul
 first_name: Geert
 last_name: Bailleul
 mobile: "+32478233183"
 roles: 
-  - President
   - "President CIS"
-  - "Representative BOIC"
+  - "International Arbiters"
 slug: geert
-order: 1
