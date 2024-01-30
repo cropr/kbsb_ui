@@ -127,9 +127,8 @@ function doExportPlayer() {
 }
 
 function fillinPlayerList() {
-  console.log('filling playerlist', clubmembers.value)
-  let assigning = []
-  const now = new Date().valueOf()
+  console.log('filling playerlist clubmembers', clubmembers.value)
+  let assigning = [], existass
   clubmembers.value.forEach((m) => {
     let maxrating = Math.max(m.fiderating, m.natrating)
     let newplayer = {
@@ -147,16 +146,27 @@ function fillinPlayerList() {
       titular: "",
       transfer: null,
     }
-    if (!playersindexed[newplayer.idbel]) {
-      playersindexed[newplayer.idbel] = newplayer
-      // delay adding assigning members after setting assignedrating 
+    let existpl = playersindexed[newplayer.idbel]
+    if (existpl) {
+      if (!maxrating && existpl.nature == PLAYERSTATUS.unassigned) {
+        // flagging a reassign
+        console.log('adding for reassigning', newplayer.idbel)
+        newplayer.reassign = true
+        playersindexed[newplayer.idbel] = newplayer
+        assigning.push(newplayer)
+      }
+    }
+    else {
       if (maxrating) {
-        console.log('adding to players', newplayer.idbel, newplayer.assignedrating)
-        players.value.push(newplayer)
+        // stotre unassigned nature
+        console.log('store unassgined rating', newplayer.idbel)
+        playersindexed[newplayer.idbel] = newplayer
       }
       else {
-        console.log('adding to assigning', newplayer.idbel, newplayer.assignedrating)
+        console.log('adding for assigning', newplayer.idbel)
+        playersindexed[newplayer.idbel] = newplayer
         assigning.push(newplayer)
+        // adding 
       }
     }
   })
@@ -164,13 +174,29 @@ function fillinPlayerList() {
   if (assigning.length) {
     assigning.sort(compareLastName)
     console.log('assigning sorted', assigning)
-    let minelo = (players.value.reduce((prev, curr) =>
-      prev.assignedrating < curr.assignedrating ? prev : curr).assignedrating
+    existass = players.value.filter((p) =>
+      [PLAYERSTATUS.assigned, PLAYERSTATUS.requestedin].includes(p.nature)
     )
+    let minelo = 1150
+    if (existass.length) {
+      minelo = (existass.reduce((prev, curr) =>
+        prev.assignedrating < curr.assignedrating ? prev : curr).assignedrating
+      )
+    }
     console.log('minelo', minelo)
     assigning.forEach((m) => {
       m.assignedrating = --minelo
-      players.value.push(m)
+      m.idnumber = m.idbel
+      playersindexed[m.idbel] = m
+      if (m.reassign) {
+        // overwrite the existing player  
+        const aix = players.value.findIndex((p) => p.idbel == m.idbel)
+        players.value.splice(aix, 1, m)
+      }
+      else {
+        // add it to the bottom
+        players.value.push(m)
+      }
     })
   }
   players.value.forEach((p) => {
@@ -181,6 +207,8 @@ function fillinPlayerList() {
 }
 
 async function getClubMembers() {
+  let reply, cutoff
+  console.log('getClubMembers', clubmembers_id.value, idclub.value)
   // get club members for member database currently on old site
   if (!idclub.value) {
     clubmembers.value = []
@@ -191,9 +219,7 @@ async function getClubMembers() {
     console.log("using cached version of members")
     return  // it is already read in
   }
-  console.log('getting Club Members from signaletique')
   showLoading(true)
-  let reply
   clubmembers.value = []
   try {
     reply = await $backend("member", "mgmt_getclubmembers", {
@@ -208,7 +234,7 @@ async function getClubMembers() {
     showLoading(false)
   }
   clubmembers_id.value = idclub.value
-  let cutoff = new Date(cutoffday3).getTime()
+  cutoff = new Date(cutoffday3).getTime()
   const members = reply.data.filter((m) =>
     cutoff > new Date(m.date_affiliation).getTime()
   )
@@ -217,7 +243,7 @@ async function getClubMembers() {
   })
   clubmembers.value = members.sort((a, b) =>
     (a.last_name > b.last_name ? 1 : -1))
-  fillinPlayerList()
+  console.log('clubmembers', clubmembers.value.length)
 }
 
 function minelo(p) {
@@ -261,7 +287,6 @@ function readICclub() {
       titularchoices.push({ title: t.name, value: t.name })
     })
   }
-  fillinPlayerList()
 }
 
 function rowstyle(idbel) {
@@ -299,11 +324,15 @@ function status(idbel) {
   return pl ? pl.idclubvisit : ""
 }
 
-function updateClub(clb, mbrs) {
-  console.log('setup playerlist', clb)
+async function updateClub(clb) {
+  console.log('Update club in playerlist', clb)
   icclub.value = clb
   readICclub()
-  getClubMembers()
+  await getClubMembers()
+  console.log('Status before filling', clubmembers.value.length, players.value.length)
+  if (players.value.length) {
+    fillinPlayerList()
+  }
 }
 
 async function validatePlayerlist() {
