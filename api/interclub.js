@@ -244,12 +244,8 @@ export default {
   mgmt_generate_penalties: async function (options) {
     const { token, round } = options
     const resp = await axios.post(
-      `${prefix}/mgmt/command/penalties`,
-      {},
-      {
-        headers: { Authorization: "Bearer " + token },
-        params: { round },
-      }
+      `${prefix}/mgmt/command/penalties/${round}`, {},
+      { headers: { Authorization: "Bearer " + token } }
     )
     return resp
   },
