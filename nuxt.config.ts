@@ -1,6 +1,8 @@
 // https://v3.nuxtjs.org/api/configuration/nuxt.config
+import vuetify, { transformAssetUrls } from 'vite-plugin-vuetify'
+
 export default defineNuxtConfig({
-  app:{
+  app: {
     head: {
       link: [
         {
@@ -13,16 +15,16 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
-  components: {
-    dirs: []
-  },
+  // components: {
+  //   dirs: []
+  // },
   content: {
     api: {
       baseURL: '/capi'
     }
   },
   css: [
-    'vuetify/lib/styles/main.sass', 
+    'vuetify/lib/styles/main.sass',
     '@mdi/font/css/materialdesignicons.min.css'
   ],
   experimental: {
@@ -36,16 +38,22 @@ export default defineNuxtConfig({
       { code: "de", file: "de.js" },
       { code: "en", file: "en.js" },
     ],
-    langDir: "lang/",    
+    langDir: "lang/",
     strategy: "prefix",
     defaultLocale: "nl",
     vueI18n: './i18n.config.ts',
-  },  
-  modules: ['@nuxt/content', '@nuxtjs/i18n', '@pinia/nuxt'],
+  },
+  modules: ['@nuxt/content', '@nuxtjs/i18n', '@pinia/nuxt', '@vueuse/nuxt',
+    async (options, nuxt) => {
+      nuxt.hooks.hook('vite:extendConfig',
+        config => config.plugins.push(vuetify())
+      )
+    },
+  ],
   nitro: {
     prerender: {
       crawlLinks: false,
-      failOnError: false, 
+      failOnError: false,
     },
   },
   runtimeConfig: {
@@ -54,5 +62,5 @@ export default defineNuxtConfig({
       statamicurl: process.env.STATAMIC_URL || "http://localhost:8000/",
       repo_branch: "master"
     }
-  }  
+  }
 })
