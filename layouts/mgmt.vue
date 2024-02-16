@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from "vue";
-import { VApp, VAppBar, VAppBarTitle, VNavigationDrawer, 
-  VAppBarNavIcon, VMain, VList, VListItem, VToolbar, VToolbarTitle } from 'vuetify/components'
+import {
+  VApp, VAppBar, VAppBarTitle, VNavigationDrawer,
+  VAppBarNavIcon, VMain, VList, VListItem, VToolbar, VToolbarTitle
+} from 'vuetify/components'
 
 const drawer = ref(false);
 
@@ -9,7 +11,7 @@ const drawer = ref(false);
 const localePath = useLocalePath()
 
 async function goto(section) {
-  const url=`/mgmt/${section}`
+  const url = `/mgmt/${section}`
   console.log('going to', url)
   navigateTo(localePath(url))
 }
@@ -17,7 +19,7 @@ async function goto(section) {
 
 <template>
   <VApp>
-    <VNavigationDrawer model="drawer" class="bg-deep-purple-darken-1 text-white">
+    <VNavigationDrawer v-model="drawer" class="bg-deep-purple-darken-1 text-white">
       <VToolbar class="bg-deep-purple-lighten-1 text-white">
         <VToolbarTitle>Menu</VToolbarTitle>
       </VToolbar>

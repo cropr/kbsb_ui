@@ -12,7 +12,7 @@ const error_messages = {
   401: "Authentication required",
   403: "Permission denied",
   404: "Not found",
-  422: "Inout validation error",
+  422: "Request validation error",
   500: "General server error",
   503: "Could not connect to database server",
   600: "Connectiom issue: server unreachable",
@@ -31,15 +31,17 @@ axios.interceptors.response.use(
   },
   (error) => {
     if (error.response) {
-      const detail = error.response.data.detail
-      console.warn("Axios", error.response.status, detail, error.request)
-      console.log("detail", detail)
-      console.log("status code", error.response.status)
+      const errdata = error.response.data
+      const detail = errdata?.detail
+      console.error("backend error", error.response.status, detail)
+      const message = error_messages[detail] ? error_messages[detail] : error_messages[error.response.status]
+      console.error('message', message)
       return Promise.reject({
         code: error.response.status,
         headers: error.response.headers,
-        message: detail ? detail : error_messages[error.response.status],
-      })
+        message: message,
+      });
+
     }
     if (error.request) {
       console.warn("Axios", "No response received", error.request)
