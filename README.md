@@ -1,22 +1,30 @@
-# kbsb
+# Content v2 Minimal Starter
 
-> A Vue.js project
+Look at the [Content documentation](https://content-v2.nuxtjs.org/) to learn more.
 
-## Build Setup
+## Setup
 
-``` bash
-# install dependencies
-npm install
+Make sure to install the dependencies:
 
-# serve with hot reload at localhost:8080
-npm run dev
+```bash
+# yarn
+yarn install
+```
 
-# build for production with minification
-npm run prod
+## Development Server
 
-## Deployment
+Start the development server on http://localhost:3000
 
-# staging
+```bash
+yarn dev
+```
 
-When the a new vommit is pushed to branch staging, the new deployment is automatically started
-using ba build tigger on cloud build
+## Production
+
+Build the application for production:
+
+```bash
+API_URL=https://www.frbe-kbsb-ksb.be/ yarn generate
+gcloud app deploy
+```
+

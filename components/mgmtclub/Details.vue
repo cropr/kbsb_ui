@@ -1,13 +1,113 @@
+<script setup>
+import { ref, computed } from 'vue'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, VCol, 
+  VDialog, VDivider, VTextField, VTextarea,  } from 'vuetify/components';
+import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
+import showdown from 'showdown'
+
+// stores
+import { useMgmtTokenStore } from "@/store/mgmttoken"
+import { storeToRefs } from 'pinia'
+const mgmtstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmtstore) 
+
+// communication
+const emit = defineEmits(['updateClub'])
+defineExpose({ setup })
+const { $backend } = useNuxtApp()
+
+//  snackbar and loading widgets
+import ProgressLoading from '@/components/ProgressLoading.vue'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
+const refsnackbar = ref(null)
+let showSnackbar
+const refloading = ref(null)
+let showLoading
+
+// datamodel
+const clubdetails = ref(EMPTY_CLUB)
+const helpdialog = ref(false)
+const statuscm = ref(CLUB_STATUS.CONSULTING)
+const { data: help }  = await useAsyncData('help-login', () => queryContent('/pages/help-club-contact').findOne())
+const status_consulting = computed(() => (statuscm.value == CLUB_STATUS.CONSULTING))
+const status_modifying = computed(() => (statuscm.value == CLUB_STATUS.MODIFYING))
+const mdConverter = new showdown.Converter()
+const ttitle = `title_en`
+const tcontent = `content_en`
+let copyclubdetails = null
+
+function md(s) { 
+  return  mdConverter.makeHtml(s)
+}
+
+function cancelClub() {
+  statuscm.value = CLUB_STATUS.CONSULTING
+}
+
+
+async function modifyClub() {
+  statuscm.value = CLUB_STATUS.MODIFYING
+}
+
+function readClubDetails(club) {
+  console.log('readClubDetails in details')  
+  clubdetails.value = { ...EMPTY_CLUB, ...club }
+  copyclubdetails = JSON.parse(JSON.stringify(club))
+}
+
+async function saveClub() {
+  // build a a diff between clubdetails and its cooy
+  console.log('saveClub')
+  let update = {}
+  for (const [key, value] of Object.entries(clubdetails.value)) {
+    if (value != copyclubdetails[key]) {
+      update[key] = value
+    }
+  }
+  showLoading(true)
+  try {
+    const reply = await $backend("club", "mgmt_update_club",{
+      ...update,
+      idclub: clubdetails.value.idclub,
+      token: mgmttoken.value,
+    })
+    statuscm.value = CLUB_STATUS.CONSULTING
+    showSnackbar('Club saved')
+    emit('updateClub')
+  } catch (error) {
+    if (error.code == 401) gotoLogin()
+    showSnackbar(error.message)
+    return
+  }
+  finally {
+    showLoading(false)
+  }
+}
+
+function setup(club){
+  console.log('setupDetails', club)
+  readClubDetails(club)
+}
+
+onMounted( () => {
+  showSnackbar = refsnackbar.value.showSnackbar
+  showLoading = refloading.value.showLoading
+})
+</script>
+
+
 <template>
   <v-container>
-    <p v-if="!club.idclub">Select a club to view the club details</p>
-    <div v-if="club.idclub">
+    <SnackbarMessage ref="refsnackbar" />
+    <ProgressLoading ref="refloading"/>    
+    <p v-if="!clubdetails.idclub">Select a club to view the club details</p>
+    <div v-if="clubdetails.idclub">
       <v-container v-show="status_consulting">
         <h2>Consulting club details</h2>
         <v-row>
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card>            
-              <v-card-title class="fieldname">
+              <v-card-title>
                 Club details
               </v-card-title>
               <v-card-text>
@@ -42,15 +142,9 @@
           </v-col>                      
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card>
-              <v-card-title>
-                <v-layout class="mt-2">
-                  <v-flex grow>
-                    <h4>Contact</h4>
-                  </v-flex>
-                  <v-flex>
-                    <help-popup file="club_contact" />
-                  </v-flex>
-                </v-layout>
+              <v-card-title class="mt-2">
+                <v-btn icon="mdi-help" color="purple" size="small" class="float-right" @click="helpdialog = true"/>                
+                <h4>{{ $t('Contact') }}</h4>
               </v-card-title>
               <v-card-text>
                 <div><span class="fieldname">Main email address</span>: {{
@@ -75,17 +169,17 @@
           </v-col>
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card>
-              <v-card-title class="fieldname">
+              <v-card-title>
                 Playing details
               </v-card-title>
               <v-card-text>
                 <div><span class="fieldname">Club venue</span>:<br />
                   <span v-html='clubdetails.venue.replaceAll("\n", "<br />")'></span>
                 </div>
-                <h4>Playing hours}</h4>
+                <h4>Playing hours</h4>
                 <div v-for="(h,d) in clubdetails.openinghours" :key="d">
                   <div v-show="h.length">
-                    <span class="fieldname">{{ d }}</span>: {{ h }}
+                    <span class="fieldname">d</span>: {{ h }}
                   </div>
                 </div>                
               </v-card-text>
@@ -101,7 +195,7 @@
         <v-row>
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
-              <v-card-title class="fieldname">
+              <v-card-title>
                 Club details
               </v-card-title>
               <v-card-text>
@@ -114,7 +208,7 @@
           </v-col>
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
-              <v-card-title class="fieldname">
+              <v-card-title>
                 Contact
               </v-card-title>
               <v-card-text>
@@ -128,8 +222,8 @@
           </v-col>
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card class="elevation-5">
-              <v-card-title class="fieldname">
-                Bank details
+              <v-card-title>
+                {{ $t('Bank details') }}
               </v-card-title>
               <v-card-text>
                 <v-text-field v-model="clubdetails.bankacount_name" label="Bank account name" />
@@ -140,12 +234,12 @@
           </v-col>
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card>
-              <v-card-title class="fieldname">
-                Playing details
+              <v-card-title>
+                {{ $t('Playing details') }}
               </v-card-title>
               <v-card-text>
                 <v-textarea rows="3" v-model="clubdetails.venue" label="Club venue" />
-                <h4>Playing hours</h4>
+                <h4>{{ $t('Playing hours') }}</h4>
                 <v-text-field v-model="clubdetails.openinghours.Monday" label="Monday" />                
                 <v-text-field v-model="clubdetails.openinghours.Tuesday" label="Tuesday" />                
                 <v-text-field v-model="clubdetails.openinghours.Wednesday" label="Wednesday" />                
@@ -163,121 +257,18 @@
         </v-row>
       </v-container>
     </div>
+    <v-dialog v-model="helpdialog" width="20em">
+      <ContentRenderer :value="help">
+        <v-card>
+          <v-card-title v-html="help[ttitle] ? help[ttitle] : help.title" />
+          <v-divider></v-divider>
+          <v-card-text class="pa-3 ma-1 markdowncontent" v-html="md(help[tcontent])"> 
+          </v-card-text>
+        </v-card>
+      </ContentRenderer>
+    </v-dialog> 
   </v-container>
-</template>``
-<script>
-
-import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
-
-
-export default {
-
-  name: 'Details',
-
-  data() {
-    return {
-      clubmembers: {},
-      clubdetails: EMPTY_CLUB,
-      copyclubdetails: null,
-      mbr_items: [],
-      status: CLUB_STATUS.CONSULTING,
-    }
-  },
-
-  props: {
-    bus: Object,
-    club: Object,
-  },
-
-  computed: {
-    logintoken() { return this.$store.state.newlogin.value },
-    status_consulting() { return this.status == CLUB_STATUS.CONSULTING },
-    status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
-  },
-
-
-  methods: {
-
-    cancelClub() {
-      this.status = CLUB_STATUS.CONSULTING
-      this.get_clubdetails(this.club)
-    },
-
-    async get_clubdetails() {
-      if (!this.club.id) {
-        this.clubdetails = EMPTY_CLUB
-        return
-      }
-      try {
-        const reply = await this.$api.club.mgmt_get_club({
-          idclub: this.club.idclub,
-          token: this.logintoken
-        })
-        this.readClubdetails(reply.data)
-      } catch (error) {
-        const reply = error.reply
-        if (reply.status === 403) {
-          this.$root.$emit('snackbar', { text: 'Permission denied' })
-        }
-        else {
-          console.error('Getting club details failed', reply.data.detail)
-          this.$root.$emit('snackbar', { text: 'Getting club details failed' })
-        }
-      }
-    },
-
-
-    modifyClub() {
-      this.status = CLUB_STATUS.MODIFYING
-    },
-
-    readClubdetails(details) {
-      this.clubdetails = { ...EMPTY_CLUB, ...details }
-      this.copyclubdetails = JSON.parse(JSON.stringify(details))
-    },
-
-    async saveClub() {
-      // build a a diff between clubdetails ans its cooy
-      let update = {}
-      for (const [key, value] of Object.entries(this.clubdetails)) {
-        if (value != this.copyclubdetails[key]) {
-          update[key] = value
-        }
-      }
-      console.log('updates ', update)
-      try {
-        const reply = await this.$api.club.mgmt_update_club({
-          ...update,
-          idclub: this.clubdetails.idclub,
-          token: this.logintoken,
-        })
-        this.status = CLUB_STATUS.CONSULTING
-        this.$root.$emit('snackbar', { text: 'Club saved' })
-      } catch (error) {
-        const reply = error.response
-        if (reply.status === 403) {
-          this.$root.$emit('snackbar', { text: 'Permission denied' })
-        }
-        else {
-          console.error('Saving enrollment', reply.data.detail)
-          this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
-        }
-      }
-    },
-
-    async setupDetails(){
-      await this.get_clubdetails()
-    }
-
-
-  },
-
-  mounted() {
-    this.bus.$on("setupdetails", this.setupDetails)
-  },
-
-}
-</script>
+</template>
 
 <style scoped>
 .fieldname {

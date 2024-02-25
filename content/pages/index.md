@@ -14,6 +14,7 @@ content_nl: |-
   - Raadpleging van de resultaten van de [interclubs 2022-23](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
   - Het gebruik van [Club Manager](/clubs/manager) door de bestuurders van de club 
   - Het gebruik van [Interclubs Manager](/interclubs/manager) door de bestuurders van de club 
+  - Korte handleiding voor het opstellen van de [Interclubs spelerslijst](/interclubs/docplayerlist)
   - Raadpleging van de [toernooiuitslagen in SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
   
 
@@ -29,6 +30,7 @@ content_fr: |-
   - La consultation des résultats des [Interclubs 20220-23](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
   - L'utilisation de [Club Manager](/clubs/manager) par les administrateurs du club
   - L'utilisation de [Interclubs Manager](/interclubs/manager) par les administrateurs du club
+  - Petit guide pour établir [la liste de force](/interclubs/docplayerlist)
   - La consultation des [résultats des tournois SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
 
 
@@ -44,6 +46,7 @@ content_de: |-
     - Die Abfrage der Ergebnisse von [Interclubs 2022-23](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
     - Die Verwendung von [Club-Manager](/clubs/manager) durch die Clubadministratoren
     - Die Verwendung von [Interclubs-Manager](/interclubs/manager) durch die Clubadministratoren
+    - Kurzanleitung zur Erstellung der [Spielerliste](/interclubs/docplayerlist)
     - Die Abfrage der [Turnierergebnisse von SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
 
 
@@ -59,6 +62,7 @@ content_en: |-
    - Consultation of the results of [Interclubs 2023-24](https://www.frbe-kbsb.be/index.php/interclubs/2022-2023)
    - The use of [Club Manager](/clubs/manager) by the club's administrators
    - The use of [Interclubs Manager](/interclubs/manager) by the club's administrators
+   - Short manual for setting up the [Player List](/interclubs/docplayerlist)
    - Consultation of [tournament results of SWAR](https://www.frbe-kbsb.be/sites/manager/GestionSWAR/SwarResults.php)
 
 updated_by: 95162e3e-623b-4d65-9b52-2463e3620b8a

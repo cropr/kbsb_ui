@@ -1,90 +1,87 @@
+<script setup>
+import { ref, onMounted } from 'vue'
+import { VContainer } from 'vuetify/components'
+import * as jose from 'jose'
+import { usePersonStore } from "@/store/person"
+import { storeToRefs } from 'pinia'
+
+const personstore = usePersonStore();
+const { person } = storeToRefs(personstore)
+const wrong_domain = ref(false)
+
+
+function checkAuth () {
+  console.log('checking if auth is present so we can go to overview')
+  if (person.value.credentials.length > 0) {
+    if (person.value.email.endsWith('@frbe-kbsb-ksb.be')) {
+      navigateTo('/mgmt/overview')
+    } 
+    else {
+      wrong_domain.value = true
+    }
+  }
+}
+
+function handleGoogle (resp) {
+  console.log('handling google')
+  wrong_domain.value = false
+  const payload = jose.decodeJwt(resp.credential)
+  console.log('decoded', payload)
+  personstore.updatePerson( {
+    credentials: resp.credential,
+    user: payload.given_name,
+    email: payload.email
+  })
+  checkAuth()
+}
+
+function setupGoogle () {
+  console.log('Setup google sign in')
+  const reply = google.accounts.id.initialize({
+    client_id: '658290412135-v6ah768urdv83dn76ra4mkiovdalal2k.apps.googleusercontent.com',
+    callback: handleGoogle,
+    prompt_parent_id: 'parent_id'
+  })
+  console.log("initialize:", reply)
+  const prompt = google.accounts.id.prompt((notif) =>{
+    console.log('notif', notif)
+    if (notif.isNotDisplayed() || notif.isSkippedMoment()) {
+        document.cookie =  `g_state=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+        google.accounts.id.prompt()
+    }
+  })
+  console.log("prompt", prompt)
+  console.log('Setup google sign in completed')
+}
+
+useHead({
+  script: [
+    { src: 'https://accounts.google.com/gsi/client', defer: true }
+  ],
+  title: 'Management Login',    
+})
+
+definePageMeta({
+  layout: 'mgmt',
+})
+
+onMounted (() => {
+  checkAuth()
+  setupGoogle()
+})
+
+</script>
+
 <template>
-  <v-container>
+  <VContainer>
     <p>Management FRBE KBSB KSB</p>
     <p>
       This part of the site is only accessible for people with a valid
       @frbe-kbsb-ksb.be email address
     </p>
     <div id="parent_id" />
-  </v-container>
+  </VContainer>
 </template>
+  
 
-<script>
-
-import * as jose from 'jose'
-
-export default {
-
-  name: "TheIndex",
-
-  layout: 'mgmt',
-
-  data () {
-    return {
-      wrong_domain: false
-    }
-  },
-
-  head: {
-    title: 'Management Login',
-    script: [
-      {
-        src: 'https://accounts.google.com/gsi/client',
-        defer: true
-      }
-    ]
-  },
-
-  computed: {
-    person () { return this.$store.state.person }
-  },
-
-  mounted () {
-    this.checkAuth()
-    this.setupGoogle()
-  },
-
-  methods: {
-
-    handleGoogle (resp) {
-      console.log('handling google')
-      this.wrong_domain = false
-      const payload = jose.decodeJwt(resp.credential)
-      console.log('decoded', payload)
-      this.$store.commit('person/updateUser', {
-        credential: resp.credential,
-        user: payload.given_name,
-        email: payload.email
-      })
-      this.checkAuth()
-    },
-
-    setupGoogle () {
-      console.log('Setup google sign in')
-      // eslint-disable-next-line no-undef
-      const reply = google.accounts.id.initialize({
-        client_id: '658290412135-v6ah768urdv83dn76ra4mkiovdalal2k.apps.googleusercontent.com',
-        callback: this.handleGoogle,
-        prompt_parent_id: 'parent_id'
-      })
-      console.log("initialize:", reply)
-      // eslint-disable-next-line no-undef
-      const prompt = google.accounts.id.prompt()
-      console.log("prompt", prompt)
-      console.log('Setup google sign in completed')
-    },
-
-    checkAuth () {
-      console.log('checking if auth is present so we can go to overview')
-      if (this.person.credential.length > 0) {
-        if (this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
-          this.$router.push('/mgmt/overview')
-        } else {
-          this.wrong_domain = true
-        }
-      }
-    }
-  }
-
-}
-</script>
+  

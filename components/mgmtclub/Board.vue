@@ -1,13 +1,145 @@
+<script setup>
+import { ref, computed } from 'vue'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VRow, VCol, 
+  VAutocomplete, VSelect, VTextField,  } from 'vuetify/components'
+import { visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
+
+// stores
+import { useMgmtTokenStore } from "@/store/mgmttoken"
+import { storeToRefs } from 'pinia'
+const mgmtstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmtstore) 
+
+//  snackbar and loading widgets
+import ProgressLoading from '@/components/ProgressLoading.vue'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
+const refsnackbar = ref(null)
+let showSnackbar
+const refloading = ref(null)
+let showLoading
+
+// datamodel
+const boardmembers = ref(EMPTY_BOARD)
+const clubdetails = ref(EMPTY_CLUB)
+const clubmembers = ref([])
+const statuscm = ref(CLUB_STATUS.CONSULTING)
+const status_consulting = computed(() => (statuscm.value == CLUB_STATUS.CONSULTING))
+const status_modifying = computed(() => (statuscm.value == CLUB_STATUS.MODIFYING))
+const t_vis_items = computed(()=>  visibility_items.map((x) =>({
+  title: x.title,
+  value: x.value
+})))
+let copyclubdetails = null
+
+// communication
+const emit = defineEmits(['updateClub'])
+const { $backend } = useNuxtApp()
+
+
+function cancelClub() {
+  statuscm.value = CLUB_STATUS.CONSULTING
+  emit('updateClub')
+}
+
+function copyClubMembers(cm) {
+  clubmembers.value = cm
+}
+
+
+function gotoLogin() {
+  navigateTo('/mgmt')
+}
+
+async function modifyClub() {
+  statuscm.value = CLUB_STATUS.MODIFYING
+}
+
+function readClubDetails(club) {
+  console.log('readClubDetails in board')  
+  clubdetails.value = { ...EMPTY_CLUB, ...club }
+  copyclubdetails = JSON.parse(JSON.stringify(club))
+  boardmembers.value = { ...EMPTY_BOARD, ...club.boardmembers }
+}
+
+async function saveClub() {
+  // build a a diff between clubdetails and its cooy
+  showLoading(true)
+  let update = {}
+  for (const [key, value] of Object.entries(clubdetails.value)) {
+    if (value != copyclubdetails[key]) {
+      update[key] = value
+    }
+  }
+  try {
+    const reply = await $backend("club", "mgmt_update_club",{
+      ...update,
+      idclub: clubdetails.value.idclub,
+      token: mgmttoken.value,
+    })
+    statuscm.value = CLUB_STATUS.CONSULTING
+    showSnackbar('Club saved')
+    emit('updateClub')
+  } catch (error) { 
+    if (error.code == 401) gotoLogin()
+    showSnackbar(error.message)
+    return
+  }
+  finally {
+    showLoading(false)
+  }
+}
+
+function updateboard(f) {
+  const bm = boardmembers.value[f]
+  if (bm.idnumber) {
+    let cm = clubmembers.value.find(x => x.idnumber == bm.idnumber)
+    bm.first_name = cm.first_name
+    bm.last_name = cm.last_name
+    bm.email = cm.email
+    bm.mobile = cm.mobile
+    bm.email_visibility = "CLUB"
+    bm.mobile_visibility = "CLUB"
+    clubdetails.value.boardmembers[f] = bm
+  }
+  else {
+    bm.first_name = null
+    bm.last_name = null
+    bm.email = null
+    bm.mobile = null
+    bm.email_visibility = null
+    bm.mobile_visibility = null
+    delete clubdetails.value.boardmembers[f]
+ }
+}
+
+function setup(club){
+  console.log('setupBoard', club)
+  readClubDetails(club)
+}
+
+defineExpose({setup, copyClubMembers})
+
+onMounted( () => {
+  showSnackbar = refsnackbar.value.showSnackbar
+  showLoading = refloading.value.showLoading
+})
+
+
+</script>
+
+
 <template>
   <v-container>
-    <p v-if="!club.idclub">Select a club to view the club details</p>
-    <div v-if="club.idclub">
-      <v-container v-show="status_consulting">
+    <SnackbarMessage ref="refsnackbar" />
+    <ProgressLoading ref="refloading"/>    
+    <p v-if="!clubdetails.idclub">Select a club to view the club details</p>
+    <div v-if="clubdetails.idclub">
+      <v-container v-if="status_consulting">
         <h2>Consulting board members</h2>
         <v-row>
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(bm, f) in boardmembers" :key="f">
             <v-card class="elevation-5">
-              <v-card-title class="fieldname">
+              <v-card-title>
                 {{ f }}
               </v-card-title>
               <v-card-text>
@@ -19,30 +151,27 @@
           </v-col>
         </v-row>
         <v-row class="mt-2">
-          <v-btn @click="modifyClub">Modify'</v-btn>
+          <v-btn @click="modifyClub">Modify</v-btn>
         </v-row>        
       </v-container>
-      <v-container v-show="status_modifying">
+      <v-container v-if="status_modifying">
         <h2>Modify board members</h2>
         <v-row>
           <v-col cols="12" sm="6" md="4" xl="3" v-for="(bm, f) in boardmembers" :key="f">
             <v-card class="elevation-5">
-              <v-card-title class="fieldname">
-                {{ f }}
+              <v-card-title>
+                {{  f  }}
               </v-card-title>
               <v-card-text>
-                <v-autocomplete v-model="boardmembers[f].idnumber" :items="clubmembers" item-text="merged"
-                  item-value="idnumber" color="deep-purple" clearable @change="updateboard(f)">
-                  <template v-slot:item="data">
-                    {{ data.item.merged }}
-                  </template>
+                <v-autocomplete v-model="boardmembers[f].idnumber" :items="clubmembers" item-title="merged"
+                  item-value="idnumber" color="green" clearable  @update:model-value="updateboard(f)">
                 </v-autocomplete>
                 <v-text-field label="Email" v-model="boardmembers[f].email"></v-text-field>
-                <v-select v-model="boardmembers[f].email_visibility" :items="visibility_items" color="deep-purple"
-                  @change="updateboard(f)" label="Email visibility" />
+                <v-select v-model="boardmembers[f].email_visibility" :items="t_vis_items" color="green"
+                  label="Email visibility" />
                 <v-text-field label="GSM" v-model="boardmembers[f].mobile"></v-text-field>
-                <v-select v-model="boardmembers[f].mobile_visibility" :items="visibility_items" color="deep-purple"
-                  @change="updateboard(f)" label="Mobile visibility" />
+                <v-select v-model="boardmembers[f].mobile_visibility" :items="t_vis_items" color="green"
+                  label="Mobile visibility" />
               </v-card-text>
             </v-card>
           </v-col>
@@ -56,149 +185,9 @@
   </v-container>
 </template>
 
-<script>
-
-import { boardroles, visibility_items, CLUB_STATUS, EMPTY_BOARD, EMPTY_CLUB } from '@/util/club'
-
-export default {
-
-  name: 'Details',
-
-  data() {
-    return {
-      boardmembers: EMPTY_BOARD,
-      boardroles: boardroles,
-      clubdetails: EMPTY_CLUB,
-      copyclubdetails: null,
-      status: CLUB_STATUS.CONSULTING,
-      visibility_items: [...visibility_items],
-    }
-  },
-
-  props: {
-    club: Object,
-    clubmembers: Array,
-    bus: Object,
-  },
-
-  computed: {
-    logintoken() { return this.$store.state.newlogin.value },
-    status_consulting() { return this.status == CLUB_STATUS.CONSULTING },
-    status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
-  },
-
-
-  methods: {
-
-    cancelClub() {
-      this.status = CLUB_STATUS.CONSULTING
-      this.get_clubdetails()
-    },
-
-
-    async get_clubdetails() {
-      if (!this.club.id) {
-        this.clubdetails = EMPTY_CLUB
-        return
-      }
-      try {
-        const reply = await this.$api.club.mgmt_get_club({
-          idclub: this.club.idclub,
-          token: this.logintoken
-        })
-        this.readClubdetails(reply.data)
-      } catch (error) {
-        switch (reply.status) {
-          case 403:
-            this.$root.$emit('snackbar', { text: 'Permission denied' })
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: 'Getting club details failed' })
-        }
-      }
-    },
-
-    async modifyClub() {  
-      this.status = CLUB_STATUS.MODIFYING
-    },
-
-    readClubdetails(details) {
-      this.clubdetails = { ...EMPTY_CLUB, ...details }
-      this.copyclubdetails = JSON.parse(JSON.stringify(details))
-      this.boardmembers = { ...EMPTY_BOARD, ...details.boardmembers }
-    },
-
-    async saveClub() {
-      // build a a diff between clubdetails ans its cooy
-      let update = {}
-      for (const [key, value] of Object.entries(this.clubdetails)) {
-        if (value != this.copyclubdetails[key]) {
-          update[key] = value
-        }
-      }
-      try {
-        const reply = await this.$api.club.mgmt_update_club({
-          ...update,
-          idclub: this.clubdetails.idclub,
-          token: this.logintoken,
-        })
-        this.status = CLUB_STATUS.CONSULTING
-        this.$root.$emit('snackbar', { text: 'Club saved' })
-      } catch (error) {
-        const reply = error.response
-        switch (reply.status) {
-          case 403:
-            this.$root.$emit('snackbar', { text: 'Permission denied' })
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: 'Saving club details' })
-        }
-      }
-    },
-
-    async setupBoard(){
-      await this.get_clubdetails()
-    },
-
-    updateboard(f) {
-      const bm = this.boardmembers[f]
-      if (bm.idnumber) {
-        let cm = this.clubmembers.find(x => x.idnumber == bm.idnumber)
-        bm.first_name = cm.first_name
-        bm.last_name = cm.last_name
-        if (!bm.email) bm.email = cm.email
-        if (!bm.mobile) bm.mobile = cm.mobile
-        if (!bm.email_visibility) bm.email_visibility = "CLUB"
-        if (!bm.mobile_visibility) bm.mobile_visibility = "CLUB"
-        this.clubdetails.boardmembers[f] = bm
-      }
-      else {
-        bm.first_name = null
-        bm.last_name = null
-        bm.email = null
-        bm.mobile = null
-        bm.email_visibility = null
-        bm.mobile_visibility = null
-        delete this.clubdetails.boardmembers[f]
-      }
-
-    },
-
-  },
-
-  mounted() {
-    this.bus.$on("setupboard", this.setupBoard)
-    this.setupBoard() 
-  },
-
-}
-</script>
-
 <style scoped>
 .fieldname {
-  color: purple;
+  color: green;
 }
 .v-card__text, .v-card__title {
   word-break: normal; /* maybe !important  */

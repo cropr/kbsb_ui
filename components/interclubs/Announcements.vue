@@ -1,42 +1,22 @@
+<script setup>
+import showdown from 'showdown'
+import { VContainer } from 'vuetify/lib/components/index.mjs';
+
+const { locale } = useI18n()
+const ttitle = `title_${locale.value}`
+const tcontent = `content_${locale.value}`
+const { data }  = await useAsyncData('interclubs-announcements', () => queryContent('/pages/interclubs-announcements').findOne())
+
+const mdConverter = new showdown.Converter()
+
+function md(s) { return  mdConverter.makeHtml(s)}
+</script>
+
 <template>
   <v-container>
-    <h2>{{ pagetitle }}</h2>
-    <div class="mt-1" v-html="pagecontent" />
+    <ContentRenderer :value="data"  >
+      <h2 v-html= "data[ttitle] ? data[ttitle] : data.title" />
+      <div v-html= "md(data[tcontent])" class="markdowncontent" />
+    </ContentRenderer>
   </v-container>
 </template>
-
-<script>
-
-import showdown from 'showdown'
-
-export default {
-
-  name: 'Enrollment',
-
-  data(){
-    return{
-      page: {}
-    }
-  }, 
-
-  async fetch () {
-    this.page = await this.$content('pages', 'interclubs-announcements').fetch()
-  },
-
-  computed: {
-    pagecontent () {
-      const pcontent = this.page[`content_${this.$i18n.locale}`]
-      const converter = new showdown.Converter()
-      return converter.makeHtml(pcontent)
-    },
-
-    pagetitle () {
-      const locale = this.$i18n.locale
-      const pti18 = this.page[`title_${locale}`]
-      const ptitle = pti18 && pti18.length ? pti18 : this.page.title
-      return ptitle
-    }
-  }
-
-}
-</script>

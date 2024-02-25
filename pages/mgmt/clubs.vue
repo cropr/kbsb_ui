@@ -1,245 +1,226 @@
-<template>
-  <v-container>
-    <h1>Club Manager</h1>
-    <v-dialog width="10em" v-model="waiting_dialog">
-      <template v-slot:activator="{ on, attrs }"></template>
-      <v-card>
-        <v-card-title>Loading...</v-card-title>
-        <v-card-text>
-          <v-progress-circular indeterminate color="deep-purple" />
-        </v-card-text>
-      </v-card>
-    </v-dialog>
-    <v-card>
-      <v-card-text>
-        <v-row>
-          <v-col cols="4">
-            <v-btn @click="notyet">Create new club</v-btn><br />
-            <v-btn @click="notyet" class="mt-2">Make a mailing</v-btn>
-          </v-col>
-          <v-col cols="8">
-            <v-btn @click="download">Export list of clubs</v-btn>
-            <v-select label="Format" v-model="exportformat" :items="exportformats">
-            </v-select>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
+<script setup>
+import { ref, onMounted, nextTick } from 'vue'
+import { VContainer, VAutocomplete, VCard,  VCardText, VTabs, VTab, VWindow, 
+  VWindowItem} from 'vuetify/components'
+import { Details, Access, Board }  from '@/components/mgmtclub'
+import ProgressLoading from '@/components/ProgressLoading.vue'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
 
-    <h2 class="mt-2">Managing a single club</h2>
-    <v-card class="mt-2">
-      <v-card-text>
-        Select the club. (start typing number or name)
-        <v-autocomplete v-model="idclub" :items="clubs" item-text="merged" item-value="idclub" color="deep-purple"
-          label="Club" clearable @change="selectclub">
-          <template v-slot:item="data">
-            {{ data.item.merged }}
-          </template>
-        </v-autocomplete>
-      </v-card-text>
-    </v-card>
+import  { EMPTY_CLUB } from '@/util/club'
+import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { usePersonStore } from "@/store/person"
+import { storeToRefs } from 'pinia'
 
-    <h3 class="mt-2">Selected club: {{ activeclub.idclub }} {{ activeclub.name_short }}
-    </h3>
-    <div class="elevation-2">
+// stores
+const mgmtstore = useMgmtTokenStore()
+const {token: mgmttoken} = storeToRefs(mgmtstore) 
+const personstore = usePersonStore();
+const { person } = storeToRefs(personstore)
 
-      <v-tabs v-model="tab" color="deep-purple" @change="updateTab">
-        <v-tabs-slider color="deep-purple"></v-tabs-slider>
-        <v-tab>Details</v-tab>
-        <v-tab>Board members</v-tab>
-        <v-tab>Access rights</v-tab>
-      </v-tabs>
-      <v-tabs-items v-model="tab">
-        <v-tab-item :eager="true">
-          <MgmtclubDetails :bus="bus" :club="activeclub" ref="detail" />
-        </v-tab-item>
-        <v-tab-item :eager="true">
-          <MgmtclubBoard :bus="bus" :club="activeclub" :clubmembers="clubmembers" ref="board"/>
-        </v-tab-item>
-        <v-tab-item :eager="true">
-          <MgmtclubAccess :bus="bus" :club="activeclub" :clubmembers="clubmembers" ref="access"/>
-        </v-tab-item>
-      </v-tabs-items>
-    </div>
-  </v-container>
-</template>
+//  snackbar and loading widgets
+const refsnackbar = ref(null)
+let showSnackbar
+const refloading = ref(null)
+let showLoading
 
-<script>
-import Vue from 'vue'
-import { EMPTY_CLUB } from '@/util/club'
-const noop = function () { }
-
-function utoa(data) {
-  return window.btoa(unescape(encodeURIComponent(data)));
-}
-
-export default {
-
-  name: 'Club',
-
-  layout: 'mgmt',
-
-  data() {
-    return {
-      activeclub: {},
-      bus: new Vue(),
-      clubmembers: null,      
-      clubs: [],
-      exportformat: "JSON",
-      exportformats: [
-        "JSON",
-        "CSV",
-        "Excel",
-      ],      
-      idclub: null,
-      tab: null,
-      waiting_dialog: false
-    }
-  },
-
-  computed: {
-    logintoken() {
-      return this.$store.state.newlogin.value
-    },
-    person() {
-      return this.$store.state.person
-    },
-  },
-
-  head: {
-    title: 'Management Clubs',
-    script: [
-      {
-        src: 'https://accounts.google.com/gsi/client',
-        defer: true
-      }
-    ]
-  },
-
-  async mounted() {
-    await this.checkAuth()
-    await this.getClubs()
-  },
-
-  methods: {
+// datamodel
+const clubmembers = ref(null)
+const clubmembers_id = ref(0)
+const club = ref(EMPTY_CLUB) 
+const clubs = ref([])
+const idclub = ref(null)
 
 
-    async checkAuth() {
-      console.log('checking if auth is already set')
-      if (!this.logintoken) {
-        if (this.person.credential.length === 0) {
-          this.$router.push('/mgmt')
-        }
-        if (!this.person.email.endsWith('@frbe-kbsb-ksb.be')) {
-          this.$router.push('/mgmt')
-        }
-        // now login using the Google auth token
-        await this.$api.root.login({
-          logintype: 'google',
-          token: this.person.credential
-        }).then(
-          (resp) => {
-            this.$store.commit('newlogin/update', resp.data)
-          },
-          (error) => {
-            const resp = error.response
-            console.log('failed login', resp.data.detail)
-            this.$router.push('/mgmt')
-          }
-        )
-      }
-    },
-
-    async download(){
-      switch(this.exportformat) {
-        case "JSON":
-          window.open('/api/v1/a/clubs', "_download")
-          break
-        case "CSV":
-        window.open('/api/v1/a/csv/clubs', "_download")
-          break
-        case "Excel":
-          this.$root.$emit('snackbar', {
-            text: 'Not supported yet'
-          })
-      }
-    },
-
-    async getClubs() {
-      try {
-        const reply = await this.$api.club.anon_get_clubs();
-        this.clubs = reply.data.clubs
-        this.clubs.forEach(p => {
-          p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
-        })
-      } catch (error) {
-        const reply = error.response
-        console.error('Getting clubs failed', reply.data.detail)
-        this.$root.$emit('snackbar', {
-          text: 'Getting clubs failed'
-        })
-      }
-    },
-
-    async getClubMembers() {
-      this.waiting_dialog = true
-      try {
-        const reply = await this.$api.old.get_clubmembers({
-          idclub: this.idclub,
-        })
-        this.waiting_dialog = false
-        const members = reply.data.activemembers
-        members.forEach(p => {
-          p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
-        })
-        this.clubmembers = members.sort((a, b) =>
-          (a.last_name > b.last_name ? 1 : -1))        
-      } catch (error) {
-        this.waiting_dialog = false        
-        const reply = error.reply
-        console.error('Getting club members failed', reply.data.detail)
-        this.$root.$emit('snackbar', { text: 'Getting club members failed' })
-      }
-    },    
-
-    notyet(){
-      this.$root.$emit('snackbar', { text: 'Not available yet' })      
-    },
-
-    async selectclub() {
-      if (!this.idclub) {
-        this.activeclub = {}
-        return
-      }
-      this.clubs.forEach((c) => {
-        if (c.idclub == this.idclub) {
-          this.activeclub = { ...EMPTY_CLUB, ...c }
-        }
-      })
-      this.$nextTick(()=> this.bus.$emit("setupdetails"))   // fill data on load 
-      this.clubmembers = null
-      await this.getClubMembers()   
-    },
-
-    updateTab(){
-      switch (this.tab) {
-        case 0:
-          this.bus.$emit("setupdetails")
-          break
-        case 1:
-          console.log('emitting board')
-          this.bus.$emit("setupboard")
-          break
-        case 2:
-          console.log('emitting access')
-          this.bus.$emit("setupaccess")
-          break
-      }
-    }    
-
+// communication
+const { $backend } = useNuxtApp()
+const tab = ref(null)
+const refboard = ref(null)
+const refdetails = ref(null)
+const refaccess = ref(null)
+function changeTab(){
+  console.log('changeTab', tab.value)
+  switch (tab.value) {
+    case 'access':
+      refaccess.value.setup(club.value)
+      break 
+    case 'board':
+      refboard.value.setup(club.value)
+      break
+    case 'details':
+      console.log('refdetails', refdetails.value)
+      refdetails.value.setup(club.value)
+      break   
   }
-
 }
+
+
+// layout + header
+definePageMeta({
+  layout: 'mgmt'
+})
+useHead({
+  script: [
+    { src: 'https://accounts.google.com/gsi/client', defer: true }
+  ],
+  title: 'Management Clubs',    
+})
+
+async function checkAuth() {
+  console.log('checking if auth is already set', mgmttoken.value)
+  if (mgmttoken.value) return 
+  if (person.value.credentials.length === 0) {
+    navigateTo('/mgmt')
+    return
+  }
+  if (!person.value.email.endsWith('@frbe-kbsb-ksb.be')) {
+    navigateTo('/mgmt')
+    return
+  }
+  let reply
+  showLoading(true)
+  // now login using the Google auth token
+  try {
+    reply = await $backend("accounts", "login", {
+      logintype: 'google',
+      token: person.value.credentials,
+      username: null,
+      password: null,
+    })
+  }
+  catch (error) {
+    navigateTo('/mgmt')
+  }
+  finally {
+    showLoading(false)
+  }
+  mgmtstore.updateToken(reply.data)
+}
+
+async function getClubs() {
+  let reply
+  showLoading(true)
+  try {
+    reply = await $backend("club", "anon_get_clubs", {})
+  } catch (error) {
+    console.log('getClubs error')
+    showSnackbar(error.message)
+    return
+  }
+  finally {
+    showLoading(false)
+  }
+  clubs.value = reply.data
+  clubs.value.forEach(p => {
+    p.merged = `${p.idclub}: ${p.name_short} ${p.name_long}`
+  })
+}
+
+async function getClubDetails() {
+  let reply
+  club.value = EMPTY_CLUB
+  if (idclub.value) {
+    showLoading(true)
+    try {
+      reply = await $backend("club","mgmt_get_club" ,{
+        idclub: idclub.value,
+        token: mgmttoken.value
+      })
+    } catch (error) {
+      console.log('getClubDetails error', error)
+      showSnackbar(error.message)
+      return
+    } finally {
+      showLoading(false)
+    }
+    club.value = reply.data
+    refdetails.value.setup(club.value)
+    refaccess.value.setup(club.value)
+  }
+}
+
+async function getClubMembers() {
+  // get club members for member database currently on old site
+  if (!idclub.value) return
+  if (idclub.value == clubmembers_id.value) return  // it is already read in
+  let reply
+  clubmembers.value = null
+  showLoading(true)
+  try {
+    reply = await $backend("member", "anon_getclubmembers", {
+      idclub: idclub.value,
+    })
+  } catch (error) {    
+    console.log('getClubMembers error')
+    showSnackbar(error.message)
+    return
+  } finally {
+    showLoading(false)
+  }
+  clubmembers_id.value = idclub.value
+  const members = reply.data
+  members.forEach(p => {
+    p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
+  })
+  clubmembers.value = members.sort((a, b) =>
+    (a.last_name > b.last_name ? 1 : -1))
+  refboard.value.copyClubMembers(clubmembers.value)
+  refaccess.value.copyClubMembers(clubmembers.value)
+}
+
+async function selectClub(){
+  await getClubDetails()
+  await getClubMembers()
+}
+
+function updateClubDetails(){
+  console.log('getting updated club details')
+}
+
+onMounted( () => {
+  showSnackbar = refsnackbar.value.showSnackbar
+  showLoading = refloading.value.showLoading
+  changeTab('details')
+  checkAuth()
+  getClubs()
+})
+
 </script>
 
-<style></style>
+<template>
+  <VContainer>
+    <SnackbarMessage ref="refsnackbar" />
+    <ProgressLoading ref="refloading"/>
+    <h1>Management Clubs</h1>
+      <v-card>
+        <v-card-text>
+          Select the club: start typing number or name
+          <VAutocomplete v-model="idclub" :items="clubs" 
+            item-title="merged" item-value="idclub" color="purple"
+            label="Club" clearable @update:model-value="selectClub" >
+          </VAutocomplete>
+        </v-card-text>
+      </v-card>
+      <h3 class="mt-2">
+        Selected club: {{ club.idclub }} {{ club.name_short }}
+      </h3>
+      <div class="elevation-2">
+        <v-tabs v-model="tab" color="purple" @update:modelValue="changeTab">
+          <v-tab value="details">Details</v-tab>
+          <v-tab value="board">Board members</v-tab>
+          <v-tab value="access">Access Rights</v-tab>
+        </v-tabs>
+        <v-window v-model="tab" @update:modelValue="changeTab" >
+          <v-window-item value="details" :eager="true">
+            <Details ref="refdetails" @updateClub="updateClubDetails" />
+          </v-window-item>
+          <v-window-item value="board" :eager="true">
+            <Board ref="refboard" @updateClub="updateClubDetails" />
+          </v-window-item>
+          <v-window-item value="access" :eager="true">
+            <Access ref="refaccess" @updateClub="updateClubDetails" /> 
+          </v-window-item>
+        </v-window>
+      </div>
+    
+  </VContainer>  
+</template>

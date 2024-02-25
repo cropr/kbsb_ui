@@ -1,74 +1,22 @@
-<template>
-  <v-container>
-    <h1>{{ page.title }}</h1>
-    <div class="mt-1" v-html="pagecontent" />
-  </v-container>
-</template>
-
-<script>
+<script setup>
 
 import showdown from 'showdown'
 
-export default {
+const {data}  = await useAsyncData('emailaddresses', 
+  () => queryContent('/pages/email-addresses').findOne())
 
-  layout: 'default',
+const mdConverter = new showdown.Converter()
+function md(s) { return  mdConverter.makeHtml(s)}
 
-  data () {
-    return {
-      page: {},
-      tab: 0
-    }
-  },
-
-  async fetch () {
-    this.page = await this.$content('pages','email-addresses').fetch()
-  },
-
-  head: {
-    title: 'Email',
-    link: [
-      {
-        rel: 'stylesheet',
-        href:
-          'https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700,900'
-      },
-      {
-        rel: 'stylesheet',
-        href: 'https://fonts.googleapis.com/css?family=Material+Icons'
-      },
-      {
-        rel: 'stylesheet',
-        href:
-          'https://cdn.jsdelivr.net/npm/@mdi/font@latest/css/materialdesignicons.min.css'
-      },
-      { rel: 'favicon', href: 'favicon.ico' }
-    ],
-    meta: [
-      { charset: 'utf-8' },
-      { name: 'viewport', content: 'width=device-width, initial-scale=1' },
-      { hid: 'home', name: 'description', content: 'Meta description' }
-    ],
-    script: [
-      {
-        src: 'https://apis.google.com/js/platform.js',
-        async: true,
-        defer: true
-      }
-    ]
-  },
-  computed: {
-    pagecontent () {
-      const pcontent = this.page[`content_${this.$i18n.locale}`]
-      const converter = new showdown.Converter()
-      return converter.makeHtml(pcontent)
-    },
-
-    pagetitle () {
-      const locale = this.$i18n.locale
-      const pti18 = this.page[`title_${locale}`]
-      const ptitle = pti18 && pti18.length ? pti18 : this.page.title
-      return ptitle
-    }
-  }
-}
 </script>
+
+<template>
+  <v-container>
+    <ContentRenderer :value="data"  >
+      <h1>{{ data.title }}</h1>
+      <div v-html= "md(data.content_nl)" class="markdowncontent"/>
+    </ContentRenderer>
+  </v-container>
+</template>
+
+

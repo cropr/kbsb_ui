@@ -5,14 +5,14 @@ title: 'Help Club Contact'
 title_nl: Contactgegevens
 content_nl: |-
   Het hoofd e-mailadres moet altijd ingevuld zijn.  Alle communicatie
-  vanuit de KBSB wordt naar dit e-mailadres gestuurd.
+  vanuit de KBSB wordt altijd naar dit e-mailadres gestuurd.
     
-  De e-mailadressen voor interclub, administratie en financiën bevatten additionele adressen die togevoegd worden aan het hoofd e-mailadres voor respectievelijk interclub, administartieve of financiële zaken.
+  De e-mailadressen voor interclub, administratie en financiën bevatten additionele adressen die togevoegd worden aan het hoofd e-mailadres voor respectievelijk interclub, administratieve of financiële zaken.
 
   Ieder veld kan meer adressen bevatten, gescheiden door komma's.
 title_fr: 'Les coordonnées'
 content_fr: |-
-  L'adresse e-mail principale doit toujours être saisie. Toutes les communications de la FRBE sont envoyées à cette adresse e-mail.
+  L'adresse e-mail principale doit toujours être saisie. Toutes les communications de la FRBE sont toujours envoyées à cette adresse e-mail.
 
   Les adresses e-mail pour l'interclub, l'administration et les finances sont des adresses supplémentaires ajoutées à l'adresse e-mail principale pour les affaires interclubs, administratives ou financières respectivement.
 
@@ -26,7 +26,7 @@ content_de: |-
   Jedes Feld kann mehr als eine Adresse enthalten, getrennt durch Kommas.
 title_en: 'Contact details'
 content_en: |-
-  The main e-mail address must always be entered. All communication from the RBCF is sent to this e-mail address.
+  The main e-mail address must always be entered. All communication from the RBCF is always sent to this e-mail address.
 
   The e-mail addresses for interclub, administration and finance    contsin additional addresses added to the main email address
   for interclubs, administrative or financial matters respectively.

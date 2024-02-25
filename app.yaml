@@ -1,51 +1,35 @@
 runtime: python310
 
+env_variables:
+  API_URL: https://www.frbe-kbsb-ksb.be/
+
 handlers:
 
-  # standard file types
-  - url: /(.*\.html)
-    mime_type: text/html
-    static_files: dist/\1
-    upload: dist/(.*\.html)
+# root 
+- url: /
+  static_files: .output/public/index.html
+  upload: .output/public/index.html
+  secure: always
 
-  - url: /(.*\.js)
-    mime_type: text/javascript
-    static_files: dist/\1
-    upload: dist/(.*\.js)
+# url  /capi
+- url: /capi
+  static_dir: .output/public/capi
+  secure: always
 
-  - url: /(.*\.css)
-    mime_type: text/css
-    static_files: dist/\1
-    upload: dist/(.*\.js)
-  
-  - url: /(.*\.txt)
-    mime_type: text/plain
-    static_files: dist/\1
-    upload: dist/(.*\.txt)
+# url ending with /
+- url: /(.+)/
+  static_files: .output/public/\1/index.html
+  upload: .output/public/(.+)/index.html
+  secure: always
 
-  # image files
-  - url: /(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
-    static_files: dist/\1
-    upload: dist/(.*\.(bmp|gif|ico|jpeg|jpg|png|svg))
+# url with no dot
+- url: /([^.]*)$
+  static_files: .output/public/\1/index.html
+  upload: .output/public/[^.]*/index.html
+  secure: always
 
-  # pdf files
-  - url: /(.*\.pdf)
-    static_files: dist/\1
-    upload: dist/(.*\.pdf)
-
-  # home 
-  - url: /
-    secure: always
-    static_files: dist/index.html
-    upload: dist/index.html
-
-  # index files
-  - url: /(.+)/
-    static_files: dist/\1/index.html
-    upload: dist/(.+)/index.html
-
-  # redirect to 'url + /' url.
-  - url: /(.+)
-    static_files: dist/redirector.html
-    upload: dist/redirector.html
-
+# the rest
+- url: /(.*)
+  static_files: .output/public/\1
+  upload: .output/public/(.*)
+  secure: always

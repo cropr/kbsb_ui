@@ -1,57 +1,39 @@
+<script setup>
+import showdown from 'showdown'
+import { computed, ref } from 'vue'
+
+const props = defineProps({
+  file: String
+})
+const { locale } = useI18n()
+const ttitle = `title_${locale.value}`
+const tcontent = `content_${locale.value}`
+const helptopic = `help-${props.file}`
+console.log('helptopic', helptopic)
+const { data }  = await useAsyncData(helptopic, () => queryContent(`/pages/${help-topic.value}`).findOne())
+const dialog = ref(false)
+const mdConverter = new showdown.Converter()
+
+function md(s) { return  mdConverter.makeHtml(s)}
+
+</script>
+
 <template>
   <v-dialog v-model="dialog" width="20em">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn color="green" fab outlined x-small v-bind="attrs" v-on="on">
-        <v-icon>mdi-help</v-icon>
+      <v-btn icon="mdi-help" color="green" size="x-small" v-bind="attrs" v-on="on">
       </v-btn>
     </template>
 
-    <v-card>
-      <v-card-title>{{ pagetitle }}
-      </v-card-title>
-      <v-divider></v-divider>
-      <v-card-text class="pt-3" v-html="pagecontent"> 
-      </v-card-text>
-    </v-card>
+    <ContentRenderer :value="data">
+      <v-card>
+        <v-card-title v-html="data[ttitle] ? data[ttitle] : data.title" />
+        <v-divider></v-divider>
+        <v-card-text class="pt-3 markdowncontent" v-html="md(data[tcontent])"> 
+        </v-card-text>
+      </v-card>
+    </ContentRenderer>
+
   </v-dialog>
 </template>
 
-<script>
-
-import showdown from 'showdown'
-
-export default {
-  data() {
-    return {
-      dialog: false,
-      page: {},
-    }
-  },
-
-  async fetch() {
-    const f = `help-${this.file}`
-    this.page = (await this.$content('pages', f).fetch())
-  },
-
-  props: {
-    file: String
-  },
-
-  computed: {
-    
-    pagecontent () {
-      const pcontent = this.page[`content_${this.$i18n.locale}`] || "Nothing"
-      const converter = new showdown.Converter()
-      return converter.makeHtml(pcontent)
-    },
-
-    pagetitle () {
-      const locale = this.$i18n.locale
-      const pti18 = this.page[`title_${locale}`] || "Nothing"
-      const ptitle = pti18 && pti18.length ? pti18 : this.page.title
-      return ptitle
-    }
-  }
-
-}
-</script>

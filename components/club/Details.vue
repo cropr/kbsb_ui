@@ -1,3 +1,86 @@
+<script setup>
+import { ref, computed, nextTick } from 'vue'
+import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
+import { VContainer, VBtn, VCard, VCardTitle, VCardText, VDialog, VRow, VCol,
+  VTextField,VTextarea, VDivider } from 'vuetify/lib/components/index.mjs';
+
+import { useIdtokenStore}  from '@/store/idtoken'
+import { storeToRefs } from 'pinia'
+import showdown from 'showdown'
+
+const { localePath } = useLocalePath()
+const { locale, t } = useI18n()
+const { $backend } = useNuxtApp()
+const props = defineProps(['club'])
+const clubdetails = ref(EMPTY_CLUB)
+const helpdialog = ref(false)
+const statuscm = ref(CLUB_STATUS.CONSULTING)
+const idstore = useIdtokenStore()
+const { token: idtoken } = storeToRefs(idstore)
+const { data: help }  = await useAsyncData('help-login', () => queryContent('/pages/help-club-contact').findOne())
+const status_consulting = computed(() => (statuscm.value == CLUB_STATUS.CONSULTING))
+const status_modifying = computed(() => (statuscm.value == CLUB_STATUS.MODIFYING))
+const mdConverter = new showdown.Converter()
+const ttitle = `title_${locale.value}`
+const tcontent = `content_${locale.value}`
+let copyclubdetails = null
+const emit = defineEmits(['displaySnackbar', 'updateClub'])
+
+function md(s) { 
+  return  mdConverter.makeHtml(s)
+}
+
+function cancelClub() {
+  statuscm.value = CLUB_STATUS.CONSULTING
+  emit('updateClub')
+}
+
+
+function gotoLogin() {
+  navigateTo(localePath('/tools/login?url=__clubs__manager'))
+}
+
+async function modifyClub() {
+  statuscm.value = CLUB_STATUS.MODIFYING
+}
+
+function readClubDetails() {
+  console.log('details.clubdetails', props.club)
+  clubdetails.value = { ...EMPTY_CLUB, ...props.club }
+  copyclubdetails = JSON.parse(JSON.stringify(props.club))
+}
+
+async function saveClub() {
+  // build a a diff between clubdetails and its cooy
+  let update = {}
+  for (const [key, value] of Object.entries(clubdetails.value)) {
+    if (value != copyclubdetails[key]) {
+      update[key] = value
+    }
+  }
+  try {
+    const reply = await $backend("club", "clb_update_club",{
+      ...update,
+      idclub: props.club.idclub,
+      token: idtoken.value,
+    })
+    statuscm.value = CLUB_STATUS.CONSULTING
+    emit('displaySnackbar', t('Club saved'))
+    emit('updateClub')
+  } catch (error) {
+    if (error.code == 401) gotoLogin()
+    emit('displaySnackbar', t(error.message))
+    return
+  }
+}
+
+
+defineExpose({readClubDetails})
+
+
+</script>
+
+
 <template>
   <v-container>
     <p v-if="!club.idclub">{{ $t('Select a club to view the club details') }}</p>
@@ -42,15 +125,9 @@
           </v-col>                      
           <v-col cols="12" sm="6" md="4" xl="3">
             <v-card>
-              <v-card-title>
-                <v-layout class="mt-2">
-                  <v-flex grow>
-                    <h4>{{ $t('Contact') }}</h4>
-                  </v-flex>
-                  <v-flex>
-                    <help-popup file="club_contact" />
-                  </v-flex>
-                </v-layout>
+              <v-card-title class="mt-2">
+                <v-btn icon="mdi-help" color="green" size="small" class="float-right" @click="helpdialog = true"/>                
+                <h4>{{ $t('Contact') }}</h4>
               </v-card-title>
               <v-card-text>
                 <div><span class="fieldname">{{ $t('Main email address') }}</span>: {{
@@ -163,145 +240,18 @@
         </v-row>
       </v-container>
     </div>
+    <v-dialog v-model="helpdialog" width="20em">
+      <ContentRenderer :value="help">
+        <v-card>
+          <v-card-title v-html="help[ttitle] ? help[ttitle] : help.title" />
+          <v-divider></v-divider>
+          <v-card-text class="pa-3 ma-1 markdowncontent" v-html="md(help[tcontent])"> 
+          </v-card-text>
+        </v-card>
+      </ContentRenderer>
+    </v-dialog> 
   </v-container>
 </template>
-<script>
-
-import { CLUB_STATUS, EMPTY_CLUB } from '@/util/club'
-
-export default {
-
-  name: 'Details',
-
-  data() {
-    return {
-      clubmembers: {},
-      clubdetails: EMPTY_CLUB,
-      copyclubdetails: null,
-      mbr_items: [],
-      status: CLUB_STATUS.CONSULTING,
-    }
-  },
-
-  props: {
-    bus: Object,
-    club: Object,
-  },
-
-  computed: {
-    logintoken() { return this.$store.state.oldlogin.value },
-    status_consulting() { return this.status == CLUB_STATUS.CONSULTING },
-    status_modifying() { return this.status == CLUB_STATUS.MODIFYING },
-  },
-
-
-  methods: {
-
-    cancelClub() {
-      this.status = CLUB_STATUS.CONSULTING
-      this.get_clubdetails()
-    },
-
-    async get_clubdetails() {
-      if (!this.club.id) {
-        this.clubdetails = EMPTY_CLUB
-        return
-      }
-      try {
-        const reply = await this.$api.club.clb_get_club({
-          idclub: this.club.idclub,
-          token: this.logintoken
-        })
-        this.readClubdetails(reply.data)
-      } catch (error) {
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Getting club details failed') })
-        }
-      }
-    },
-
-    gotoLogin() {
-      this.$router.push('/mgmt/login?url=__clubs__manager')
-    },
-
-    async modifyClub() {
-      try {
-        const reply = await this.$api.club.verify_club_access({
-          idclub: this.club.idclub,
-          role: "ClubAdmin",
-          token: this.logintoken,
-        })
-        this.status = CLUB_STATUS.MODIFYING
-      } catch (error) {
-        const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-        }
-      }
-    },
-
-    readClubdetails(details) {
-      this.clubdetails = { ...EMPTY_CLUB, ...details }
-      this.copyclubdetails = JSON.parse(JSON.stringify(details))
-    },
-
-    async saveClub() {
-      // build a a diff between clubdetails ans its cooy
-      let update = {}
-      for (const [key, value] of Object.entries(this.clubdetails)) {
-        if (value != this.copyclubdetails[key]) {
-          update[key] = value
-        }
-      }
-      try {
-        const reply = await this.$api.club.clb_update_club({
-          ...update,
-          idclub: this.clubdetails.idclub,
-          token: this.logintoken,
-        })
-        this.status = CLUB_STATUS.CONSULTING
-        this.$root.$emit('snackbar', { text: this.$t('Club saved') })
-      } catch (error) {
-        const reply = error.response
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-            break
-          default:
-            console.error('Getting clubs failed', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Saving club details') })
-        }
-      }
-    },
-
-    async setupDetails(){
-      await this.get_clubdetails()
-    }
-
-  },
-
-  async mounted() {
-    this.bus.$on("setupdetails", this.setupDetails)
-  },
-
-}
-</script>
 
 <style scoped>
 .fieldname {

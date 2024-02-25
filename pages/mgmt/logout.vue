@@ -1,28 +1,40 @@
+<script setup>
+import { usePersonStore }  from "@/store/person"
+import { useMgmtTokenStore } from "@/store/mgmttoken"
+
+const localePath = useLocalePath()
+const personstore = usePersonStore();
+const mgmttokenstore = useMgmtTokenStore()
+
+useHead({
+  title: 'Management Overview',
+  // we need google script to load because we might redirect internally
+  // to index in case we fail the authentication
+  script: [
+    { src: 'https://accounts.google.com/gsi/client', async: true, defer: true }
+  ]
+})
+
+definePageMeta({
+  layout: 'mgmt',
+})
+
+function logout(){
+  personstore.updatePerson({
+    credentials: "",
+    user: "",
+    email: "",    
+  })
+  mgmttokenstore.updateToken(null)
+  document.cookie =  `g_state=;path=/;expires=Thu, 01 Jan 1970 00:00:01 GMT`;
+  navigateTo(localePath('/mgmt'))
+}
+
+</script>
 <template>
   <v-container>
     <h1>Logout</h1>
-    <p>You have been logged out</p>
+    <VBtn @click="logout">Logout</VBtn>
   </v-container>
+  
 </template>
-
-<script>
-
-export default {
-  layout: 'mgmt',
-
-  name: "MgmtLogout",
-
-  head: {
-    title: 'Logout'
-  },
-
-  mounted (){
-    this.$store.commit('newlogin/update', null)
-  }
-
-}
-</script>
-
-<style>
-
-</style>

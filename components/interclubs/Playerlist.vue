@@ -1,233 +1,544 @@
+<script setup>
+import { ref } from 'vue'
+import { VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog, 
+  VSpacer, VTextField, VIcon, VAlert} from 'vuetify/lib/components/index.mjs';
+import { VDataTable } from 'vuetify/lib/labs/components.mjs';
+
+import { PLAYERSTATUS } from "@/util/interclubs"
+
+// store
+import { storeToRefs } from 'pinia'
+import { useIdtokenStore}  from '@/store/idtoken'
+const idstore = useIdtokenStore()
+const { token: idtoken } = storeToRefs(idstore)
+
+// communication
+const emit = defineEmits(['playerlistUpdated'])
+defineExpose({ setup })
+const { $backend } = useNuxtApp()
+
+// i18n
+const { t: $t } = useI18n()
+const { localePath } = useLocalePath()
+
+//  snackbar and loading widgets
+import ProgressLoading from '@/components/ProgressLoading.vue'
+import SnackbarMessage from '@/components/SnackbarMessage.vue'
+const refsnackbar = ref(null)
+let showSnackbar
+const refloading = ref(null)
+let showLoading
+
+// datamodel
+const clubmembers = ref([])
+const clubmembers_id = ref(null)
+const icclub = ref({})
+const idclub = ref(0) 
+const enrolled = ref(null)
+let playersindexed = {}
+const players = ref([])
+const playeredit = ref({})
+const editdialog = ref(false)
+const exportalldialog = ref(false)
+const exportallvisit = ref(0)
+const exportdialog = ref(false)
+const titularchoices = [{title: "No titular", value:""}]
+const plstatus = ref("noclub")
+
+// validation
+const validationdialog = ref(false)
+const validationerrors = ref([])
+
+// data table definiton
+const headers = [
+  { title: "N", key: "index"},
+	{ title: $t("Name"), key: 'fullname' },
+	{ title: $t("ID number"), key: 'idnumber', sortable: false },
+	{ title: "ELO", key: "assignedrating" },
+	{ title: "F-ELO", key: "fiderating" },
+	{ title: "B-ELO", key: "natrating" },  
+	{ title: "Club", key: "idcluborig" },
+	{ title: $t("Titular"), key: "titular" },
+	{ title: $t("Actions"), key:"action" },
+]
+const itemsPerPage = 50
+const itemsPerPageOptions = [
+  {value: 50, title: '50'},
+  {value: 150, title: '150'},
+  {value: -1, title: 'All'}
+]
+
+// Constants changing per year
+const startdate1 = "2023-09-01"
+const cutoffday1 = "2023-09-18"
+const startdate2 = "2023-10-28"
+const cutoffday2 = "2023-11-04"
+const startdate3 = "2023-12-28"
+const cutoffday3 = "2024-01-04"
+
+// methods alphabetically
+
+function assignPlayer(idnumber){
+  console.log('Assigning player', idnumber)
+  playeredit.value = { ... playersindexed[idnumber]}
+  playeredit.value.nature = PLAYERSTATUS.assigned
+  playerEdit2Player()
+}
+
+async function calcPlstatus(){
+  if (!icclub.value.idclub) return 'noclub'
+  const now = new Date().valueOf()
+  if (now < startdate1.valueOf()) {
+    clubmembers.value = []
+    return "closed"
+  }
+  console.log('checking access')
+  const acc = await checkAccess() 
+  console.log('checked access', acc)
+  if (!acc) {
+    console.log('no access granted')
+    clubmembers.value = []
+    return "noaccess"
+  }
+  if (cutoffday1.valueOf() >= now && now > startdate2.valueOf() ) {
+    clubmembers.value = []
+    return "closed"
+  }
+  if (cutoffday2.valueOf() >= now && now > startdate3.valueOf() ) {
+    clubmembers.value = []
+    return "closed"
+  }
+  if (cutoffday3.valueOf() >= now ) {
+    clubmembers.value = []
+    return "closed"
+  }
+  return "open"
+}
+
+function canAssign(idnumber){
+  return [PLAYERSTATUS.unassigned].includes(playersindexed[idnumber].nature)  && 
+    (!playersindexed[idnumber].natrating) && 
+    (!playersindexed[idnumber].fiderating)
+}
+
+function canEdit(idnumber){
+  return [PLAYERSTATUS.assigned, PLAYERSTATUS.comfirmedin, PLAYERSTATUS.requestedin].includes(
+    playersindexed[idnumber].nature)    
+}
+
+
+function canExport(idnumber){
+  return [PLAYERSTATUS.assigned, PLAYERSTATUS.unassiged].includes(
+    playersindexed[idnumber].nature)    
+}
+
+async function checkAccess(){
+  let reply
+  showLoading(true)
+  try {
+    reply = await $backend("club", "verify_club_access", {
+      idclub: idclub.value,
+      role: "InterclubAdmin,InterclubCaptain",
+      token: idtoken.value,
+    })
+    return true
+  } catch (error) {
+      console.log('reply NOK', error)
+      return false
+  } finally {
+    showLoading(false)
+  }
+}
+
+function doEditPlayer(){
+  playerEdit2Player()
+  editdialog.value = false
+}
+
+function doExportAll(){
+  players.value.forEach((m)=> {
+    m.nature = PLAYERSTATUS.confirmedout
+    m.idclubvisit = parseInt(exportallvisit.value) + 0
+  })
+  exportalldialog.value = false
+}
+
+function doExportPlayer(){
+  playeredit.value.nature = PLAYERSTATUS.confirmedout
+  playeredit.value.idclubvisit = parseInt(playeredit.value.idclubvisit) + 0
+  playerEdit2Player()
+  exportdialog.value = false
+}
+
+function fillinPlayerList() {
+  // add new members to the playerlist
+  let pnature = PLAYERSTATUS.unassigned
+  const now = new Date().valueOf()
+  if (enrolled.value && now < startdate1.valueOf) {
+    // automatically make players assigned at the start of the Interclubs
+    p.nature = PLAYERSTATUS.assigned
+  }
+  clubmembers.value.forEach((m) => {
+    if (!playersindexed[m.idnumber]) {
+      let newplayer = {
+        assignedrating:  Math.max(m.fiderating, m.natrating),
+        fiderating: m.fiderating,
+        fullname: `${m.last_name}, ${m.first_name}`,
+        first_name: m.first_name,
+        idnumber: m.idnumber,
+        idcluborig: m.idclub,
+        idclubvisit: 0,
+        last_name: m.last_name,
+        natrating: m.natrating,
+        nature: pnature,
+        titular: "",
+        transfer: null,
+      }
+      players.value.push(newplayer)
+      playersindexed[m.idnumber] = newplayer
+    }
+  })
+  players.value.forEach((p) => {
+    if (!p.fullname) {
+      p.fullname = `${p.last_name}, ${p.first_name}`
+    }
+  })
+}
+
+
+async function getClubMembers() {
+  // get club members for member database currently on old site
+  if (!idclub.value) {
+    clubmembers.value = []
+    return
+  }
+  console.log('getting Club Members from signaletique')
+  if (idclub.value == clubmembers_id.value) {
+    console.log("using cached version of members")
+  }
+  showLoading(true)
+  let reply
+  clubmembers.value = []
+  try {
+    reply = await $backend("member", "anon_getclubmembers", {
+      idclub: idclub.value,
+    })
+  } catch (error) {    
+    console.log('getClubMembers error')
+    showSnackbar(error.message)
+    return
+  } finally {
+    showLoading(false)
+  }
+  clubmembers_id.value = idclub.value
+  const members = reply.data
+  members.forEach(p => {
+    p.merged = `${p.idnumber}: ${p.first_name} ${p.last_name}`
+  })
+  clubmembers.value = members.sort((a, b) =>
+    (a.last_name > b.last_name ? 1 : -1))
+  fillinPlayerList()  
+}
+
+
+function maxelo(p) {
+  if (!p.fiderating && !p.natrating) return 1600
+  return p.fiderating ? Math.max(p.fiderating, p.natrating) + 100 : p.natrating + 100
+}
+
+
+function minelo(p) {
+  let minrating = p.fiderating ? Math.min(p.fiderating, p.natrating) - 100 : p.natrating - 100
+  return Math.max (minrating, 1000)
+}
+
+function openEditPlayer(idnumber) {
+	playeredit.value = { ... playersindexed[idnumber]}
+	editdialog.value = true
+}
+
+function openExportAll(){
+  exportalldialog.value = true
+}
+
+function openExportPlayer(idnumber) {
+	playeredit.value = { ... playersindexed[idnumber]}
+  exportdialog.value = true
+}
+
+function playerEdit2Player(){
+  // copy the data of Player Edit back to the Player
+  // we splice the players array and add the playeredit to trigger a repaint of the table
+  const aix = players.value.findIndex((p)=> p.idnumber == playeredit.value.idnumber)
+  players.value.splice(aix, 1, playeredit.value)
+  playersindexed[playeredit.value.idnumber] = players.value[aix]
+}
+
+function readICclub() {
+  idclub.value = icclub.value.idclub
+  enrolled.value = icclub.value.enrolled
+	players.value = icclub.value.players ? [...icclub.value.players] : []
+	playersindexed = Object.fromEntries(players.value.map((x)=> [x.idnumber, x]))
+  titularchoices.splice(1,titularchoices.length-1)
+  if (icclub.value.teams) {
+    icclub.value.teams.forEach((t)=> {
+      titularchoices.push({title: t.name, value: t.name })
+    })
+  }
+  fillinPlayerList()
+}
+
+function rowstyle(idnumber){
+  const pl = playersindexed[idnumber]
+  if (!pl) return {}
+  return {
+    imported: pl.nature == "requestedin",
+    exported: pl.nature == "confirmedout",
+    unassigned: pl.nature == "unassigned"
+  }
+}
+
+async function savePlayerlist(){
+  let reply
+  try {
+    showLoading(true)
+		reply = await $backend("interclub","clb_setICclub", {
+			token: idtoken.value,
+			idclub: idclub.value,
+			players: players.value,
+		})
+  } catch (error) {
+    showSnackbar(error.message)
+    return
+  }
+  finally {
+    showLoading(false)
+  }
+  validationdialog.value = false
+	showSnackbar('Playerlist saved')
+}
+
+function visitingclub(idnumber) {
+  const pl = playersindexed[idnumber]
+  return pl ? pl.idclubvisit : ""
+}
+
+async function setup(clb){
+  console.log('setup playerlist', clb)
+  icclub.value = clb
+  readICclub()
+  plstatus.value = await calcPlstatus()
+  console.log()
+  getClubMembers()
+} 
+
+async function validatePlayerlist(){
+  if (!enrolled.value) {
+    savePlayerlist()
+    return
+  }
+  let reply
+  try {
+    showLoading(true)
+		reply = await $backend("interclub","clb_validateICplayers", {
+			token: idtoken.value,
+			idclub: idclub.value,
+			players: players.value,
+		})
+  } catch (error) {
+    showSnackbar(error.message)
+    return
+  }
+  finally {
+    showLoading(false)
+  }
+  console.log('reply.data', reply.data)
+  validationerrors.value = reply.data
+  if (validationerrors.value.length) {
+    validationdialog.value = true
+  }
+  else {
+    savePlayerlist()
+  }
+   
+}
+
+onMounted( () => {
+  showSnackbar = refsnackbar.value.showSnackbar
+  showLoading = refloading.value.showLoading
+})
+
+</script>
 <template>
-  <v-container>
-    <p v-if="!club.idclub">{{ $t('Please select a club to edit the player list') }}</p>
-    <div v-if="club.idclub">
-      <div v-if="teams.length">
-        <v-stepper v-model="step" vertical>
-
-          <v-stepper-step :complete="step > 1" step="1" color="green">
-            {{ $t('Intro') }}
-          </v-stepper-step>
-          <v-stepper-content step="1">
-            <InterclubPlayerlistintro />
-          </v-stepper-content>
-
-          <v-stepper-step :complete="step > 2" step="2" color="green">
-            {{ $t('Define players') }}
-          </v-stepper-step>
-          <v-stepper-content step="2">
-            <InterclubPlayerlistplayers :club="club" :activenotloaded="activenotloaded" />
-          </v-stepper-content>
-
-          <v-stepper-step :complete="step > 3" step="3" color="green">
-            {{ $t('Define transfers') }}
-          </v-stepper-step>
-          <v-stepper-content step="3">
-            <InterclubPlayerlisttransfer :club="club" :activenotloaded="activenotloaded" />
-          </v-stepper-content>
-
-          <v-stepper-step :complete="step > 4" step="4" color="green">
-            {{ $t('Define order') }}
-          </v-stepper-step>
-          <v-stepper-content step="4">
-            <InterclubPlayerlistorder />
-          </v-stepper-content>
-
-          <v-stepper-step :complete="step > 5" step="5" color="green">
-            {{ $t('Define teams') }}
-          </v-stepper-step>
-          <v-stepper-content step="5">
-            <InterclubPlayerlistteams :club="club" />
-          </v-stepper-content>
-
-          <v-stepper-step :complete="step > 6" step="6" color="green">
-            {{ $t('Confirmation') }}
-          </v-stepper-step>
-          <v-stepper-content step="6">
-            <InterclubPlayerlistconfirm :club="club" />
-          </v-stepper-content>
-
-        </v-stepper>
-
+	<v-container>
+    <SnackbarMessage ref="refsnackbar" />
+    <ProgressLoading ref="refloading"/>  
+		<h2>{{ $t('Player list') }}</h2>
+    <v-alert  type="warning" variant="outlined" 
+      v-if="plstatus == 'noclub'"
+      :text="$t('Please select a club')"/>
+    <v-alert type="warning" variant="outlined"
+      v-if="plstatus == 'closed'"
+      :text="$t('Currently the player list cannot be modified')" />
+    <v-alert  type="error" variant="outlined"  
+      v-if="plstatus == 'noaccess'"
+      :text="$t('Permission denied')"/>
+		<div v-if="plstatus == 'open'">
+      <div v-if="!enrolled">
+        This club is not enrolled in Interclubs 2023-24
+        <VBtn @click="openExportAll"  color="primary" class="ml-8">
+          Export all players
+        </VBtn>
       </div>
-      <div v-if="!teams.length">
-        <p>
-          {{ $t('This club is not enrolled in the interclubs.') }}
-          {{ $t('As such, for this interclub season, it can transfer it members to other clubs.') }}
-        </p>
-        <InterclubPlayerlisttransfer :club="club" />
-        <InterclubPlayerlistconfirm :club="club" />
-
+      <VDataTable :items="players" :headers="headers"
+        density="compact" 
+        :items-per-page="itemsPerPage"
+        :items-per-page-options="itemsPerPageOptions" 
+        :sort-by="[{key: 'assignedrating', order: 'desc'}]"
+      >
+        <template v-slot:item.index="{ item, index }">
+          <span :class="rowstyle(item.columns.idnumber)">
+            {{ index + 1 }}
+          </span>
+        </template>
+        <template v-slot:item.fullname="{ item }">
+          <span :class="rowstyle(item.columns.idnumber)">
+            {{ item.columns.fullname }}
+          </span>
+        </template>
+        <template v-slot:item.idnumber="{ item }">
+          <span :class="rowstyle(item.columns.idnumber)">
+            {{ item.columns.idnumber }}
+          </span>
+        </template>
+        <template v-slot:item.assignedrating="{ item }">
+          <span :class="rowstyle(item.columns.idnumber)">
+            {{ item.columns.assignedrating }}
+          </span>
+        </template>
+        <template v-slot:item.idclub="{ item }">
+          <span :class="rowstyle(item.columns.idnumber)">
+            {{ item.columns.idclub }}
+          </span>
+        </template>                      
+        <template v-slot:item.action="{ item }">
+          <span v-show="item.columns.nature == 'confirmedout'">
+            <VIcon>mdi-arrow-right-bold</VIcon>{{ visitingclub(item.columns.idnumber) }}
+          </span>
+          <VBtn density="compact" color="green" icon="mdi-pencil" variant="text"
+            v-show="canEdit(item.columns.idnumber)" 
+            @click="openEditPlayer(item.columns.idnumber)" 
+          />
+          <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text" 
+            v-show="canExport(item.columns.idnumber)"           
+            @click="openExportPlayer(item.columns.idnumber)" />
+          <VBtn density="compact" color="green" icon="mdi-arrow-left" variant="text" 
+            v-show="canAssign(item.columns.idnumber)"           
+            @click="assignPlayer(item.columns.idnumber)" />        
+        </template>
+      </VDataTable>
+      <div>
+        <VBtn @click="validatePlayerlist()" color="primary">Save</VBtn>
       </div>
     </div>
+		<VDialog v-model="editdialog"  width="20em">
+			<VCard>
+				<VCardTitle>
+					{{ $t('Edit') }}: {{ playeredit.fullname }}
+					<VDivider />
+				</VCardTitle>
+				<VCardText>
+					<h4>{{ $t('Modify assigned Elo') }}</h4>
+					<div>{{ $t('Current assigned rating') }}: {{ playeredit.assignedrating }} </div>
+					<div>Max ELO: {{ maxelo(playeredit) }}</div>
+					<div>Min ELO: {{ minelo(playeredit) }}</div>
+					<VTextField v-model="playeredit.assignedrating" label="New Elo" />
+					<!-- <VDivider />
+					<h4>{{ $t('Titular') }}</h4>
+						<VSelect :items="titularchoices" v-model="playeredit.titular"></VSelect>
+					<VDivider /> -->
+				</VCardText>
+				<VCardActions>
+					<VSpacer />
+					<VBtn @click="doEditPlayer">{{ $t('OK') }}</VBtn>
+					<VBtn @click="editdialog  = false">{{ $t('Cancel') }}</VBtn>
+				</VCardActions>
+			</VCard> 
+		</VDialog>
+    <VDialog v-model="exportdialog"  width="30em">
+			<VCard>
+				<VCardTitle>
+					Export: {{ playeredit.fullname }}
+					<VDivider />
+				</VCardTitle>
+				<VCardText>
+          <p>Exporting a player to another club</p>
+          <VTextField label="Club number" v-model="playeredit.idclubvisit" />
+				</VCardText>
+				<VCardActions>
+					<VSpacer />
+					<VBtn @click="doExportPlayer">OK</VBtn>
+          <VBtn @click="exportdialog = false">Cancel</VBtn>
+				</VCardActions>
+			</VCard> 
+		</VDialog>
+    <VDialog v-model="exportalldialog"  width="30em">
+			<VCard>
+				<VCardTitle>
+					Export all players
+					<VDivider />
+				</VCardTitle>
+				<VCardText>
+          <p>Exporting all players to another club</p>
+          <VTextField label="Club number" v-model="exportallvisit" />
+				</VCardText>
+				<VCardActions>
+					<VSpacer />
+					<VBtn @click="doExportAll">OK</VBtn>
+					<VBtn @click="exportalldialog = false">Cancel</VBtn>
+				</VCardActions>
+			</VCard> 
+		</VDialog>    
+		<VDialog v-model="validationdialog"  width="30em">
+			<VCard>
+				<VCardTitle>
+					{{ $t('Validation of player list.') }}
+					<VDivider />
+				</VCardTitle>
+				<VCardText class="markdowncontent">
+					<div>{{ $t('The player list contains validation errors') }}</div>
+          <ul>
+            <li v-for="(err, ix) in validationerrors" :key="ix">
+              <span v-show="err.errortype == 'ELO'">
+                {{ $t('Player')}} {{ $t(err.detail)  }}: {{ $t(err.message) }}
+              </span>
+              <span v-show="err.errortype == 'TitularOrder'">
+                {{  $t(err.message) }}
+              </span>
+              <span v-show="err.errortype == 'TitularCount'">
+                {{ $t(err.detail)  }}: {{  $t(err.message) }}
+              </span>            
+            </li>
+          </ul>
+          <VDivider />
+				</VCardText>
+				<VCardActions>
+					<VSpacer />
+					<VBtn @click="savePlayerlist()">{{ $t('Save anyhow') }}</VBtn>
+					<VBtn @click="validationdialog = false">{{ $t('Cancel') }}</VBtn>
+				</VCardActions>
+			</VCard> 
+		</VDialog>    
   </v-container>
 </template>
-<script>
-import Vue from 'vue'
 
-function compareAssignedrating(a, b) {
-  return b.assignedrating - a.assignedrating
+<style scoped>
+.imported {
+  color: purple;
+  font-weight: 500;
+}
+.exported, .unassigned {
+  color: rgb(186, 185, 185);
 }
 
-export default {
-
-  name: 'Playerlist',
-
-  data() {
-    return {
-      activenotloaded: true,
-    }
-  },
-
-  props: {
-    club: Object
-  },
-
-  computed: {
-    activemembers() {
-      return this.$store.state.playerlist.activemembers
-    },
-    players() {
-      return this.$store.state.playerlist.players
-    },
-    step() {
-      return this.$store.state.playerlist.step
-    },
-    teams() {
-      return this.$store.state.playerlist.teams
-    },
-  },
-
-  methods: {
-
-    addmember(x) {
-      const players = [...this.players]
-      players.push({
-        fiderating: x.fiderating,
-        first_name: x.first_name,
-        idnumber: x.idnumber,
-        idclub: x.idclub,
-        last_name: x.last_name,
-        natrating: x.natrating,
-        transfer: false
-      })
-      this.$store.commit('playerlist/updatePlayers', players)
-    },
-
-    buildplayers() {
-      console.log('building players')
-      const players = [...this.players]
-      players.forEach((x) => {
-        let nr = x.natrating || 0
-        let fr = x.fiderating || 0
-        if (nr > 0 && fr > 0) {
-          if (x.assignedrating == null) x.assignedrating = nr
-          x.maxrating = Math.max(nr, fr) + 100
-          x.minrating = Math.min(nr, fr) - 100
-        }
-        if (nr > 0 && fr == 0) {
-          if (x.assignedrating == null) x.assignedrating = nr
-          x.maxrating = nr + 100
-          x.minrating = nr - 100
-        }
-        if (nr == 0 && fr > 0) {
-          if (x.assignedrating == null) x.assignedrating = fr
-          x.maxrating = fr + 100
-          x.minrating = fr - 100
-        }
-        if (nr == 0 && fr == 0) {
-          if (x.assignedrating == null) x.assignedrating = 1150
-          x.maxrating = 1600
-          x.minrating = 1000
-        }
-      })
-      players.sort(compareAssignedrating)
-      this.$store.commit('playerlist/updatePlayers', players)
-    },
-
-    emitInterface() {
-      this.$emit("interface", "playerlist_init", this.playerlist_init);
-    },
-
-    playerlist_init() {
-      this.get_activemembers();
-      this.get_interclubclub();
-    },
-
-    async get_activemembers() {
-      try {
-        const reply = await this.$api.old.get_clubmembers({
-          idclub: this.club.idclub,
-        })
-        this.activenotloaded = false;
-        this.$store.commit('playerlist/updateActivemembers', reply.data.activemembers)
-      } catch (error) {
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-            break
-          default:
-            console.error('Getting active members', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Getting active club members failed') })
-        }
-      }
-    },
-
-    async get_interclubclub() {
-      try {
-        const reply = await this.$api.interclub.get_interclubclub({
-          idclub: this.club.idclub,
-        })
-        console.log('reply interclubclub', reply.data)
-        this.$store.commit('playerlist/updatePlayers', reply.data.players)
-        this.$store.commit('playerlist/updateTeams', reply.data.teams)
-        this.$store.commit('playerlist/updateTransfersout', reply.data.transfersout)
-        console.log('icc done', reply.data.players.length)
-      } catch (error) {
-        switch (reply.status) {
-          case 401:
-            this.gotoLogin()
-            break
-          case 403:
-            this.$root.$emit('snackbar', { text: this.$t('Permission denied') })
-            break
-          default:
-            console.error('Getting interclub clubdetails', reply.data.detail)
-            this.$root.$emit('snackbar', { text: this.$t('Getting interclub club details failed') })
-        }
-      }
-    },
-
-  },
-
-  mounted() {
-    this.$root.$on('addmember', ((pl) => {
-      this.addmember(pl)
-    }))
-    this.$root.$on('buildplayers', (() => {
-      this.buildplayers()
-    }))
-    this.emitInterface()
-    this.$nextTick(() => {
-      this.playerlist_init()
-    })
-  },
-
-  watch: {
-    step: function (nv, ov) {
-      console.log('step', nv)
-      if (nv == 4) {
-        this.buildplayers()
-      }
-      if (nv == 5) {
-        this.$root.$emit('buildtitulars')
-      }
-    }
-  },
-
-
-}
-</script>
+</style>
