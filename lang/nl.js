@@ -288,6 +288,7 @@ export default {
 "Tournament rules": `Wedstrijdreglement`,
 "tournament_director": `toernooileider`,
 "Transfer of all members to a single club at once.": `Transfer van alle leden in één keer naar één club.`,
+"Transgender": `Transgenders`,
 "Treasurer": `Penningmeester`,
 "treasurer": `penningmeester`,
 "Treasurer a.i.": `Penningmeester a.i.`,

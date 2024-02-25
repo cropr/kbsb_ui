@@ -288,6 +288,7 @@ export default {
 "Tournament rules": `Tournament rules`,
 "tournament_director": `tournament director`,
 "Transfer of all members to a single club at once.": `Transfer of all members to a single club at once.`,
+"Transgender": `Transgender`,
 "Treasurer": `Treasurer`,
 "treasurer": `treasurer`,
 "Treasurer a.i.": `Treasurer a.i.`,

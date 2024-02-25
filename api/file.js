@@ -1,10 +1,12 @@
 import axios from "axios";
 
-const prefix = "/api/v1/report";
+const rprefix = "/api/v1/report";
+const fprefix = "/api/v1/filestore";
+
 export default {
   anon_get_files: async function (options) {
     const { reports } = options;
-    return await axios.get(`${prefix}/anon/file`, {
+    return await axios.get(`${rprefix}/anon/file`, {
       params: { reports },
     });
   },
@@ -53,5 +55,17 @@ export default {
       },
     });
     return resp;
+  },
+  anon_get_file: async function (options) {
+    const { group, name } = options
+    return await axios.get(`${fprefix}/anon/file`, {
+      params: { group, name },
+    })
+  },
+  anon_get_filelist: async function (options) {
+    const { group } = options
+    return await axios.get(`${fprefix}/anon/files`, {
+      params: { group },
+    })
   },
 };
