@@ -12,26 +12,22 @@ const pagetitle = ref("")
 const pagecontent = ref("")
 
 async function getContent() {
+  console.log('getting Content')
   try {
-    const reply = await $backend('filestore', 'anon_get_file', {
+    const reply = await $backend('file', 'anon_get_file', {
       group: 'pages',
-      name: 'transgender.md'
+      name: 'transgenders.md'
     })
     metadata.value = useMarkdown(reply.data).metadata
-    updateLocale(locale.value)
+    pagetitle.value = metadata.value["title_" + locale.value]
+    pagecontent.value = mdConverter.makeHtml(metadata.value["content_" + locale.value])
   }
   catch (error) {
-    console.log('failed')
+    console.log('getContent failed', error)
   }
 }
 
-function updateLocale(l) {
-  console.log('updating locale', l)
-  pagetitle.value = metadata.value["title_" + l]
-  pagecontent.value = mdConverter.makeHtml(metadata.value["content_" + l])
-}
 
-watch(locale, (nl, ol) => updateLocale(nl))
 
 onMounted(() => {
   getContent()
