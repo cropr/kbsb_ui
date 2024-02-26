@@ -1,10 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import {
-  VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog,
-  VSpacer, VTextField, VIcon
-} from 'vuetify/lib/components/index.mjs';
-import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 import { PLAYERSTATUS } from "@/util/interclubs"
 
 // store
@@ -392,42 +387,42 @@ onMounted(() => {
         :items-per-page-options="itemsPerPageOptions"
         :sort-by="[{ key: 'assignedrating', order: 'desc' }]">
         <template v-slot:item.index="{ item, index }">
-          <span :class="rowstyle(item.columns.idbel)">
+          <span :class="rowstyle(item.idbel)">
             {{ index + 1 }}
           </span>
         </template>
         <template v-slot:item.fullname="{ item }">
-          <span :class="rowstyle(item.columns.idbel)">
-            {{ item.columns.fullname }}
+          <span :class="rowstyle(item.idbel)">
+            {{ item.fullname }}
           </span>
         </template>
         <template v-slot:item.idbel="{ item }">
-          <span :class="rowstyle(item.columns.idbel)">
-            {{ item.columns.idbel }}
+          <span :class="rowstyle(item.idbel)">
+            {{ item.idbel }}
           </span>
         </template>
         <template v-slot:item.assignedrating="{ item }">
-          <span :class="rowstyle(item.columns.idbel)">
-            {{ item.columns.assignedrating }}
+          <span :class="rowstyle(item.idbel)">
+            {{ item.assignedrating }}
           </span>
         </template>
         <template v-slot:item.idclub="{ item }">
-          <span :class="rowstyle(item.columns.idbel)">
-            {{ item.columns.idclub }}
+          <span :class="rowstyle(item.idbel)">
+            {{ item.idclub }}
           </span>
         </template>
         <template v-slot:item.nature="{ item }">
-          <span v-show="item.columns.nature == 'confirmedout'">
-            <VIcon>mdi-arrow-right-bold</VIcon>{{ status(item.columns.idbel) }}
+          <span v-show="item.nature == 'confirmedout'">
+            <VIcon>mdi-arrow-right-bold</VIcon>{{ status(item.idbel) }}
           </span>
         </template>
         <template v-slot:item.action="{ item }">
           <VBtn density="compact" color="green" icon="mdi-pencil" variant="text"
-            v-show="canEdit(item.columns.idbel)" @click="openEditPlayer(item.columns.idbel)" />
+            v-show="canEdit(item.idbel)" @click="openEditPlayer(item.idbel)" />
           <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text"
-            v-show="canExport(item.columns.idbel)" @click="openExportPlayer(item.columns.idbel)" />
+            v-show="canExport(item.idbel)" @click="openExportPlayer(item.idbel)" />
           <VBtn density="compact" color="green" icon="mdi-arrow-left" variant="text"
-            v-show="canAssign(item.columns.idbel)" @click="assignPlayer(item.columns.idbel)" />
+            v-show="canAssign(item.idbel)" @click="assignPlayer(item.idbel)" />
         </template>
       </VDataTable>
       <div>

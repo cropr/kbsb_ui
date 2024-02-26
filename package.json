@@ -10,7 +10,7 @@
     "@nuxt/content": "^2.7.2",
     "@nuxtjs/i18n": "^8.0.0-rc.3",
     "@types/node": "^18.17.3",
-    "nuxt": "^3.6.5",
+    "nuxt": "^3.10.3",
     "prettier": "^3.0.3",
     "vite": "^5.1.4",
     "vite-plugin-vuetify": "^2.0.1",

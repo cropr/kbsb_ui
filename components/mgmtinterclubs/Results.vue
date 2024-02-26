@@ -1,6 +1,6 @@
 <script setup>
 import { ref } from 'vue'
-import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
+import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION, resultchoices, overrulechoices } from '@/util/interclubs'
 
 // stores
 import { useMgmtTokenStore } from "@/store/mgmttoken"
@@ -33,28 +33,15 @@ const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x) => {
 })
 const games = ref([])
 
-const resultchoices = ["1-0", "½-½", "0-1", "1-0 FF", "0-1 FF", "0-0 FF", ""]
-
-const overrulechoices = [
-  { title: "No overruling", value: "" },
-  { title: "1-0", value: "1-0" },
-  { title: "½-½", value: "½-½" },
-  { title: "0-1", value: "0-1" },
-  { title: "1-0 FF", value: "1-0 FF" },
-  { title: "0-1 FF", value: "0-1 FF" },
-  { title: "0-0 FF", value: "0-0 FF" },
-]
 
 // methods alphabetically
 
 function calc_points(tr) {
   let bphome = 0
   let bpvisit = 0
-  let mphome = 0
-  let mpvisit = 0
   let allfilled = true
   tr.games.forEach((g) => {
-    let result = g.overruled ? g.overruled : g.result
+    let result = (g.overruled && g.overruled != "NOR") ? g.overruled : g.result
     switch (result) {
       case "1-0":
       case "1-0 FF":
@@ -62,6 +49,12 @@ function calc_points(tr) {
         break
       case "½-½":
         bphome += 1
+        bpvisit += 1
+        break
+      case "½-0":
+        bphome += 1
+        break
+      case "0-½":
         bpvisit += 1
         break
       case "0-1":
