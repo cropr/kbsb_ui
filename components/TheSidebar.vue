@@ -9,7 +9,7 @@ function gotorating() {
   return locale === 'nl' ? '/tools/ratingnl' : '/tools/ratingfr'
 }
 
-function gotoOldsite(url){
+function gotoOldsite(url) {
   window.open(phpbaseurl + url, "oldsite")
 }
 </script>
@@ -57,7 +57,8 @@ function gotoOldsite(url){
         <v-list-item :to="localePath('/competition/championships-adult')" :title="$t('BC Adults')" />
         <v-list-item :to="localePath('/competition/championships-blitz')" :title="$t('BC Blitz')" />
         <v-list-item :to="localePath('/competition/championships-rapid')" :title="$t('BC Rapid')" />
-        <v-list-item :to="localePath('/competition/international-adult')" :title="$t('International competitions')" />
+        <v-list-item :to="localePath('/competition/international-adult')"
+          :title="$t('International competitions')" />
       </v-list-group>
 
       <v-list-group>
@@ -86,6 +87,7 @@ function gotoOldsite(url){
         <v-list-item :to="localePath('/info/email-addresses')" :title="$t('Email addresses')" />
         <v-list-item :to="localePath('/info/elo-processing')" :title="$t('ELO processing')" />
         <v-list-item :to="localePath('/info/gdpr')" :title="$t('GDPR')" />
+        <v-list-item :to="localePath('/info/transgender')" :title="$t('Transgender')" />
       </v-list-group>
 
       <v-list-group>
@@ -93,12 +95,14 @@ function gotoOldsite(url){
           <v-list-item v-bind="props" :title="$t('Tools')" />
         </template>
         <v-list-item :to="gotorating()" :title="$t('ELO tournaments')" />
-        <v-list-item title="Player Manager" @click="gotoOldsite('sites/manager/GestionCOMMON/GestionLogin.php')" />
+        <v-list-item title="Player Manager"
+          @click="gotoOldsite('sites/manager/GestionCOMMON/GestionLogin.php')" />
         <v-list-item :to="localePath('/clubs/manager')" title="Club Manager" />
         <v-list-item :to="localePath('/interclubs/manager')" title="Interclub Manager" />
-        <v-list-item title="Elo"  @click="gotoOldsite('sites/manager/GestionFICHES/FRBE_Fiche.php')" />
-        <v-list-item :title="$t('Results SWAR')"  @click="gotoOldsite('sites/manager/GestionSWAR/SwarResults.php')" />
-        <v-list-item title="Calc Norm"  @click="gotoOldsite('sites/manager/CalcNorm/norm.php')" />
+        <v-list-item title="Elo" @click="gotoOldsite('sites/manager/GestionFICHES/FRBE_Fiche.php')" />
+        <v-list-item :title="$t('Results SWAR')"
+          @click="gotoOldsite('sites/manager/GestionSWAR/SwarResults.php')" />
+        <v-list-item title="Calc Norm" @click="gotoOldsite('sites/manager/CalcNorm/norm.php')" />
       </v-list-group>
 
       <v-list-item :to="localePath('/info/partners')" title="Partners" />

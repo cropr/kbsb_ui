@@ -15,9 +15,6 @@ export default defineNuxtConfig({
   build: {
     transpile: ['vuetify'],
   },
-  // components: {
-  //   dirs: []
-  // },
   content: {
     api: {
       baseURL: '/capi'
@@ -43,12 +40,12 @@ export default defineNuxtConfig({
     defaultLocale: "nl",
     vueI18n: './i18n.config.ts',
   },
-  modules: ['@nuxt/content', '@nuxtjs/i18n', '@pinia/nuxt', '@vueuse/nuxt',
+  modules: ['@nuxt/content', '@nuxtjs/i18n', '@pinia/nuxt',
     async (options, nuxt) => {
       nuxt.hooks.hook('vite:extendConfig',
         config => config.plugins.push(vuetify())
       )
-    },
+    }
   ],
   nitro: {
     prerender: {
@@ -62,5 +59,12 @@ export default defineNuxtConfig({
       statamicurl: process.env.STATAMIC_URL || "http://localhost:8000/",
       repo_branch: "master"
     }
-  }
+  },
+  vite: {
+    vue: {
+      template: {
+        transformAssetUrls
+      }
+    }
+  },
 })

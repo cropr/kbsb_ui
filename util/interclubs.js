@@ -25,7 +25,7 @@ export const INTERCLUBS_ROUNDS = {
   8: "2024-02-18",
   9: "2024-03-10",
   10: "2024-03-24",
-  11: "2024-04-24",
+  11: "2024-04-21",
 };
 
 export const PLAYERS_DIVISION = {
