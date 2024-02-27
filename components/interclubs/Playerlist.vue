@@ -4,7 +4,6 @@ import {
   VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog,
   VSpacer, VTextField, VIcon, VAlert
 } from 'vuetify/lib/components/index.mjs';
-import { VDataTable } from 'vuetify/lib/labs/components.mjs';
 
 import { PLAYERSTATUS } from "@/util/interclubs"
 
