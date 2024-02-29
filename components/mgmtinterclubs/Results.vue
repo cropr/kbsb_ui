@@ -1,15 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION, resultchoices, overrulechoices } from '@/util/interclubs'
 
 // stores
 import { useMgmtTokenStore } from "@/store/mgmttoken"
+import { useMgmtInterclubStore } from "@/store/mgmtinterclub"
 import { storeToRefs } from 'pinia'
-const mgmtstore = useMgmtTokenStore()
-const { token: mgmttoken } = storeToRefs(mgmtstore)
+const mgmttokenstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmttokenstore)
+const mgmtinterclubstore = useMgmtInterclubStore()
+const { club, round } = storeToRefs(mgmtinterclubstore)
 
 // communication
-defineExpose({ updateClub, updateRound })
+defineExpose({ checkStore })
 const { $backend } = useNuxtApp()
 
 //  snackbar and loading widgets
@@ -21,18 +24,15 @@ const refloading = ref(null)
 let showLoading
 
 // datamodel
-const idclub = ref(0)
-let roundold = -1
+const my = ref({
+  idclub: 0,
+  round: 0,
+})
 const playerlist_buffer = ref({})
 let playersindexed = {}
 const icseries = ref([])
-const round = ref(-1)
 const teamresults = ref([])
-const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x) => {
-  return { value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}` }
-})
-const games = ref([])
-
+const showResults = computed(() => my.value.idclub && my.value.round)
 
 // methods alphabetically
 
@@ -40,6 +40,7 @@ function calc_points(tr) {
   let bphome = 0
   let bpvisit = 0
   let allfilled = true
+  let teamforfeit = false
   tr.games.forEach((g) => {
     let result = (g.overruled && g.overruled != "NOR") ? g.overruled : g.result
     switch (result) {
@@ -70,10 +71,28 @@ function calc_points(tr) {
   if (!allfilled) {
     tr.matchpoints = ""
   }
+  else if (teamforfeit) {
+    tr.matchpoints = "TFF"
+  }
   else {
     if (bphome > bpvisit) tr.matchpoints = "2-0"
     if (bphome == bpvisit) tr.matchpoints = "1-1"
     if (bphome < bpvisit) tr.matchpoints = "0-2"
+  }
+}
+
+async function checkStore() {
+  console.log('checkstore results', round.value)
+  if (my.value.round != round.value) {
+    my.value.round = round.value
+    await getICSeries()
+  }
+  if (my.value.idclub != club.value.idclub) {
+    my.value.idclub = club.value.idclub
+    playerlist_buffer.value = {}
+    teamresults.value = []
+    icseries.value = []
+    processICplayerlist()
   }
 }
 
@@ -115,15 +134,15 @@ async function getICclub(clb_id) {
 async function getICSeries() {
   // get the pairing data limited to current round and club 
   let reply
-  if (!idclub.value) {
+  if (!my.value.idclub) {
     icseries.value = {}
     return
   }
   showLoading(true)
   try {
     reply = await $backend("interclub", "mgmt_getICseries", {
-      round: round.value,
-      idclub: idclub.value,
+      round: my.value.round,
+      idclub: my.value.idclub,
       token: mgmttoken.value
     })
   } catch (error) {
@@ -133,17 +152,18 @@ async function getICSeries() {
     }
     return
   } finally {
+    icseries.value = reply.data
+    await processICSeries()
     showLoading(false)
   }
-  icseries.value = reply.data
-  await processICSeries()
 }
 
-function processICplayerlist(ic_clb) {
-  console.log('processing playerlist', ic_clb.idclub)
-  if (!ic_clb && !ic_clb.idclub) return
-  let players = ic_clb.players.filter((p) => p.nature != "confirmedout")
-  playerlist_buffer.value[ic_clb.idclub] = players
+function processICplayerlist() {
+  // processing the playerlist from the club details available in the store
+  console.log('processing playerlist for club', my.value.idclub)
+  if (!my.value.idclub) return
+  let players = club.value.players.filter((p) => p.nature != "confirmedout")
+  playerlist_buffer.value[my.value.idclub] = players
   players.forEach((p) => {
     p.full = `${p.idnumber} ${p.last_name}, ${p.first_name}`
     playersindexed[p.idnumber] = p
@@ -160,7 +180,7 @@ async function processICSeries() {
       // skip byes
       if (!enc.icclub_home || !enc.icclub_visit) return
       // skip encounters of other clubs
-      if (![enc.icclub_home, enc.icclub_visit].includes(idclub.value)) return
+      if (![enc.icclub_home, enc.icclub_visit].includes(my.value.idclub)) return
       getICclub(enc.icclub_home)
       getICclub(enc.icclub_visit)
       let encounter = {
@@ -196,7 +216,6 @@ async function processICSeries() {
   })
   tra = tra.sort((a, b) => (a.division - b.division))
   teamresults.value = [...tra]
-  roundold = round.value
 }
 
 async function saveResults() {
@@ -217,24 +236,6 @@ async function saveResults() {
   showSnackbar('Results saved')
 }
 
-function updateClub(clb) {
-  idclub.value = clb.idclub
-  if (!clb.idclub) {
-    playerlist_buffer.value = {}
-    teamresults.value = []
-    icseries.value = []
-    return
-  }
-  if (!playerlist_buffer[idclub.value]) {
-    processICplayerlist(clb)
-  }
-}
-
-function updateRound(rnd) {
-  round.value = rnd
-  getICSeries()
-}
-
 onMounted(() => {
   showSnackbar = refsnackbar.value.showSnackbar
   showLoading = refloading.value.showLoading
@@ -247,8 +248,8 @@ onMounted(() => {
     <SnackbarMessage ref="refsnackbar" />
     <ProgressLoading ref="refloading" />
     <h2>Results</h2>
-    <p v-if="!idclub">Please select a club to view the interclubs player list</p>
-    <div v-if="idclub">
+    <p v-show="!showResults">Please select a club to view the interclubs player list</p>
+    <div v-show="showResults">
       <VBtn color="purple" @click="saveResults">Save results</VBtn>
       <v-card v-for="tr in teamresults" class="my-2">
         <v-card-title>

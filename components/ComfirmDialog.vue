@@ -1,28 +1,35 @@
 <script setup>
 import { ref } from 'vue'
 
-const { t } = useI18n()
 const visible = ref(false)
+const title = ref("")
 const line1 = ref("")
 const line2 = ref("")
+const color = ref("")
+
 let cbconfirm = null
-function showConfirm(l1, l2, callbackconfirm) {
+
+function showConfirm(callback, t1, l1, l2, c) {
   visible.value = true
   line1.value = l1
   line2.value = l2
-  cbconfirm = callbackconfirm
+  title.value = t
+  color.value = c
+  cbconfirm = callback
 }
+
 function confirm() {
   visible.value = false
   if (cbconfirm) cbconfirm()
 }
+
 defineExpose({ showConfirm })
 </script>
 <template>
   <VDialog v-model="visible" width="20em">
     <VCard>
-      <VCardTitle class="borderline">
-        {{ t('Confirmation') }}
+      <VCardTitle class="borderline" :color="color">
+        {{ title }}
       </VCardTitle>
       <VCardText class="borderline">
         <div>{{ line1 }}</div>

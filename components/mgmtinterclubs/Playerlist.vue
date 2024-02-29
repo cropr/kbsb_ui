@@ -1,16 +1,18 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { PLAYERSTATUS } from "@/util/interclubs"
 
-// store
+// stores
+import { useMgmtTokenStore } from "@/store/mgmttoken"
+import { useMgmtInterclubStore } from "@/store/mgmtinterclub"
 import { storeToRefs } from 'pinia'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
-const mgmtstore = useMgmtTokenStore()
-const { token: mgmttoken } = storeToRefs(mgmtstore)
+const mgmttokenstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmttokenstore)
+const mgmtinterclubstore = useMgmtInterclubStore()
+const { club, round } = storeToRefs(mgmtinterclubstore)
 
 // communication
-const emit = defineEmits(['playerlistUpdated'])
-defineExpose({ updateClub })
+defineExpose({ checkStore })
 const { $backend } = useNuxtApp()
 
 //  snackbar and loading widgets
@@ -22,10 +24,12 @@ const refloading = ref(null)
 let showLoading
 
 // datamodel
+const my = {
+  idclub: 0,
+  round: 0
+}
 const clubmembers = ref([])
 const clubmembers_id = ref(null)
-const icclub = ref({})
-const idclub = ref(0)
 const enrolled = ref(null)
 let playersindexed = {}
 const players = ref([])
@@ -35,6 +39,7 @@ const exportalldialog = ref(false)
 const exportallvisit = ref(0)
 const exportdialog = ref(false)
 const titularchoices = [{ title: "No titular", value: "" }]
+const showPlayerlist = computed(() => my.idclub)
 
 // validation
 const validationdialog = ref(false)
@@ -93,6 +98,16 @@ function canEdit(idbel) {
 function canExport(idbel) {
   return [PLAYERSTATUS.assigned, PLAYERSTATUS.unassiged].includes(
     playersindexed[idbel].nature)
+}
+
+async function checkStore() {
+  if (my.idclub != club.value.idclub) {
+    readICclub()
+    await getClubMembers()
+  }
+  if (players.value.length) {
+    fillinPlayerList()
+  }
 }
 
 function compareLastName(a, b) {
@@ -205,12 +220,12 @@ async function getClubMembers() {
   let reply, cutoff
   console.log('getClubMembers', clubmembers_id.value, idclub.value)
   // get club members for member database currently on old site
-  if (!idclub.value) {
+  if (!my.idclub) {
     clubmembers.value = []
     return
   }
   const now = new Date().valueOf()
-  if (idclub.value == clubmembers_id.value) {
+  if (my.idclub == clubmembers_id.value) {
     console.log("using cached version of members")
     return  // it is already read in
   }
@@ -219,7 +234,7 @@ async function getClubMembers() {
   try {
     reply = await $backend("member", "mgmt_getclubmembers", {
       token: mgmttoken.value,
-      idclub: idclub.value,
+      idclub: my.idclub,
     })
   } catch (error) {
     console.log('getClubMembers error')
@@ -228,7 +243,7 @@ async function getClubMembers() {
   } finally {
     showLoading(false)
   }
-  clubmembers_id.value = idclub.value
+  clubmembers_id.value = my.idclub
   cutoff = new Date(cutoffday3).getTime()
   const members = reply.data.filter((m) =>
     cutoff > new Date(m.date_affiliation).getTime()
@@ -269,16 +284,14 @@ function playerEdit2Player() {
 }
 
 function readICclub() {
-  console.log('reading IC Club', icclub.value.idclub,
-    icclub.value.players ? icclub.value.players.length : 0)
-  idclub.value = icclub.value.idclub
-  enrolled.value = icclub.value.enrolled
-  players.value = icclub.value.players ? [...icclub.value.players] : []
+  my.idclub = club.value.idclub
+  enrolled.value = club.value.enrolled
+  players.value = club.value.players ? [...club.value.players] : []
   players.value.forEach((m) => m.idbel = m.idnumber)
   playersindexed = Object.fromEntries(players.value.map((x) => [x.idbel, x]))
   titularchoices.splice(1, titularchoices.length - 1)
-  if (icclub.value.teams) {
-    icclub.value.teams.forEach((t) => {
+  if (club.value.teams) {
+    club.value.teams.forEach((t) => {
       titularchoices.push({ title: t.name, value: t.name })
     })
   }
@@ -300,7 +313,7 @@ async function savePlayerlist() {
     showLoading(true)
     reply = await $backend("interclub", "mgmt_setICclub", {
       token: mgmttoken.value,
-      idclub: idclub.value,
+      idclub: my.idclub,
       players: players.value,
     })
   } catch (error) {
@@ -319,16 +332,7 @@ function status(idbel) {
   return pl ? pl.idclubvisit : ""
 }
 
-async function updateClub(clb) {
-  console.log('Update club in playerlist', clb)
-  icclub.value = clb
-  readICclub()
-  await getClubMembers()
-  console.log('Status before filling', clubmembers.value.length, players.value.length)
-  if (players.value.length) {
-    fillinPlayerList()
-  }
-}
+
 
 async function validatePlayerlist() {
   if (!enrolled.value) {
@@ -340,7 +344,7 @@ async function validatePlayerlist() {
     showLoading(true)
     reply = await $backend("interclub", "mgmt_validateICplayers", {
       token: mgmttoken.value,
-      idclub: idclub.value,
+      idclub: my.idclub,
       players: players.value,
     })
   } catch (error) {
@@ -372,8 +376,8 @@ onMounted(() => {
     <SnackbarMessage ref="refsnackbar" />
     <ProgressLoading ref="refloading" />
     <h2>Player list</h2>
-    <p v-if="!idclub">Please select a club to view the interclubs player list</p>
-    <div v-if="idclub">
+    <p v-show="!showPlayerlist">Please select a club to view the interclubs player list</p>
+    <div v-show="showPlayerlist">
       <div v-if="enrolled">
         This club is enrolled in Interclubs 2023-24
       </div>

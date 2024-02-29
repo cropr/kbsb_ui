@@ -3,17 +3,20 @@ import { ref, onMounted } from 'vue'
 import { Downloads, Playerlist, Results, Venue, Teamforfeit } from '@/components/mgmtinterclubs'
 import ProgressLoading from '@/components/ProgressLoading.vue'
 import SnackbarMessage from '@/components/SnackbarMessage.vue'
-
 import { INTERCLUBS_ROUNDS } from '@/util/interclubs'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
-import { usePersonStore } from "@/store/person"
-import { storeToRefs } from 'pinia'
+
 
 // stores
-const mgmtstore = useMgmtTokenStore()
-const { token: mgmttoken } = storeToRefs(mgmtstore)
+import { useMgmtTokenStore } from "@/store/mgmttoken";
+import { useMgmtInterclubStore } from "@/store/mgmtinterclub"
+import { usePersonStore } from "@/store/person"
+import { storeToRefs } from 'pinia'
+const mgmttokenstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmttokenstore)
 const personstore = usePersonStore();
 const { person } = storeToRefs(personstore)
+const mgmtinterclubstore = useMgmtInterclubStore()
+const { club, round } = storeToRefs(mgmtinterclubstore)
 
 //  snackbar and loading widgets
 const refsnackbar = ref(null)
@@ -23,13 +26,11 @@ let showLoading
 
 // datamodel
 const clubs = ref([])
-const icclub = ref({})          // the icclub data
-const idclub = ref(null)
-const club = ref(null)          // the mgmt club details 
-const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x) => {
+const roundchoices = Object.keys(INTERCLUBS_ROUNDS).map((x) => {
   return { value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}` }
 })
-const round = ref("1")
+const myround = ref(null)
+const myidclub = ref(null)
 
 // communication
 const { $backend } = useNuxtApp()
@@ -39,28 +40,7 @@ const refplayerlist = ref(null)
 const refresults = ref(null)
 const refvenues = ref(null)
 const refteamforfeit = ref(null)
-function changeTab() {
-  console.log('changeTab', tab.value)
-  switch (tab.value) {
-    case 'downloads':
-      refdownloads.value.updateClub(icclub.value)
-      refdownloads.value.updateRound(round.value)
-      break
-    case 'playerlist':
-      refplayerlist.value.updateClub(icclub.value)
-      break
-    case 'results':
-      refresults.value.updateClub(icclub.value)
-      refresults.value.updateRound(round.value)
-      break
-    case 'teamforfeit':
-      refteamforfeit.value.updateClub(icclub.value)
-      break
-    case 'venues':
-      refvenues.value.updateClub(icclub.value)
-      break
-  }
-}
+
 
 
 // layout + header
@@ -104,7 +84,7 @@ async function checkAuth() {
   finally {
     showLoading(false)
   }
-  mgmtstore.updateToken(reply.data)
+  mgmttokenstore.updateToken(reply.data)
 }
 
 async function getClubs() {
@@ -127,41 +107,51 @@ async function getClubs() {
 }
 
 async function getClubDetails() {
-  let reply
-  icclub.value = {}
-  if (idclub.value) {
+  if (myidclub.value) {
     showLoading(true)
     try {
-      reply = await $backend("interclub", "mgmt_getICclub", {
-        idclub: idclub.value,
+      const reply = await $backend("interclub", "mgmt_getICclub", {
+        idclub: myidclub.value,
         token: mgmttoken.value
       })
+      mgmtinterclubstore.updateClub(reply.data)
     } catch (error) {
       showSnackbar(error.message)
-      return
+      mgmtinterclubstore.updateClub({})
     } finally {
       showLoading(false)
+      updatedStore()
     }
-    icclub.value = reply.data
   }
-  refdownloads.value.updateClub(icclub.value)
-  refplayerlist.value.updateClub(icclub.value)
-  refresults.value.updateClub(icclub.value)
-  refvenues.value.updateClub(icclub.value)
+
 }
 
-function onPlayerlistUpdated() {
-  console.log('player list updated')
+function updateRound() {
+  mgmtinterclubstore.updateRound(myround.value)
+  updatedStore()
 }
 
-function selectClub() {
-  getClubDetails()
+function updatedStore() {
+  console.log('updatedStore', tab.value)
+  switch (tab.value) {
+    case 'downloads':
+      refdownloads.value.checkStore()
+      break
+    case 'playerlist':
+      refplayerlist.value.checkStore()
+      break
+    case 'results':
+      refresults.value.checkStore()
+      break
+    case 'teamforfeit':
+      refteamforfeit.value.checkStore()
+      break
+    case 'venues':
+      refvenues.value.checkStore()
+      break
+  }
 }
 
-function selectRound() {
-  refdownloads.value.updateRound(round.value)
-  refresults.value.updateRound(round.value)
-}
 
 // triggers
 
@@ -170,7 +160,6 @@ onMounted(() => {
   showLoading = refloading.value.showLoading
   checkAuth()
   getClubs()
-  selectRound()
 })
 
 
@@ -185,30 +174,30 @@ onMounted(() => {
       <VCardText>
         <VRow>
           <VCol cols="12" sm="6">
-            <VAutocomplete v-model="idclub" :items="clubs" item-title="merged" item-value="idclub"
-              color="purple" label="Club" clearable @update:model-value="selectClub">
+            <VAutocomplete v-model="myidclub" :items="clubs" item-title="merged" item-value="idclub"
+              color="purple" label="Club" clearable @update:model-value="getClubDetails">
             </VAutocomplete>
           </VCol>
           <VCol cols="12" sm="6">
-            <VSelect v-model="round" :items="ic_rounds" label="Round"
-              @update:model-value="selectRound">
+            <VSelect v-model="myround" :items="roundchoices" label="Round"
+              @update:model-value="updateRound">
             </VSelect>
           </VCol>
         </VRow>
       </VCardText>
     </VCard>
     <h3 class="mt-2">
-      Selected club: {{ icclub.idclub }} {{ icclub.name }}
+      Selected club: {{ club.idclub }} {{ club.name }}
     </h3>
     <div class="elevation-2">
-      <VTabs v-model="tab" color="purple" @update:modelValue="changeTab">
+      <VTabs v-model="tab" color="purple" @update:modelValue="updatedStore">
         <VTab value="results">Results</VTab>
         <VTab value="venues">Venues</VTab>
         <VTab value="playerlist">Player lists</VTab>
         <VTab value="teamforfeit">Team Forfeiting</VTab>
         <VTab value="downloads">Downloads</VTab>
       </VTabs>
-      <VWindow v-model="tab" @update:modelValue="changeTab">
+      <VWindow v-model="tab" @update:modelValue="updatedStore">
         <VWindowItem value="results" :eager="true">
           <Results ref="refresults" />
         </VWindowItem>
@@ -216,7 +205,7 @@ onMounted(() => {
           <Venue ref="refvenues" />
         </VWindowItem>
         <VWindowItem value="playerlist" :eager="true">
-          <Playerlist ref="refplayerlist" @playerlist-updated="onPlayerlistUpdated" />
+          <Playerlist ref="refplayerlist" />
         </VWindowItem>
         <VWindowItem value="teamforfeit" :eager="true">
           <Teamforfeit ref="refteamforfeit" />

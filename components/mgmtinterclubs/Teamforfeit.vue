@@ -3,12 +3,15 @@ import { ref } from 'vue'
 
 // stores
 import { useMgmtTokenStore } from "@/store/mgmttoken"
+import { useMgmtInterclubStore } from "@/store/mgmtinterclub"
 import { storeToRefs } from 'pinia'
-const mgmtstore = useMgmtTokenStore()
-const { token: mgmttoken } = storeToRefs(mgmtstore)
+const mgmttokenstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmttokenstore)
+const mgmtinterclubstore = useMgmtInterclubStore()
+const { club } = storeToRefs(mgmtinterclubstore)
 
 // communication
-defineExpose({ updateClub })
+defineExpose({ checkStore })
 const { $backend } = useNuxtApp()
 
 //  snackbar, loading and confirm widgets
@@ -21,12 +24,25 @@ const refconfirm = ref(null)
 let showSnackbar, showLoading, showConfirm
 
 // datamodel
-const idclub = ref(0)
+const my = {
+  idclub: 0,
+  round: 0,
+}
 const icseries = ref([])
 const teamchoices = ref([])
 const teamselected = ref(null)
 
 // methods alphabetically
+
+async function checkStore() {
+  // check if the store contain different value than the local values
+  // is triggered by the parent component
+  if (my.idclub != club.value.idclub) {
+    my.idclub = club.value.idclub
+    teamselected.value = null
+    await getICSeries()
+  }
+}
 
 function confirmForfeit() {
   showConfirm(`Are you sure to register a forfeiting for team ${teamselected.value.name}? ` +
@@ -61,14 +77,14 @@ async function getICSeries() {
   console.log("team forfeit get IC series")
   // get the pairing data limited to current club 
   let reply
-  if (!idclub.value) {
+  if (!my.idclub) {
     icseries.value = {}
     return
   }
   showLoading(true)
   try {
     reply = await $backend("interclub", "mgmt_getICseries", {
-      idclub: idclub.value,
+      idclub: my.idclub,
       token: mgmttoken.value
     })
   } catch (error) {
@@ -89,7 +105,7 @@ async function processICSeries() {
   teamchoices.value = []
   icseries.value.forEach((s) => {
     s.teams.forEach((t) => {
-      if (t.idclub == idclub.value && !t.teamforfeit) {
+      if (t.idclub == my.idclub && !t.teamforfeit) {
         teamchoices.value.push({
           title: `${t.name} (${t.division}${t.index})`,
           value: t,
@@ -117,11 +133,7 @@ async function registerForfait() {
   showSnackbar('Results saved')
 }
 
-async function updateClub(clb) {
-  idclub.value = clb.idclub
-  teamselected.value = null
-  await getICSeries()
-}
+
 
 onMounted(() => {
   showSnackbar = refsnackbar.value.showSnackbar
@@ -137,8 +149,8 @@ onMounted(() => {
     <ProgressLoading ref="refloading" />
     <ConfirmDialog ref="refconfirm" />
     <h2>Team Forfeiting</h2>
-    <p v-if="!idclub">Select a club to register a team forfeit</p>
-    <div v-if="idclub">
+    <p v-if="!my.idclub">Select a club to register a team forfeit</p>
+    <div v-if="my.idclub">
       <p>Select the team which is forfeiting</p>
       <v-select v-model="teamselected" :items="teamchoices" />
       <v-btn @click="confirmForfeit">Confirm</v-btn>
