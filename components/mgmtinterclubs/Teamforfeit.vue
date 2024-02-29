@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, nextTick } from 'vue'
 
 // stores
 import { useMgmtTokenStore } from "@/store/mgmttoken"
@@ -31,6 +31,7 @@ const my = {
 const icseries = ref([])
 const teamchoices = ref([])
 const teamselected = ref(null)
+const showTeamforfeit = ref(false)
 
 // methods alphabetically
 
@@ -40,16 +41,30 @@ async function checkStore() {
   if (my.idclub != club.value.idclub) {
     my.idclub = club.value.idclub
     teamselected.value = null
-    await getICSeries()
+    showTeamforfeit.value = !!my.idclub
+    if (my.idclub) {
+      await nextTick()
+      await getICSeries()
+    }
+    else {
+      icseries.value = []
+    }
   }
 }
 
 function confirmForfeit() {
-  showConfirm(`Are you sure to register a forfeiting for team ${teamselected.value.name}? ` +
-    "This will erase all results of this team, an action which cannot be undone easily.",
-    "Important remark:  Don't use this routine for the final round. " +
-    "  For the last round you should overrule all results of team manually.",
-    forfeitConfirmed)
+  showConfirm(
+    forfeitConfirmed,
+    {
+      title: "Confirm Fofeiting team",
+      line1: `Are you sure to register a forfeiting for team ${teamselected.value.name}?  
+This will erase all results of this team, an action which cannot be undone easily.`,
+      line2: `Important remark:  Don't use this routine for the final round.
+For the last round you should overrule all results of team manually.`,
+      bgcolor: "purple",
+      fgcolor: "white",
+    }
+  )
 }
 
 async function forfeitConfirmed() {
@@ -149,8 +164,8 @@ onMounted(() => {
     <ProgressLoading ref="refloading" />
     <ConfirmDialog ref="refconfirm" />
     <h2>Team Forfeiting</h2>
-    <p v-if="!my.idclub">Select a club to register a team forfeit</p>
-    <div v-if="my.idclub">
+    <p v-show="!showTeamforfeit">Select a club to register a team forfeit</p>
+    <div v-show="showTeamforfeit">
       <p>Select the team which is forfeiting</p>
       <v-select v-model="teamselected" :items="teamchoices" />
       <v-btn @click="confirmForfeit">Confirm</v-btn>

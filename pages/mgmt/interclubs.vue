@@ -60,11 +60,11 @@ async function checkAuth() {
   console.log('checking if auth is already set', mgmttoken.value)
   if (mgmttoken.value) return
   if (person.value.credentials.length === 0) {
-    navigateTo('/mgmt')
+    await navigateTo('/mgmt')
     return
   }
   if (!person.value.email.endsWith('@frbe-kbsb-ksb.be')) {
-    navigateTo('/mgmt')
+    await navigateTo('/mgmt')
     return
   }
   let reply
@@ -79,7 +79,7 @@ async function checkAuth() {
     })
   }
   catch (error) {
-    navigateTo('/mgmt')
+    await navigateTo('/mgmt')
   }
   finally {
     showLoading(false)
@@ -131,23 +131,23 @@ function updateRound() {
   updatedStore()
 }
 
-function updatedStore() {
+async function updatedStore() {
   console.log('updatedStore', tab.value)
   switch (tab.value) {
     case 'downloads':
-      refdownloads.value.checkStore()
+      await refdownloads.value.checkStore()
       break
     case 'playerlist':
-      refplayerlist.value.checkStore()
+      await refplayerlist.value.checkStore()
       break
     case 'results':
-      refresults.value.checkStore()
+      await refresults.value.checkStore()
       break
     case 'teamforfeit':
-      refteamforfeit.value.checkStore()
+      await refteamforfeit.value.checkStore()
       break
     case 'venues':
-      refvenues.value.checkStore()
+      await refvenues.value.checkStore()
       break
   }
 }

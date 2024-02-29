@@ -1,5 +1,5 @@
 <script setup>
-import { ref, computed } from 'vue'
+import { ref, computed, nextTick } from 'vue'
 import { PLAYERSTATUS } from "@/util/interclubs"
 
 // stores
@@ -22,6 +22,7 @@ const refsnackbar = ref(null)
 let showSnackbar
 const refloading = ref(null)
 let showLoading
+const showPlayerlist = ref(false)
 
 // datamodel
 const my = {
@@ -29,7 +30,6 @@ const my = {
   round: 0
 }
 const clubmembers = ref([])
-const clubmembers_id = ref(null)
 const enrolled = ref(null)
 let playersindexed = {}
 const players = ref([])
@@ -39,7 +39,6 @@ const exportalldialog = ref(false)
 const exportallvisit = ref(0)
 const exportdialog = ref(false)
 const titularchoices = [{ title: "No titular", value: "" }]
-const showPlayerlist = computed(() => my.idclub)
 
 // validation
 const validationdialog = ref(false)
@@ -101,12 +100,23 @@ function canExport(idbel) {
 }
 
 async function checkStore() {
+  console.log('checkStore playerlist')
   if (my.idclub != club.value.idclub) {
-    readICclub()
-    await getClubMembers()
-  }
-  if (players.value.length) {
-    fillinPlayerList()
+    // change detected
+    my.idclub = club.value.idclub
+    showPlayerlist.value = !!my.idclub
+    await nextTick()
+    if (my.idclub) {
+      readICclub()
+      await getClubMembers()
+      if (players.value.length) {
+        fillinPlayerList()
+      }
+    }
+    else {
+      players.value = []
+      playersindexed = {}
+    }
   }
 }
 
@@ -218,17 +228,13 @@ function fillinPlayerList() {
 
 async function getClubMembers() {
   let reply, cutoff
-  console.log('getClubMembers', clubmembers_id.value, idclub.value)
+  console.log('getClubMembers', my.idclub)
   // get club members for member database currently on old site
   if (!my.idclub) {
     clubmembers.value = []
     return
   }
   const now = new Date().valueOf()
-  if (my.idclub == clubmembers_id.value) {
-    console.log("using cached version of members")
-    return  // it is already read in
-  }
   showLoading(true)
   clubmembers.value = []
   try {
@@ -243,7 +249,6 @@ async function getClubMembers() {
   } finally {
     showLoading(false)
   }
-  clubmembers_id.value = my.idclub
   cutoff = new Date(cutoffday3).getTime()
   const members = reply.data.filter((m) =>
     cutoff > new Date(m.date_affiliation).getTime()
@@ -284,7 +289,6 @@ function playerEdit2Player() {
 }
 
 function readICclub() {
-  my.idclub = club.value.idclub
   enrolled.value = club.value.enrolled
   players.value = club.value.players ? [...club.value.players] : []
   players.value.forEach((m) => m.idbel = m.idnumber)
@@ -331,8 +335,6 @@ function status(idbel) {
   const pl = playersindexed[idbel]
   return pl ? pl.idclubvisit : ""
 }
-
-
 
 async function validatePlayerlist() {
   if (!enrolled.value) {
