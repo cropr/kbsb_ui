@@ -1,21 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-import {
-  VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog,
-  VSpacer, VTextField, VIcon
-} from 'vuetify/lib/components/index.mjs';
-import { VDataTable } from 'vuetify/lib/labs/components.mjs';
+import { ref, computed, nextTick } from 'vue'
 import { PLAYERSTATUS } from "@/util/interclubs"
 
-// store
+// stores
+import { useMgmtTokenStore } from "@/store/mgmttoken"
+import { useMgmtInterclubStore } from "@/store/mgmtinterclub"
 import { storeToRefs } from 'pinia'
-import { useMgmtTokenStore } from "@/store/mgmttoken";
-const mgmtstore = useMgmtTokenStore()
-const { token: mgmttoken } = storeToRefs(mgmtstore)
+const mgmttokenstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmttokenstore)
+const mgmtinterclubstore = useMgmtInterclubStore()
+const { club, round } = storeToRefs(mgmtinterclubstore)
 
 // communication
-const emit = defineEmits(['playerlistUpdated'])
-defineExpose({ updateClub })
+defineExpose({ checkStore })
 const { $backend } = useNuxtApp()
 
 //  snackbar and loading widgets
@@ -25,12 +22,14 @@ const refsnackbar = ref(null)
 let showSnackbar
 const refloading = ref(null)
 let showLoading
+const showPlayerlist = ref(false)
 
 // datamodel
+const my = {
+  idclub: 0,
+  round: 0
+}
 const clubmembers = ref([])
-const clubmembers_id = ref(null)
-const icclub = ref({})
-const idclub = ref(0)
 const enrolled = ref(null)
 let playersindexed = {}
 const players = ref([])
@@ -98,6 +97,27 @@ function canEdit(idbel) {
 function canExport(idbel) {
   return [PLAYERSTATUS.assigned, PLAYERSTATUS.unassiged].includes(
     playersindexed[idbel].nature)
+}
+
+async function checkStore() {
+  console.log('checkStore playerlist')
+  if (my.idclub != club.value.idclub) {
+    // change detected
+    my.idclub = club.value.idclub
+    showPlayerlist.value = !!my.idclub
+    await nextTick()
+    if (my.idclub) {
+      readICclub()
+      await getClubMembers()
+      if (players.value.length) {
+        fillinPlayerList()
+      }
+    }
+    else {
+      players.value = []
+      playersindexed = {}
+    }
+  }
 }
 
 function compareLastName(a, b) {
@@ -208,23 +228,19 @@ function fillinPlayerList() {
 
 async function getClubMembers() {
   let reply, cutoff
-  console.log('getClubMembers', clubmembers_id.value, idclub.value)
+  console.log('getClubMembers', my.idclub)
   // get club members for member database currently on old site
-  if (!idclub.value) {
+  if (!my.idclub) {
     clubmembers.value = []
     return
   }
   const now = new Date().valueOf()
-  if (idclub.value == clubmembers_id.value) {
-    console.log("using cached version of members")
-    return  // it is already read in
-  }
   showLoading(true)
   clubmembers.value = []
   try {
     reply = await $backend("member", "mgmt_getclubmembers", {
       token: mgmttoken.value,
-      idclub: idclub.value,
+      idclub: my.idclub,
     })
   } catch (error) {
     console.log('getClubMembers error')
@@ -233,7 +249,6 @@ async function getClubMembers() {
   } finally {
     showLoading(false)
   }
-  clubmembers_id.value = idclub.value
   cutoff = new Date(cutoffday3).getTime()
   const members = reply.data.filter((m) =>
     cutoff > new Date(m.date_affiliation).getTime()
@@ -274,16 +289,13 @@ function playerEdit2Player() {
 }
 
 function readICclub() {
-  console.log('reading IC Club', icclub.value.idclub,
-    icclub.value.players ? icclub.value.players.length : 0)
-  idclub.value = icclub.value.idclub
-  enrolled.value = icclub.value.enrolled
-  players.value = icclub.value.players ? [...icclub.value.players] : []
+  enrolled.value = club.value.enrolled
+  players.value = club.value.players ? [...club.value.players] : []
   players.value.forEach((m) => m.idbel = m.idnumber)
   playersindexed = Object.fromEntries(players.value.map((x) => [x.idbel, x]))
   titularchoices.splice(1, titularchoices.length - 1)
-  if (icclub.value.teams) {
-    icclub.value.teams.forEach((t) => {
+  if (club.value.teams) {
+    club.value.teams.forEach((t) => {
       titularchoices.push({ title: t.name, value: t.name })
     })
   }
@@ -305,7 +317,7 @@ async function savePlayerlist() {
     showLoading(true)
     reply = await $backend("interclub", "mgmt_setICclub", {
       token: mgmttoken.value,
-      idclub: idclub.value,
+      idclub: my.idclub,
       players: players.value,
     })
   } catch (error) {
@@ -324,17 +336,6 @@ function status(idbel) {
   return pl ? pl.idclubvisit : ""
 }
 
-async function updateClub(clb) {
-  console.log('Update club in playerlist', clb)
-  icclub.value = clb
-  readICclub()
-  await getClubMembers()
-  console.log('Status before filling', clubmembers.value.length, players.value.length)
-  if (players.value.length) {
-    fillinPlayerList()
-  }
-}
-
 async function validatePlayerlist() {
   if (!enrolled.value) {
     savePlayerlist()
@@ -345,7 +346,7 @@ async function validatePlayerlist() {
     showLoading(true)
     reply = await $backend("interclub", "mgmt_validateICplayers", {
       token: mgmttoken.value,
-      idclub: idclub.value,
+      idclub: my.idclub,
       players: players.value,
     })
   } catch (error) {
@@ -372,13 +373,14 @@ onMounted(() => {
 })
 
 </script>
+
 <template>
   <v-container>
     <SnackbarMessage ref="refsnackbar" />
     <ProgressLoading ref="refloading" />
     <h2>Player list</h2>
-    <p v-if="!idclub">Please select a club to view the interclubs player list</p>
-    <div v-if="idclub">
+    <p v-show="!showPlayerlist">Please select a club to view the interclubs player list</p>
+    <div v-show="showPlayerlist">
       <div v-if="enrolled">
         This club is enrolled in Interclubs 2023-24
       </div>
@@ -388,46 +390,52 @@ onMounted(() => {
           Export all players
         </VBtn>
       </div>
-      <VDataTable :items="players" :headers="headers" density="compact" :items-per-page="itemsPerPage"
-        :items-per-page-options="itemsPerPageOptions"
+      <VDataTable :items="players" :headers="headers" density="compact"
+        :items-per-page="itemsPerPage" :items-per-page-options="itemsPerPageOptions"
         :sort-by="[{ key: 'assignedrating', order: 'desc' }]">
         <template v-slot:item.index="{ item, index }">
-          <span :class="rowstyle(item.columns.idbel)">
+          <span :class="rowstyle(item.idbel)">
             {{ index + 1 }}
           </span>
         </template>
+
         <template v-slot:item.fullname="{ item }">
-          <span :class="rowstyle(item.columns.idbel)">
-            {{ item.columns.fullname }}
+          <span :class="rowstyle(item.idbel)">
+            {{ item.fullname }}
           </span>
         </template>
+
         <template v-slot:item.idbel="{ item }">
-          <span :class="rowstyle(item.columns.idbel)">
-            {{ item.columns.idbel }}
+          <span :class="rowstyle(item.idbel)">
+            {{ item.idbel }}
           </span>
         </template>
+
         <template v-slot:item.assignedrating="{ item }">
-          <span :class="rowstyle(item.columns.idbel)">
-            {{ item.columns.assignedrating }}
+          <span :class="rowstyle(item.idbel)">
+            {{ item.assignedrating }}
           </span>
         </template>
+
         <template v-slot:item.idclub="{ item }">
-          <span :class="rowstyle(item.columns.idbel)">
-            {{ item.columns.idclub }}
+          <span :class="rowstyle(item.idbel)">
+            {{ item.idclub }}
           </span>
         </template>
+
         <template v-slot:item.nature="{ item }">
-          <span v-show="item.columns.nature == 'confirmedout'">
-            <VIcon>mdi-arrow-right-bold</VIcon>{{ status(item.columns.idbel) }}
+          <span v-show="item.nature == 'confirmedout'">
+            <VIcon>mdi-arrow-right-bold</VIcon>{{ status(item.idbel) }}
           </span>
         </template>
+
         <template v-slot:item.action="{ item }">
           <VBtn density="compact" color="green" icon="mdi-pencil" variant="text"
-            v-show="canEdit(item.columns.idbel)" @click="openEditPlayer(item.columns.idbel)" />
+            v-show="canEdit(item.idbel)" @click="openEditPlayer(item.idbel)" />
           <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text"
-            v-show="canExport(item.columns.idbel)" @click="openExportPlayer(item.columns.idbel)" />
+            v-show="canExport(item.idbel)" @click="openExportPlayer(item.idbel)" />
           <VBtn density="compact" color="green" icon="mdi-arrow-left" variant="text"
-            v-show="canAssign(item.columns.idbel)" @click="assignPlayer(item.columns.idbel)" />
+            v-show="canAssign(item.idbel)" @click="assignPlayer(item.idbel)" />
         </template>
       </VDataTable>
       <div>

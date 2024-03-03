@@ -77,7 +77,10 @@ export default defineNuxtPlugin((nuxtApp) => {
         if (!f) {
           console.log("method not existing", fact, method);
         }
-        return await f(options);
+        let now = new Date()
+        let reply = await f(options);
+        console.warn("backend call", method, "replied in ms:", new Date() - now)
+        return reply
       },
     },
   };
