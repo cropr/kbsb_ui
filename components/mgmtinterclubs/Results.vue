@@ -1,15 +1,18 @@
 <script setup>
-import { ref } from 'vue'
-import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION } from '@/util/interclubs'
+import { ref, computed, nextTick } from 'vue'
+import { INTERCLUBS_ROUNDS, PLAYERS_DIVISION, resultchoices, overrulechoices } from '@/util/interclubs'
 
 // stores
 import { useMgmtTokenStore } from "@/store/mgmttoken"
+import { useMgmtInterclubStore } from "@/store/mgmtinterclub"
 import { storeToRefs } from 'pinia'
-const mgmtstore = useMgmtTokenStore()
-const { token: mgmttoken } = storeToRefs(mgmtstore)
+const mgmttokenstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmttokenstore)
+const mgmtinterclubstore = useMgmtInterclubStore()
+const { club, round } = storeToRefs(mgmtinterclubstore)
 
 // communication
-defineExpose({ updateClub, updateRound })
+defineExpose({ checkStore })
 const { $backend } = useNuxtApp()
 
 //  snackbar and loading widgets
@@ -21,40 +24,25 @@ const refloading = ref(null)
 let showLoading
 
 // datamodel
-const idclub = ref(0)
-let roundold = -1
+const my = {
+  idclub: 0,
+  round: 0,
+}
 const playerlist_buffer = ref({})
 let playersindexed = {}
 const icseries = ref([])
-const round = ref(-1)
 const teamresults = ref([])
-const ic_rounds = Object.keys(INTERCLUBS_ROUNDS).map((x) => {
-  return { value: x, title: `R${x}: ${INTERCLUBS_ROUNDS[x]}` }
-})
-const games = ref([])
-
-const resultchoices = ["1-0", "½-½", "0-1", "1-0 FF", "0-1 FF", "0-0 FF", ""]
-
-const overrulechoices = [
-  { title: "No overruling", value: "" },
-  { title: "1-0", value: "1-0" },
-  { title: "½-½", value: "½-½" },
-  { title: "0-1", value: "0-1" },
-  { title: "1-0 FF", value: "1-0 FF" },
-  { title: "0-1 FF", value: "0-1 FF" },
-  { title: "0-0 FF", value: "0-0 FF" },
-]
+const showResults = ref(false)
 
 // methods alphabetically
 
-function calc_points(tr) {
+function calc_points(enc) {
   let bphome = 0
   let bpvisit = 0
-  let mphome = 0
-  let mpvisit = 0
   let allfilled = true
-  tr.games.forEach((g) => {
-    let result = g.overruled ? g.overruled : g.result
+  let teamforfeit = false
+  enc.games.forEach((g) => {
+    let result = (g.overruled && g.overruled != "NOR") ? g.overruled : g.result
     switch (result) {
       case "1-0":
       case "1-0 FF":
@@ -64,23 +52,48 @@ function calc_points(tr) {
         bphome += 1
         bpvisit += 1
         break
+      case "½-0":
+        bphome += 1
+        break
+      case "0-½":
+        bpvisit += 1
+        break
       case "0-1":
       case "0-1 FF":
         bpvisit += 2
+        break
+      case "Team FF":
+        teamforfeit = true
         break
       case "":
         allfilled = false
         break;
     }
   })
-  tr.boardpoints = `${bphome / 2}-${bpvisit / 2}`
+  enc.boardpoints = `${bphome / 2}-${bpvisit / 2}`
   if (!allfilled) {
-    tr.matchpoints = ""
+    enc.matchpoints = ""
+  }
+  else if (teamforfeit) {
+    enc.matchpoints = "TFF"
   }
   else {
-    if (bphome > bpvisit) tr.matchpoints = "2-0"
-    if (bphome == bpvisit) tr.matchpoints = "1-1"
-    if (bphome < bpvisit) tr.matchpoints = "0-2"
+    if (bphome > bpvisit) enc.matchpoints = "2-0"
+    if (bphome == bpvisit) enc.matchpoints = "1-1"
+    if (bphome < bpvisit) enc.matchpoints = "0-2"
+  }
+}
+
+async function checkStore() {
+  await nextTick()
+  if (club.value.idclub != my.idclub || round.value != my.round) {
+    teamresults.value = []
+    icseries.value = []
+    my.idclub = club.value.idclub
+    my.round = round.value ? parseInt(round.value) : 0
+    showResults.value = my.idclub && my.round
+    await getICSeries()
+    processICplayerlist()
   }
 }
 
@@ -96,114 +109,116 @@ function clubLabel(pairingnr, teams) {
 }
 
 async function getICclub(clb_id) {
-  console.log('gettting playerlist', clb_id)
   if (playerlist_buffer.value[clb_id]) {
     console.log('playerlist in cache', clb_id)
     return
   }
-  console.log('calling anon_getICclub', clb_id)
-  let reply
   showLoading(true)
   try {
-    reply = await $backend("interclub", "anon_getICclub", {
+    let now = new Date()
+    const reply = await $backend("interclub", "anon_getICclub", {
       idclub: clb_id
     })
+    console.log('calling anon_getICclub', clb_id, 'in ms:', new Date() - now)
+    showLoading(false)
+    processICplayerlist(clb_id, reply.data)
   } catch (error) {
-    snowSnackbar(error.message)
+    console.error('calling anon_getICclub failed', clb_id, error)
+    showSnackbar(error.message)
     return
   }
   finally {
     showLoading(false)
   }
-  let cl = reply.data
-  processICplayerlist(cl)
 }
 
 async function getICSeries() {
   // get the pairing data limited to current round and club 
   let reply
-  if (!idclub.value) {
-    icseries.value = {}
+  if (!my.idclub || !my.round) {
+    console.log("Skipping get ICseries: idclub or round not set")
     return
   }
   showLoading(true)
   try {
     reply = await $backend("interclub", "mgmt_getICseries", {
-      round: round.value,
-      idclub: idclub.value,
+      round: my.round,
+      idclub: my.idclub,
       token: mgmttoken.value
     })
   } catch (error) {
     console.log('NOK', error)
     if (error.code == 401) {
-      // TODO
+      await navigateTo('/mgmt')
     }
     return
   } finally {
+    icseries.value = reply.data
     showLoading(false)
+    await processICSeries()
   }
-  icseries.value = reply.data
-  await processICSeries()
 }
 
-function processICplayerlist(ic_clb) {
-  console.log('processing playerlist', ic_clb.idclub)
-  if (!ic_clb && !ic_clb.idclub) return
-  let players = ic_clb.players.filter((p) => p.nature != "confirmedout")
-  playerlist_buffer.value[ic_clb.idclub] = players
-  players.forEach((p) => {
+function processICplayerlist(idclub, clubdata) {
+  // processing the playerlist from the club details available in the store
+  if (!idclub) return
+  let players = []
+  clubdata.players.forEach((p) => {
+    if (p.nature == "confirmedout") return
     p.full = `${p.idnumber} ${p.last_name}, ${p.first_name}`
+    players.push(p)
     playersindexed[p.idnumber] = p
   })
+  playerlist_buffer.value[idclub] = players
 }
 
 async function processICSeries() {
   // process the pairing data received from the server
-  let tra = []
-  teamresults.value = []
+  let procencs = [] // encounters to be processed
   icseries.value.forEach((s) => {
     const { division, index } = s
-    s.rounds[0].encounters.forEach(function (enc) {
+    s.rounds[0].encounters.forEach((enc) => {
       // skip byes
       if (!enc.icclub_home || !enc.icclub_visit) return
       // skip encounters of other clubs
-      if (![enc.icclub_home, enc.icclub_visit].includes(idclub.value)) return
-      getICclub(enc.icclub_home)
-      getICclub(enc.icclub_visit)
-      let encounter = {
-        division: division,
+      if (![enc.icclub_home, enc.icclub_visit].includes(my.idclub)) return
+      procencs.push({
         games: enc.games,
+        division: division,
+        index: index,
         icclub_home: enc.icclub_home,
         icclub_visit: enc.icclub_visit,
-        index: index,
         name_home: clubLabel(enc.pairingnr_home, s.teams),
         name_visit: clubLabel(enc.pairingnr_visit, s.teams),
         nrgames: PLAYERS_DIVISION[division],
         pairingnr_home: enc.pairingnr_home,
         pairingnr_visit: enc.pairingnr_visit,
-        round: round.value
-      }
-      // fill in default games if not yet existing
-      for (let i = encounter.games.length; i < encounter.nrgames; i++) {
-        encounter.games[i] = {
-          idnumber_home: null,
-          idnumber_visit: null,
-          result: "",
-          overruled: "",
-        }
-      }
-      encounter.games.forEach((g) => {
-        if (g.idnumber_home == 0) g.idnumber_home = null
-        if (g.idnumber_visit == 0) g.idnumber_visit = null
-        if (!g.overruled) g.overruled = ""
+        round: s.rounds[0].round,
       })
-      calc_points(encounter)
-      tra.push(encounter)
     })
   })
-  tra = tra.sort((a, b) => (a.division - b.division))
-  teamresults.value = [...tra]
-  roundold = round.value
+  let tresults = [] // team results collector
+  console.log('procencs', procencs)
+  for (const enc of procencs) {
+    await Promise.all([getICclub(enc.icclub_home), getICclub(enc.icclub_visit)])
+    // fill in default games if not yet existing
+    for (let i = enc.games.length; i < enc.nrgames; i++) {
+      enc.games[i] = {
+        idnumber_home: null,
+        idnumber_visit: null,
+        result: "",          // NOTPLAYED 
+        overruled: "NOR",    // NOTOVERRULED
+      }
+    }
+    enc.games.forEach((g) => {
+      if (g.idnumber_home == 0) g.idnumber_home = null
+      if (g.idnumber_visit == 0) g.idnumber_visit = null
+      if (!g.overruled) g.overruled = "NOR"
+    })
+    calc_points(enc)
+    tresults.push(enc)
+    teamresults.value = [...tresults.sort((a, b) => (a.division - b.division))]
+  }
 }
 
 async function saveResults() {
@@ -224,24 +239,6 @@ async function saveResults() {
   showSnackbar('Results saved')
 }
 
-function updateClub(clb) {
-  idclub.value = clb.idclub
-  if (!clb.idclub) {
-    playerlist_buffer.value = {}
-    teamresults.value = []
-    icseries.value = []
-    return
-  }
-  if (!playerlist_buffer[idclub.value]) {
-    processICplayerlist(clb)
-  }
-}
-
-function updateRound(rnd) {
-  round.value = rnd
-  getICSeries()
-}
-
 onMounted(() => {
   showSnackbar = refsnackbar.value.showSnackbar
   showLoading = refloading.value.showLoading
@@ -254,8 +251,8 @@ onMounted(() => {
     <SnackbarMessage ref="refsnackbar" />
     <ProgressLoading ref="refloading" />
     <h2>Results</h2>
-    <p v-if="!idclub">Please select a club to view the interclubs player list</p>
-    <div v-if="idclub">
+    <p v-show="!showResults">Please select a club to view the interclubs player list</p>
+    <div v-show="showResults">
       <VBtn color="purple" @click="saveResults">Save results</VBtn>
       <v-card v-for="tr in teamresults" class="my-2">
         <v-card-title>
