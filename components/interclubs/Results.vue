@@ -31,12 +31,14 @@ const { t } = useI18n()
 
 // methods alphabetically
 
-function calc_points(tr) {
+function calc_points(enc) {
   let bphome = 0
   let bpvisit = 0
   let allfilled = true
-  tr.games.forEach((g) => {
-    switch (g.result) {
+  let teamforfeit = false
+  enc.games.forEach((g) => {
+    let result = isOverruled(g) ? g.overruled : g.result
+    switch (result) {
       case "1-0":
       case "1-0 FF":
         bphome += 2
@@ -45,23 +47,35 @@ function calc_points(tr) {
         bphome += 1
         bpvisit += 1
         break
+      case "½-0":
+        bphome += 1
+        break
+      case "0-½":
+        bpvisit += 1
+        break
       case "0-1":
       case "0-1 FF":
         bpvisit += 2
+        break
+      case "Team FF":
+        teamforfeit = true
         break
       case "":
         allfilled = false
         break;
     }
   })
-  tr.boardpoints = `${bphome / 2}-${bpvisit / 2}`
+  enc.boardpoints = `${bphome / 2}-${bpvisit / 2}`
   if (!allfilled) {
-    tr.matchpoints = ""
+    enc.matchpoints = ""
+  }
+  else if (teamforfeit) {
+    enc.matchpoints = "TFF"
   }
   else {
-    if (bphome > bpvisit) tr.matchpoints = "2-0"
-    if (bphome == bpvisit) tr.matchpoints = "1-1"
-    if (bphome < bpvisit) tr.matchpoints = "0-2"
+    if (bphome > bpvisit) enc.matchpoints = "2-0"
+    if (bphome == bpvisit) enc.matchpoints = "1-1"
+    if (bphome < bpvisit) enc.matchpoints = "0-2"
   }
 }
 
@@ -151,6 +165,11 @@ async function getICSeries() {
 
 async function gotoLogin() {
   await navigateTo(localePath('/tools/oldlogin?url=__interclubs__manager'))
+}
+
+
+function isOverruled(game) {
+  return game.overruled && game.overruled != "NOR"
 }
 
 async function readICSeries() {
@@ -331,7 +350,7 @@ function sign(tr, who) {
         <v-card-text>
           <v-container>
             <v-row v-for="(g, ix) in tr.games" class="d-flex">
-              <v-col cols="5">
+              <v-col cols="4">
                 <VAutocomplete v-model="g.idnumber_home" density="compact" clearable
                   :items="playerlist_buffer[tr.icclub_home]" item-title="full" item-value="idnumber"
                   :label="t('Player home') + ' ' + (ix + 1)" :hide-details="true" />
@@ -340,10 +359,16 @@ function sign(tr, who) {
                 <VSelect v-model="g.result" :items="resultchoices" density="compact"
                   :hide-details="true" @update:model-value="calc_points(tr)" />
               </v-col>
-              <v-col col="5">
+              <v-col cols="4">
                 <VAutocomplete v-model="g.idnumber_visit" density="compact"
-                  :items="playerlist_buffer[tr.icclub_visit]" item-title="full" item-value="idnumber"
-                  :label="t('Player visit') + ' ' + (ix + 1)" :hide-details="true" clearable />
+                  :items="playerlist_buffer[tr.icclub_visit]" item-title="full"
+                  item-value="idnumber" :label="t('Player visit') + ' ' + (ix + 1)"
+                  :hide-details="true" clearable />
+              </v-col>
+              <v-col col="2">
+                <div v-show="isOverruled(g)" class="text-purple font-weight-bold">
+                  {{ g.overruled }}
+                </div>
               </v-col>
             </v-row>
             <VDivider />
@@ -354,7 +379,7 @@ function sign(tr, who) {
               <v-col col="4" v-show="tr.matchpoints && !tr.signhome_idnumber">
                 {{ t('home') }}
                 <v-btn @click="sign(tr, 'home')" color="green" density="compact">{{ t('sign')
-                }}</v-btn>
+                  }}</v-btn>
               </v-col>
               <v-col cols="2">
                 MP: {{ tr.matchpoints }}
@@ -368,7 +393,7 @@ function sign(tr, who) {
               <v-col col="4" v-show="tr.matchpoints && !tr.signvisit_idnumber">
                 {{ t('away') }}
                 <v-btn @click="sign(tr, 'away')" color="green" density="compact">{{ t('sign')
-                }}</v-btn>
+                  }}</v-btn>
               </v-col>
             </v-row>
           </v-container>
@@ -379,4 +404,3 @@ function sign(tr, who) {
 
   </v-container>
 </template>
-
