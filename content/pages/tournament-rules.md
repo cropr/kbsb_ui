@@ -9,6 +9,8 @@ content_nl: |-
 
   _Huidige versie goedgekeurd op de BAV van 17 juni 2023._
 
+  _Indien de teksten of zelfs de nuances in de talen van het Wedstrijdreglement van de KBSB zouden verschillen, is het reglement in het Nederlands dat geldt._
+
   ## Algemene schikkingen 
 
   ### Artikel 1 - Omschrijving van de bevoegdheden
@@ -1445,6 +1447,7 @@ title_fr: 'Règlement des tournois de la FRBÉ'
 content_fr: |-
   _Approuvé par l’Assemblée Générale Extraordinaire (AGE) du 20 juin 2009. Approuvé par l’Assemblée Générale (AG) du 20 mars 2010. Approuvé par l’AGE du 15 janvier 2011. Approuvé par l’AGE du 18 juin 2011. Approuvé par le CA du 04/09/2011. Approuvé par l’AGE du 26 novembre 2011. Approuvé par l’AGE du 2 juin 2012. Approuvé par l’AGE du 1 juin 2013. Approuvé par l'AG du 7 décembre 2013. Approuvé par l'AGE du 2 août 2014, élaboré par le CA du 23 août 2014. Approuvé par l’AG du 4 octobre 2014. Approuvé par l’AGE du 6 juin 2015. Approuvé par l’AG du 17 octobre 2015. Approuvé par l’AG du 22 octobre 2016. Approuvé par l’AGE du 25 février 2017. Approuvé par le C.A. le 1 juillet et le 2 septembre 2017. Approuvé par l’AG du 18 novembre 2017. Approuvé par l’AG du 20 octobre 2018. Approuvé par l’AG du 9 novembre 2019. Approuvé par l’AGE du 29 août 2020. Approuvé par l’AGE du 13 février 2021._
 
+  _Si les textes ou même les nuances dans les langues du Règlement des Tournois de la FRBE diffèrent, c’est le règlement en néerlandais qui fait foi._
 
   ## Dispositions générales
 
