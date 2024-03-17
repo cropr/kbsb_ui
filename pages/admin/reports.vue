@@ -1,6 +1,5 @@
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { VContainer, VRow, VCol, VCheckbox, } from 'vuetify/lib/components/index.mjs';
 
 const config = useRuntimeConfig()
 const { locale } = useI18n()
@@ -69,7 +68,7 @@ onMounted(() => (getReports()))
     <v-data-table :headers="headers" :items="filteredfiles" class="elevation-1" items-per-page="20"
       :items-per-page-options="pageoptions" :sort-by="[{ key: 'topicdate', order: 'desc' }]">
       <template v-slot:item.topic="{ item }">
-        {{ $t(item.columns.topic) }}
+        {{ $t(item.topic) }}
       </template>
       <template v-slot:item.path="{ item }">
         URL: <a :href="urlfile(item.raw.url)">{{ item.raw.name }}</a>

@@ -1,10 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import {
-  VContainer, VSelect, VBtn, VCard, VCardTitle, VCardText, VCardActions, VDivider, VDialog,
-  VSpacer, VTextField, VIcon, VAlert
-} from 'vuetify/lib/components/index.mjs';
-
 import { PLAYERSTATUS } from "@/util/interclubs"
 
 // store
@@ -386,45 +381,44 @@ onMounted(() => {
           Export all players
         </VBtn>
       </div>
-      <VDataTable :items="players" :headers="headers" density="compact" :items-per-page="itemsPerPage"
-        :items-per-page-options="itemsPerPageOptions"
+      <VDataTable :items="players" :headers="headers" density="compact"
+        :items-per-page="itemsPerPage" :items-per-page-options="itemsPerPageOptions"
         :sort-by="[{ key: 'assignedrating', order: 'desc' }]">
         <template v-slot:item.index="{ item, index }">
-          <span :class="rowstyle(item.columns.idnumber)">
+          <span :class="rowstyle(item.idnumber)">
             {{ index + 1 }}
           </span>
         </template>
         <template v-slot:item.fullname="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.fullname }}
+          <span :class="rowstyle(item.idnumber)">
+            {{ item.fullname }}
           </span>
         </template>
         <template v-slot:item.idnumber="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.idnumber }}
+          <span :class="rowstyle(item.idnumber)">
+            {{ item.idnumber }}
           </span>
         </template>
         <template v-slot:item.assignedrating="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.assignedrating }}
+          <span :class="rowstyle(item.idnumber)">
+            {{ item.assignedrating }}
           </span>
         </template>
         <template v-slot:item.idclub="{ item }">
-          <span :class="rowstyle(item.columns.idnumber)">
-            {{ item.columns.idclub }}
+          <span :class="rowstyle(item.idnumber)">
+            {{ item.idclub }}
           </span>
         </template>
         <template v-slot:item.action="{ item }">
-          <span v-show="item.columns.nature == 'confirmedout'">
-            <VIcon>mdi-arrow-right-bold</VIcon>{{ visitingclub(item.columns.idnumber) }}
+          <span v-show="item.nature == 'confirmedout'">
+            <VIcon>mdi-arrow-right-bold</VIcon>{{ visitingclub(item.idnumber) }}
           </span>
           <VBtn density="compact" color="green" icon="mdi-pencil" variant="text"
-            v-show="canEdit(item.columns.idnumber)" @click="openEditPlayer(item.columns.idnumber)" />
+            v-show="canEdit(item.idnumber)" @click="openEditPlayer(item.idnumber)" />
           <VBtn density="compact" color="red" icon="mdi-arrow-right" variant="text"
-            v-show="canExport(item.columns.idnumber)"
-            @click="openExportPlayer(item.columns.idnumber)" />
+            v-show="canExport(item.idnumber)" @click="openExportPlayer(item.idnumber)" />
           <VBtn density="compact" color="green" icon="mdi-arrow-left" variant="text"
-            v-show="canAssign(item.columns.idnumber)" @click="assignPlayer(item.columns.idnumber)" />
+            v-show="canAssign(item.idnumber)" @click="assignPlayer(item.idnumber)" />
         </template>
       </VDataTable>
       <div>

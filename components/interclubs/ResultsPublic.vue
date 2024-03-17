@@ -124,7 +124,7 @@ async function getICencounterdetails(series, enc) {
 }
 
 function isOverruled(game) {
-  return game.overruled
+  return game.overruled && game.overruled != "NOR"
 }
 
 function processSeries(s) {

@@ -1,15 +1,17 @@
 <script setup>
 import { ref } from 'vue'
-import { VContainer, VBtn } from "vuetify/components";
 
 // stores
 import { useMgmtTokenStore } from "@/store/mgmttoken"
+import { useMgmtInterclubStore } from "@/store/mgmtinterclub"
 import { storeToRefs } from 'pinia'
-const mgmtstore = useMgmtTokenStore()
-const { token: mgmttoken } = storeToRefs(mgmtstore) 
+const mgmttokenstore = useMgmtTokenStore()
+const { token: mgmttoken } = storeToRefs(mgmttokenstore)
+const mgmtinterclubstore = useMgmtInterclubStore()
+const { club, round } = storeToRefs(mgmtinterclubstore)
 
 // communication 
-defineExpose({ updateClub, updateRound })
+defineExpose({ checkStore })
 const { $backend } = useNuxtApp()
 
 //  snackbar and loading widgets
@@ -22,10 +24,11 @@ let showLoading
 
 
 // datamodel
-const club = ref(null)
-const round = ref(null)
-const runtimeConfig = useRuntimeConfig(); 
+const runtimeConfig = useRuntimeConfig();
 
+function checkStore() {
+  // nothing happens here
+}
 
 function d() {
   console.log('token', mgmttoken.value)
@@ -33,16 +36,16 @@ function d() {
   window.location.href = url
 }
 
-async function generateBelELO(){
+async function generateBelELO() {
   showLoading(true)
   try {
-    const reply = await $backend("interclub", "mgmt_generate_bel_elo",{
+    const reply = await $backend("interclub", "mgmt_generate_bel_elo", {
       round: round.value,
       token: mgmttoken.value,
-    })    
+    })
     showSnackbar("BEL elo rapport created")
   }
-  catch(error) {
+  catch (error) {
     showSnackbar(error.message)
   }
   finally {
@@ -50,16 +53,16 @@ async function generateBelELO(){
   }
 }
 
-async function generateFideELO(){
+async function generateFideELO() {
   showLoading(true)
   try {
-    const reply = await $backend("interclub", "mgmt_generate_fide_elo",{
+    const reply = await $backend("interclub", "mgmt_generate_fide_elo", {
       round: round.value,
       token: mgmttoken.value,
-    })    
+    })
     showSnackbar("FIDE elo rapport created")
   }
-  catch(error) {
+  catch (error) {
     console.error(error)
     showSnackbar(error.message)
   }
@@ -68,16 +71,16 @@ async function generateFideELO(){
   }
 }
 
-async function generatePenalties(){
+async function generatePenalties() {
   showLoading(true)
   try {
-    await $backend("interclub", "mgmt_generate_penalties",{
+    await $backend("interclub", "mgmt_generate_penalties", {
       round: round.value,
       token: mgmttoken.value,
-    })    
+    })
     showSnackbar("Penalties rapport created")
   }
-  catch(error) {
+  catch (error) {
     console.log("error", error)
     showSnackbar(error.message)
   }
@@ -86,16 +89,13 @@ async function generatePenalties(){
   }
 }
 
-function updateClub(clb){
+function updateClub(clb) {
   club.value = clb
 }
 
-function updateRound(rnd){
-  round.value = rnd 
-}
 
 // trigger
-onMounted( () => {
+onMounted(() => {
   showSnackbar = refsnackbar.value.showSnackbar
   showLoading = refloading.value.showLoading
 })
@@ -104,16 +104,15 @@ onMounted( () => {
 <template>
   <VContainer>
     <SnackbarMessage ref="refsnackbar" />
-    <ProgressLoading ref="refloading"/>
+    <ProgressLoading ref="refloading" />
     <h3>Playerlist</h3>
     <v-btn @click="d">Download full playerlist</v-btn>
     <h3 class="mt-3">ELO processing</h3>
-    <VBtn class="ma-2" @click="generateFideELO" >Generate FIDE rapport</VBtn>
-    <VBtn class="ma-2" @click="generateBelELO" >Generate BEL rapport</VBtn>
+    <VBtn class="ma-2" @click="generateFideELO">Generate FIDE rapport</VBtn>
+    <VBtn class="ma-2" @click="generateBelELO">Generate BEL rapport</VBtn>
     <h4 class="mt-2">Availabale ELO rapports</h4>
     <h3 class="mt-3">Penalties</h3>
-    <VBtn class="ma-2" @click="generatePenalties" >Generate Penalties rapport</VBtn>
+    <VBtn class="ma-2" @click="generatePenalties">Generate Penalties rapport</VBtn>
     <h4 class="mt-2">Availabale Penalties rapports</h4>
   </VContainer>
 </template>
-

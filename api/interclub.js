@@ -249,4 +249,16 @@ export default {
     )
     return resp
   },
+  mgmt_register_teamforfeit: async function (options) {
+    const { token, division, index, name } = options
+    const resp = await axios.post(
+      `${prefix}/mgmt/command/teamforfeit/${division}/${index}/${name}`,
+      {},
+      {
+        headers: { Authorization: "Bearer " + token },
+      }
+    )
+    return resp
+  },
+
 }

@@ -1,6 +1,5 @@
 <script setup>
 import { ref } from 'vue'
-import { VContainer, VAutocomplete, VCard, VCardText, VBtn } from 'vuetify/lib/components/index.mjs';
 
 // waiting
 const waitingdialog = ref(false)
@@ -116,8 +115,8 @@ onMounted(() => {
     </v-card>
     <div v-if="idclub">
       <VBtn @click="download" class="mt-2" color="green">{{ $t('Download') }}</VBtn>
-      <VDataTable :items="players" :headers="headers" density="compact" :items-per-page="itemsPerPage"
-        :items-per-page-options="itemsPerPageOptions"
+      <VDataTable :items="players" :headers="headers" density="compact"
+        :items-per-page="itemsPerPage" :items-per-page-options="itemsPerPageOptions"
         :sort-by="[{ key: 'assignedrating', order: 'desc' }]">
         <template v-slot:item.index="{ item, index }">
           {{ index + 1 }}
